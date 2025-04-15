@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIRA Project - Connecting IT Professionals</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body { font-family: 'Arial', sans-serif; margin: 0; background-color: #f4f4f4; position: relative; }
+        .container { max-width: 800px; margin: auto; padding: 20px; background: white; border-radius: 8px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); position: relative; }
+        header { background-color: #007bff; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+        h1 { font-size: 24px; margin-bottom: 5px; }
+        h2 { font-size: 18px; font-weight: normal; }
+        section { padding: 20px; }
+        h3 { color: #007bff; font-size: 20px; border-bottom: 2px solid #007bff; padding-bottom: 5px; }
+        p, ul { color: #333; line-height: 1.6; }
+        ul { padding-left: 20px; }
+        .btn { display: inline-block; padding: 12px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 4px; margin-top: 10px; transition: 0.3s; text-align: center; }
+        .btn:hover { background: #0056b3; }
+        .footer { text-align: center; padding: 20px; font-size: 14px; background: #007bff; color: white; border-radius: 0 0 8px 8px; }
+        .language-toggle { position: absolute; top: 20px; right: 20px; }
+        .language-toggle img { width: 25px; height: 15px; cursor: pointer; margin-left: 10px; }
+        .buttons-container { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .image-container, .image-container-right { position: absolute; top: 50%; transform: translateY(-50%); max-width: 40%; }
+        .image-container { left: 2%; }
+        .image-container-right { right: 2%; }
+        .image-container img, .image-container-right img { width: 100%; height: auto; max-width: 430px; }
+        @media (max-width: 900px) {
+            .image-container, .image-container-right { position: relative; top: unset; left: unset; right: unset; transform: none; display: flex; justify-content: center; margin: 10px 0; max-width: 100%; }
+            .image-container img, .image-container-right img { max-width: 300px; }
+            .buttons-container { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="language-toggle">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Flag_of_Brazil.svg" alt="Brazil Flag" onclick="changeLanguage('pt')" />
+        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg" alt="USA Flag" onclick="changeLanguage('en')" />
+    </div>
+    
+    <header>
+        <h1 id="title">MIRA GROUP - Your professional voice has power</h1>
+        <h2 id="subtitle">Powered by Tecnologia Santos</h2>
+    </header>
+
+    <div class="image-container">
+        <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/mira/MIRA-powered.png" alt="MIRA Project Logo">
+    </div>
+    
+    <div class="image-container-right">
+        <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/mira/logo-print-hd.jpg" alt="MIRA Project Logo Right">
+    </div>
+
+    <div class="container">
+        <section>
+            <p id="description">The MIRA Project is here to revolutionize the way IT professionals connect with job opportunities. Whether you're looking for your next big career move or a company searching for top-tier talent, MIRA is your gateway to success – and it's completely free!</p>
+        </section>
+
+        <section>
+            <h3 id="howItWorksTitle">How does it work?</h3>
+            <p id="howItWorks">Simply register and get matched with job opportunities from partner companies. MIRA's connection engine will make the perfect match between you and your next IT job opportunity.</p>
+        </section>
+
+        <section>
+            <h3 id="vacancies">Job Opportunities Available:</h3>
+            <ul id="vacanciesList">
+                <li>Local positions</li>
+                <li>Remote jobs from international companies</li>
+                <li>Freelance tasks</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3 id="partnerInfo">Do you want to be our partner?</h3>
+            <p id="partnerDescription">Are you looking for skilled and evaluated IT professionals or simply want to contribute to a better work environment? This is the place! You can also associate your commercial brand. Reach out to us through the MIRA contact channel and discover how to benefit from the MIRA project.</p>
+        </section>
+
+        <section class="buttons-container">
+            <a href="https://tecnologiasantos.com/register.html" class="btn" id="registerBtn">Register Now as an IT Professional</a>
+            <a href="register_company.php" class="btn" id="registerCompanyBtn">Register as a partner company</a>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <h4 id="contact">📧 Contact us at:</h4>
+        <p><a href="mailto:ronaldo@tecnologiasantos.com.br" style="color:white;">ronaldo@tecnologiasantos.com.br</a></p>
+        <p><a href="https://tecnologiasantos.com.br" style="color:white;" target="_blank">Visit our business website</a></p>
+    </footer>
+
+    <script>
+        const translations = {
+            en: {
+                title: "MIRA GROUP - Your professional voice has power",
+                subtitle: "Powered by Tecnologia Santos",
+                description: "The MIRA Project is here to revolutionize the way IT professionals connect with job opportunities. Whether you're looking for your next big career move or a company searching for top-tier talent, MIRA is your gateway to success – and it's completely free!",
+                howItWorksTitle: "How does it work?",
+                howItWorks: "Simply register and get matched with job opportunities from partner companies. MIRA's connection engine will make the perfect match between you and your next IT job opportunity.",
+                vacancies: "Job Opportunities Available:",
+                vacanciesList: [
+                    "Local positions",
+                    "Remote jobs from international companies",
+                    "Freelance tasks"
+                ],
+                partnerInfo: "Do you want to be our partner?",
+                partnerDescription: "Are you looking for skilled and evaluated IT professionals or simply want to contribute to a better work environment? This is the place! You can also associate your commercial brand. Reach out to us through the MIRA contact channel and discover how to benefit from the MIRA project.",
+                registerBtn: "Register Now as an IT Professional",
+                registerCompanyBtn: "Register as a partner company",
+                contact: "📧 Contact us at:"
+            },
+            pt: {
+                title: "MIRA GROUP - Sua voz profissional tem poder",
+                subtitle: "Desenvolvido por Tecnologia Santos",
+                description: "O Projeto MIRA está aqui para revolucionar a maneira como os profissionais de TI se conectam com oportunidades de emprego. Se você está procurando seu próximo grande passo na carreira ou uma empresa procurando os melhores talentos, o MIRA é o seu caminho para o sucesso – e é totalmente gratuito!",
+                howItWorksTitle: "Como funciona?",
+                howItWorks: "Basta se cadastrar e ser correspondido com oportunidades de emprego das empresas parceiras. O motor de conexão do MIRA fará a correspondência perfeita entre você e sua próxima oportunidade de emprego em TI.",
+                vacancies: "Oportunidades de emprego disponíveis:",
+                vacanciesList: [
+                    "Vagas locais",
+                    "Vagas remotas de empresas internacionais",
+                    "Tarefas freelance"
+                ],
+                partnerInfo: "Quer ser nosso parceiro?",
+                partnerDescription: "Está procurando profissionais de TI qualificados e avaliados ou simplesmente quer contribuir para um ambiente de trabalho melhor? Este é o lugar! Você também pode associar sua marca comercial. Entre em contato conosco através do canal de contato do MIRA e descubra como se beneficiar do projeto MIRA.",
+                registerBtn: "Cadastre-se agora como um profissional de TI",
+                registerCompanyBtn: "Cadastre-se como uma empresa parceira",
+                contact: "📧 Entre em contato conosco em:"
+            }
+        };
+
+        function changeLanguage(language) {
+            document.getElementById("title").textContent = translations[language].title;
+            document.getElementById("subtitle").textContent = translations[language].subtitle;
+            document.getElementById("description").textContent = translations[language].description;
+            document.getElementById("howItWorksTitle").textContent = translations[language].howItWorksTitle;
+            document.getElementById("howItWorks").textContent = translations[language].howItWorks;
+            document.getElementById("vacancies").textContent = translations[language].vacancies;
+            document.getElementById("vacanciesList").innerHTML = translations[language].vacanciesList.map(vacancy => `<li>${vacancy}</li>`).join('');
+            document.getElementById("partnerInfo").textContent = translations[language].partnerInfo;
+            document.getElementById("partnerDescription").textContent = translations[language].partnerDescription;
+            document.getElementById("registerBtn").textContent = translations[language].registerBtn;
+            document.getElementById("registerCompanyBtn").textContent = translations[language].registerCompanyBtn;
+            document.getElementById("contact").textContent = translations[language].contact;
+        }
+    </script>
+</body>
+</html>
