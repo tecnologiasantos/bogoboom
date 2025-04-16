@@ -11,6 +11,33 @@
       padding: 0;
       background: #f5f5f5;
     }
+    /* Logo styles */
+    .image-container,
+    .image-container-right {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+    }
+    .image-container {
+      left: 10px;
+    }
+    .image-container-right {
+      right: 10px;
+    }
+    .image-container img,
+    .image-container-right img {
+      width: 360px;
+      height: auto;
+    }
+
+    @media (max-width: 1024px) {
+      .image-container,
+      .image-container-right {
+        display: none;
+      }
+    }
+
     header {
       background-color: #004a8f;
       color: white;
@@ -84,6 +111,15 @@
 </head>
 <body>
 
+  <!-- Logo containers -->
+  <div class="image-container">
+    <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/mira/MIRA-powered.png" alt="MIRA Project Logo">
+  </div>
+
+  <div class="image-container-right">
+    <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/mira/logo-print-hd.jpg" alt="MIRA Project Logo Right">
+  </div>
+
   <header>
     <h1>Welcome to Bogoboom</h1>
     <p>Connecting newcomers in Bogotá with jobs and homes</p>
@@ -117,28 +153,16 @@
           </select>
         </div>
         <div>
-          <label for="neighborhood">🏙️ Desired Neighborhood:</label>
-          <input type="text" id="neighborhood" name="neighborhood">
-        </div>
-        <div>
-          <label for="arrival">🗓️ Estimated Arrival Date:</label>
-          <input type="date" id="arrival" name="arrival" required>
-        </div>
-        <div>
-          <label for="profession">💼 Job Field:</label>
-          <input type="text" id="profession" name="profession" required>
-        </div>
-        <div>
-          <label for="languages">🗣️ Languages Spoken:</label>
+          <label for="languages">🗣️ Spoken Languages:</label>
           <input type="text" id="languages" name="languages">
         </div>
         <div>
-          <label for="budget">💰 Housing Budget (USD):</label>
-          <input type="number" id="budget" name="budget">
+          <label for="document">📄 Upload Document (optional):</label>
+          <input type="file" id="document" name="document" accept=".pdf,.doc,.docx">
         </div>
         <div>
-          <label for="resume">📄 Upload Resume (optional):</label>
-          <input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx">
+          <label for="budget">💰 Housing Budget (COP):</label>
+          <input type="number" id="budget" name="budget">
         </div>
         <div style="text-align: center;">
           <button type="submit">🚀 Register Now</button>
