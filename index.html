@@ -1,152 +1,231 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bogoboom Colombia - your virtual real estate agency</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <style>
-        body { font-family: 'Arial', sans-serif; margin: 0; background-color: #f4f4f4; position: relative; }
-        .container { max-width: 800px; margin: auto; padding: 20px; background: white; border-radius: 8px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); position: relative; }
-        header { background-color: #007bff; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
-        h1 { font-size: 24px; margin-bottom: 5px; }
-        h2 { font-size: 18px; font-weight: normal; }
-        section { padding: 20px; }
-        h3 { color: #007bff; font-size: 20px; border-bottom: 2px solid #007bff; padding-bottom: 5px; }
-        p, ul { color: #333; line-height: 1.6; }
-        ul { padding-left: 20px; }
-        .btn { display: inline-block; padding: 12px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 4px; margin-top: 10px; transition: 0.3s; text-align: center; }
-        .btn:hover { background: #0056b3; }
-        .footer { text-align: center; padding: 20px; font-size: 14px; background: #007bff; color: white; border-radius: 0 0 8px 8px; }
-        .language-toggle { position: absolute; top: 20px; right: 20px; }
-        .language-toggle img { width: 25px; height: 15px; cursor: pointer; margin-left: 10px; }
-        .buttons-container { display: flex; flex-direction: column; align-items: center; gap: 10px; }
-        .image-container, .image-container-right { position: absolute; top: 50%; transform: translateY(-50%); max-width: 40%; }
-        .image-container { left: 2%; }
-        .image-container-right { right: 2%; }
-        .image-container img, .image-container-right img { width: 100%; height: auto; max-width: 430px; }
-        @media (max-width: 900px) {
-            .image-container, .image-container-right { position: relative; top: unset; left: unset; right: unset; transform: none; display: flex; justify-content: center; margin: 10px 0; max-width: 100%; }
-            .image-container img, .image-container-right img { max-width: 300px; }
-            .buttons-container { flex-direction: column; }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bogoboom | Welcome to Bogotá</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+    }
+    header {
+      background-color: #004a8f;
+      color: white;
+      padding: 1rem 2rem;
+      text-align: center;
+    }
+    main {
+      padding: 2rem;
+      text-align: center;
+    }
+    .intro {
+      max-width: 600px;
+      margin: 0 auto 2rem;
+      font-size: 1.2rem;
+    }
+    section {
+      max-width: 700px;
+      margin: 2rem auto;
+      text-align: left;
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    section h3 {
+      color: #004a8f;
+    }
+    ul {
+      margin-top: 1rem;
+      padding-left: 1.2rem;
+      font-size: 1rem;
+    }
+    ul li {
+      margin-bottom: 0.7rem;
+    }
+    .card-container {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+    .card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 1.5rem;
+      width: 250px;
+    }
+    .card h3 {
+      color: #004a8f;
+    }
+    .card p {
+      font-size: 0.95rem;
+      color: #333;
+    }
+    .card a {
+      display: inline-block;
+      margin-top: 1rem;
+      text-decoration: none;
+      color: white;
+      background-color: #004a8f;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+    }
+    form {
+      max-width: 600px;
+      margin: 2rem auto;
+      background: #ffffff;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    form h3 {
+      color: #004a8f;
+      text-align: center;
+    }
+    form label {
+      display: block;
+      margin: 1rem 0 0.5rem;
+    }
+    form input, form textarea, form select {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    form button {
+      background: #004a8f;
+      color: white;
+      padding: 0.7rem 1.2rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    footer {
+      margin-top: 2rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #666;
+    }
+  </style>
 </head>
 <body>
-    <div class="language-toggle">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Flag_of_Brazil.svg" alt="Brazil Flag" onclick="changeLanguage('pt')" />
-        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg" alt="USA Flag" onclick="changeLanguage('en')" />
-    </div>
-    
-    <header>
-        <h1 id="title">Bogoboom Colombia - your virtual real estate agency</h1>
-        <h2 id="subtitle">Powered by Tecnologia Santos</h2>
-    </header>
+  <header>
+    <h1>Welcome to Bogoboom</h1>
+    <p>Connecting newcomers in Bogotá with jobs and homes</p>
+  </header>
 
-    <div class="image-container">
-        <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/mira/MIRA-powered.png" alt="MIRA Project Logo">
-    </div>
-    
-    <div class="image-container-right">
-        <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/mira/logo-print-hd.jpg" alt="MIRA Project Logo Right">
+  <main>
+    <div class="intro">
+      <p>Bogoboom is your bridge to a smooth landing in Bogotá. Whether you're a newcomer, an HR department, or a real estate agency, our platform helps you connect and thrive.</p>
     </div>
 
-    <div class="container">
-        <section>
-            <p id="description">We’re excited to introduce Bogoboom, an innovative platform developed in Bogotá, Colombia, designed to help companies, professionals, and students relocating to the city find suitable long-term housing quickly and affordably.</p>
-        </section>
+    <section>
+      <h3 id="vacancies">With Bogoboom, your company´s HR team can:</h3>
+      <ul id="vacanciesList">
+        <li>✅ Save money on temporary hotel stays and last-minute relocation support</li>
+        <li>✅ Delegate accommodation logistics to a dedicated, efficient platform</li>
+        <li>✅ Offer a better employee experience from day one</li>
+        <li>✅ Strengthen your company’s reputation as relocation-friendly</li>
+        <li>✅ Access a pre-screened list of real estate agencies offering fair, quality housing</li>
+        <li>✅ Focus more on hiring and retention—and less on real estate headaches</li>
+      </ul>
+    </section>
 
-        <section>
-            <h3 id="howItWorksTitle">How does it work?</h3>
-            <p id="howItWorks">Bogoboom is a smart, global accommodation portal that connects newcomers with verified real estate agencies — eliminating the need for expensive temporary housing and helping companies onboard new talent faster and more efficiently.</p>
-        </section>
+    <section>
+      <h3>Newcomers, discover how Bogoboom makes your journey easier:</h3>
+      <ul>
+        <li>✅ Register for free and get matched with HR teams and local agencies</li>
+        <li>✅ Explore housing options before you even land in Bogotá</li>
+        <li>✅ Enjoy a smooth relocation with trusted partners</li>
+        <li>✅ Have your housing preferences shared directly with real estate agents</li>
+        <li>✅ Start your life in Bogotá with less stress and more support</li>
+      </ul>
+    </section>
 
-        <section>
-            <h3 id="vacancies">With Bogoboom, your company´s HR team can:</h3>
-            <ul id="vacanciesList">
-                <li>✅ Save money on temporary hotel stays and last-minute relocation support</li>
-                <li>✅ Delegate accommodation logistics to a dedicated, efficient platform</li>
-                <li>✅ Offer a better employee experience from day one</li>
-                <li>✅ Strengthen your company’s reputation as relocation-friendly</li>
-                <li>✅ Access a pre-screened list of real estate agencies offering fair, quality housing</li>
-                <li>✅ Focus more on hiring and retention—and less on real estate headaches</li>
-            </ul>
-        </section>
+    <section>
+      <h3>Real Estate Agencies, partner with Bogoboom to grow your business:</h3>
+      <ul>
+        <li>✅ Access a growing network of international professionals relocating to Bogotá</li>
+        <li>✅ Get visibility among HR departments of top employers</li>
+        <li>✅ List properties that match newcomers' expectations and budgets</li>
+        <li>✅ Use our portal to receive qualified, verified housing leads</li>
+        <li>✅ Convert registrations into real contracts—quickly and reliably</li>
+      </ul>
+    </section>
 
-        <section>
-            <h3 id="partnerInfo">Do you want to be our partner?</h3>
-            <p id="partnerDescription">👉 Agency registration is completely free. Enjoy affordable subscription plans to browse and connect directly with newcomers. Let our business intelligence do all the hard work for you!.</p>
-        </section>
+    <div class="card-container">
+      <div class="card">
+        <h3>I'm a Newcomer</h3>
+        <p>Register to find job opportunities and housing options in Bogotá for free.</p>
+        <a href="#newcomer-form">Get Started</a>
+      </div>
 
-        <section class="buttons-container">
-            <a href="https://tecnologiasantos.com/register.html" class="btn" id="registerBtn">Register Now as a newcomer in Colombia and have access to your new home.</a>
-            <a href="register_company.php" class="btn" id="registerCompanyBtn">Register as a partner company and be available for newcomers in Colombia.</a>
-        </section>
+      <div class="card">
+        <h3>I'm from HR</h3>
+        <p>Create an account to register newcomers you hire and support them in relocation.</p>
+        <a href="#hr-form">Register HR</a>
+      </div>
+
+      <div class="card">
+        <h3>I'm a Real Estate Agency</h3>
+        <p>List your properties and connect with the newcomers market. Premium plans available.</p>
+        <a href="#agency-form">Join Now</a>
+      </div>
     </div>
 
-    <footer class="footer">
-        <h4 id="contact">📧 Contact us at:</h4>
-        <p><a href="mailto:ronaldo@tecnologiasantos.com.br" style="color:white;">ronaldo@tecnologiasantos.com.br</a></p>
-        <p><a href="https://tecnologiasantos.com.br" style="color:white;" target="_blank">Visit our business website</a></p>
-    </footer>
+    <form id="newcomer-form">
+      <h3>Newcomer Registration</h3>
+      <label>Full Name:</label>
+      <input type="text" name="name" required />
+      <label>Email:</label>
+      <input type="email" name="email" required />
+      <label>Country of Origin:</label>
+      <input type="text" name="country" required />
+      <label>Desired Job Role:</label>
+      <input type="text" name="job" required />
+      <label>Housing Preferences:</label>
+      <textarea name="preferences"></textarea>
+      <button type="submit">Register</button>
+    </form>
 
-    <script>
-        const translations = {
-            en: {
-                title: "Bogoboom Colombia - your virtual real estate agency",
-                subtitle: "Powered by Tecnologia Santos",
-                description: "We’re excited to introduce Bogoboom, an innovative platform developed in Bogotá, Colombia, designed to help companies, professionals, and students relocating to the city find suitable long-term housing quickly and affordably.",
-                howItWorksTitle: "How does it work?",
-                howItWorks: "Bogoboom is a smart, global accommodation portal that connects newcomers with verified real estate agencies — eliminating the need for expensive temporary housing and helping companies onboard new talent faster and more efficiently.",
-                vacancies: "With Bogoboom, your company´s HR team can:",
-                vacanciesList: [
-                "Save money on temporary hotel stays and last-minute relocation support"
-                "Delegate accommodation logistics to a dedicated, efficient platform"
-                "Offer a better employee experience from day one"
-                "Strengthen your company’s reputation as relocation-friendly"
-                "Access a pre-screened list of real estate agencies offering fair, quality housing"
-                "Focus more on hiring and retention—and less on real estate headaches"
-                ],
-                partnerInfo: "Do you want to be our partner?",
-                partnerDescription: "👉 Agency registration is completely free. Enjoy affordable subscription plans to browse and connect directly with newcomers. Let our business intelligence do all the hard work for you!",
-                registerBtn: "Register as a newcomer in Colombia and have access to your new home.",
-                registerCompanyBtn: "Register as a real estate agency and be available for newcomers in Colombia.",
-                contact: "📧 Contact us at:"
-            },
-            pt: {
-                title: "MIRA GROUP - Sua voz profissional tem poder",
-                subtitle: "Desenvolvido por Tecnologia Santos",
-                description: "O Projeto MIRA está aqui para revolucionar a maneira como os profissionais de TI se conectam com oportunidades de emprego. Se você está procurando seu próximo grande passo na carreira ou uma empresa procurando os melhores talentos, o MIRA é o seu caminho para o sucesso – e é totalmente gratuito!",
-                howItWorksTitle: "Como funciona?",
-                howItWorks: "Basta se cadastrar e ser correspondido com oportunidades de emprego das empresas parceiras. O motor de conexão do MIRA fará a correspondência perfeita entre você e sua próxima oportunidade de emprego em TI.",
-                vacancies: "Oportunidades de emprego disponíveis:",
-                vacanciesList: [
-                    "Vagas locais",
-                    "Vagas remotas de empresas internacionais",
-                    "Tarefas freelance"
-                ],
-                partnerInfo: "Quer ser nosso parceiro?",
-                partnerDescription: "Está procurando profissionais de TI qualificados e avaliados ou simplesmente quer contribuir para um ambiente de trabalho melhor? Este é o lugar! Você também pode associar sua marca comercial. Entre em contato conosco através do canal de contato do MIRA e descubra como se beneficiar do projeto MIRA.",
-                registerBtn: "Cadastre-se agora como um profissional de TI",
-                registerCompanyBtn: "Cadastre-se como uma empresa parceira",
-                contact: "📧 Entre em contato conosco em:"
-            }
-        };
+    <form id="hr-form">
+      <h3>HR Department Registration</h3>
+      <label>Company Name:</label>
+      <input type="text" name="company" required />
+      <label>HR Contact Name:</label>
+      <input type="text" name="hr_name" required />
+      <label>Email:</label>
+      <input type="email" name="email" required />
+      <label>Phone:</label>
+      <input type="text" name="phone" required />
+      <label>Number of Professionals to Relocate:</label>
+      <input type="number" name="professionals" />
+      <button type="submit">Submit</button>
+    </form>
 
-        function changeLanguage(language) {
-            document.getElementById("title").textContent = translations[language].title;
-            document.getElementById("subtitle").textContent = translations[language].subtitle;
-            document.getElementById("description").textContent = translations[language].description;
-            document.getElementById("howItWorksTitle").textContent = translations[language].howItWorksTitle;
-            document.getElementById("howItWorks").textContent = translations[language].howItWorks;
-            document.getElementById("vacancies").textContent = translations[language].vacancies;
-            document.getElementById("vacanciesList").innerHTML = translations[language].vacanciesList.map(vacancy => `<li>${vacancy}</li>`).join('');
-            document.getElementById("partnerInfo").textContent = translations[language].partnerInfo;
-            document.getElementById("partnerDescription").textContent = translations[language].partnerDescription;
-            document.getElementById("registerBtn").textContent = translations[language].registerBtn;
-            document.getElementById("registerCompanyBtn").textContent = translations[language].registerCompanyBtn;
-            document.getElementById("contact").textContent = translations[language].contact;
-        }
-    </script>
+    <form id="agency-form">
+      <h3>Real Estate Agency Registration</h3>
+      <label>Agency Name:</label>
+      <input type="text" name="agency" required />
+      <label>Contact Person:</label>
+      <input type="text" name="contact" required />
+      <label>Email:</label>
+      <input type="email" name="email" required />
+      <label>Phone:</label>
+      <input type="text" name="phone" required />
+      <label>Property Types Offered:</label>
+      <input type="text" name="types" placeholder="e.g., studios, apartments, houses" />
+      <button type="submit">Join</button>
+    </form>
+  </main>
+
+  <footer>
+    &copy; 2025 Bogoboom. All rights reserved.
+  </footer>
 </body>
 </html>
