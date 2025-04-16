@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bogoboom | Company Hiring Registration</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+    }
+    /* Logo styles */
+    .image-container,
+    .image-container-right {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+    }
+    .image-container {
+      left: 10px;
+    }
+    .image-container-right {
+      right: 10px;
+    }
+    .image-container img,
+    .image-container-right img {
+      width: 360px;
+      height: auto;
+    }
+
+    @media (max-width: 1024px) {
+      .image-container,
+      .image-container-right {
+        display: none;
+      }
+    }
+
+    header {
+      background-color: #004a8f;
+      color: white;
+      padding: 1rem 2rem;
+      text-align: center;
+    }
+    main {
+      padding: 2rem;
+      text-align: center;
+    }
+    .intro {
+      max-width: 600px;
+      margin: 0 auto 2rem;
+      font-size: 1.2rem;
+    }
+    section {
+      max-width: 700px;
+      margin: 2rem auto;
+      text-align: left;
+      background: #fff;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    section h3 {
+      color: #004a8f;
+      margin-bottom: 1rem;
+    }
+    section form {
+      display: grid;
+      gap: 1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    section form div {
+      margin-bottom: 1.5rem;
+    }
+    label {
+      font-weight: bold;
+      color: #004a8f;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 0.8rem;
+      border-radius: 6px;
+      font-size: 1rem;
+      border: 1px solid #ddd;
+      box-sizing: border-box;
+    }
+    input[type="text"], input[type="email"], input[type="date"], input[type="number"] {
+      background-color: #f9f9f9;
+    }
+    button {
+      background-color: #004a8f;
+      color: white;
+      font-size: 1.1rem;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #003c6e;
+    }
+    footer {
+      margin-top: 2rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Logo containers -->
+  <div class="image-container">
+    <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/mira/MIRA-powered.png" alt="MIRA Project Logo">
+  </div>
+
+  <div class="image-container-right">
+    <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/mira/logo-print-hd.jpg" alt="MIRA Project Logo Right">
+  </div>
+
+  <header>
+    <h1>Welcome to Bogoboom</h1>
+    <p>Connecting newcomers in Bogotá with jobs and homes</p>
+  </header>
+
+  <main>
+    <div class="intro">
+      <p>Bogoboom is your bridge to a smooth landing in Bogotá. Whether you're a newcomer, an HR department, or a real estate agency, our platform helps you connect and thrive.</p>
+    </div>
+
+    <!-- Company Hiring Registration Form Section -->
+    <section>
+      <h3>Company Hiring Registration Form</h3>
+      <form action="/register_company_hiring" method="POST" enctype="multipart/form-data">
+        <div>
+          <label for="company_name">🏢 Company Name:</label>
+          <input type="text" id="company_name" name="company_name" required>
+        </div>
+        <div>
+          <label for="company_email">📧 Company Email:</label>
+          <input type="email" id="company_email" name="company_email" required>
+        </div>
+        <div>
+          <label for="company_phone">📱 Company Phone Number:</label>
+          <input type="text" id="company_phone" name="company_phone" required>
+        </div>
+        <div>
+          <label for="responsible_name">👤 Responsible Person's Name:</label>
+          <input type="text" id="responsible_name" name="responsible_name" required>
+        </div>
+        <div>
+          <label for="company_address">🏠 Company Address:</label>
+          <input type="text" id="company_address" name="company_address" required>
+        </div>
+        <div>
+          <label for="company_website">🌐 Company Website:</label>
+          <input type="url" id="company_website" name="company_website">
+        </div>
+        <div>
+          <label for="company_industry">🏭 Industry:</label>
+          <input type="text" id="company_industry" name="company_industry">
+        </div>
+        <div>
+          <label for="company_description">📄 Company Description:</label>
+          <textarea id="company_description" name="company_description" rows="4" placeholder="Describe your company in a few words..."></textarea>
+        </div>
+        <div>
+          <label for="job_positions">💼 Job Positions Available:</label>
+          <input type="text" id="job_positions" name="job_positions">
+        </div>
+        <div>
+          <label for="company_logo">📸 Upload Company Logo (optional):</label>
+          <input type="file" id="company_logo" name="company_logo" accept=".jpg,.jpeg,.png">
+        </div>
+        <div style="text-align: center;">
+          <button type="submit">🚀 Register Now</button>
+        </div>
+      </form>
+    </section>
+
+  </main>
+
+  <footer>
+    &copy; 2025 Bogoboom. All rights reserved.
+  </footer>
+
+</body>
+</html>
