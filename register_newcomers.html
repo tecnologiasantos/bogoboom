@@ -52,7 +52,7 @@
       font-weight: bold;
       color: #004a8f;
     }
-    input, button {
+    input, select, button {
       width: 100%;
       padding: 0.8rem;
       border-radius: 6px;
@@ -73,36 +73,6 @@
     }
     button:hover {
       background-color: #003c6e;
-    }
-    .card-container {
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      flex-wrap: wrap;
-      margin-top: 2rem;
-    }
-    .card {
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      padding: 1.5rem;
-      width: 250px;
-    }
-    .card h3 {
-      color: #004a8f;
-    }
-    .card p {
-      font-size: 0.95rem;
-      color: #333;
-    }
-    .card a {
-      display: inline-block;
-      margin-top: 1rem;
-      text-decoration: none;
-      color: white;
-      background-color: #004a8f;
-      padding: 0.5rem 1rem;
-      border-radius: 4px;
     }
     footer {
       margin-top: 2rem;
@@ -142,7 +112,9 @@
         </div>
         <div>
           <label for="country">🌍 Country of Origin:</label>
-          <input type="text" id="country" name="country" required>
+          <select id="country" name="country" required>
+            <option value="">Select Country</option>
+          </select>
         </div>
         <div>
           <label for="neighborhood">🏙️ Desired Neighborhood:</label>
@@ -179,6 +151,22 @@
   <footer>
     &copy; 2025 Bogoboom. All rights reserved.
   </footer>
+
+  <script>
+    // Fetch country list from external API (Restcountries)
+    fetch('https://restcountries.com/v3.1/all')
+      .then(response => response.json())
+      .then(data => {
+        const countrySelect = document.getElementById('country');
+        data.forEach(country => {
+          const option = document.createElement('option');
+          option.value = country.name.common;
+          option.textContent = country.name.common;
+          countrySelect.appendChild(option);
+        });
+      })
+      .catch(error => console.error('Error fetching country data:', error));
+  </script>
 
 </body>
 </html>
