@@ -82,9 +82,42 @@
       font-size: 0.9rem;
       color: #666;
     }
+    .image-container,
+    .image-container-right {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+    }
+    .image-container {
+      left: 10px;
+    }
+    .image-container-right {
+      right: 10px;
+    }
+    .image-container img,
+    .image-container-right img {
+      width: 360px;
+      height: auto;
+    }
+
+    @media (max-width: 1024px) {
+      .image-container,
+      .image-container-right {
+        display: none;
+      }
+    }
   </style>
 </head>
 <body>
+  <div class="image-container">
+    <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/mira/MIRA-powered.png" alt="MIRA Project Logo">
+  </div>
+
+  <div class="image-container-right">
+    <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/mira/logo-print-hd.jpg" alt="MIRA Project Logo Right">
+  </div>
+
   <header>
     <h1>Welcome to Bogoboom</h1>
     <p>Connecting newcomers in Bogotá with jobs and homes</p>
@@ -148,7 +181,6 @@
         <a href="#">Join Now</a>
       </div>
     </div>
-
   </main>
 
   <footer>
