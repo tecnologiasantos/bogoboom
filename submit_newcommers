@@ -1,56 +1,69 @@
 <?php
-// Conexão com MariaDB
-$servername = "localhost";
-$username = "mira_admin";
-$password = "Gottmitmir2025!";
-$dbname = "bogoboom";
+require 'vendor/autoload.php';
+use Aws\S3\S3Client;
+use Aws\Exception\AwsException;
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+$bucket = 'tecnologiasantos-mira';
+$region = 'us-east-1';
+$folder = 'newcomers/documents/';
 
-// Verifica conexão
+$s3 = new S3Client([
+    'version' => 'latest',
+    'region'  => $region,
+    'credentials' => [
+        'key'    => 'YOUR_AWS_ACCESS_KEY',
+        'secret' => 'YOUR_AWS_SECRET_KEY',
+    ],
+]);
+
+$conn = new mysqli("localhost", "mira_admin", "Gottmitmir2025!", "bogoboom");
 if ($conn->connect_error) {
-    die("Erro de conexão: " . $conn->connect_error);
+    die("Erro na conexão: " . $conn->connect_error);
 }
 
-// Prepara os dados do formulário
-$full_name = $_POST['full_name'];
-$email = $_POST['email'];
-$phone = $_POST['phone'];
-$country = $_POST['country'];
-$languages = $_POST['languages'];
-$housing_budget = $_POST['housing_budget'];
-$data_consent = isset($_POST['data_consent']) ? 1 : 0;
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $full_name = $_POST["full_name"];
+    $email = $_POST["email"];
+    $phone = $_POST["phone"];
+    $country = $_POST["country"];
+    $languages = $_POST["languages"];
+    $housing_budget = $_POST["housing_budget"];
+    $data_consent = isset($_POST["data_consent"]) ? 1 : 0;
+    $registration_date = date("Y-m-d");
 
-// Trata o upload de arquivo
-$upload_dir = "uploads/";
-$document_path = "";
+    if (isset($_FILES["document"])) {
+        $file_name = basename($_FILES["document"]["name"]);
+        $file_tmp = $_FILES["document"]["tmp_name"];
+        $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+        $allowed_ext = ['pdf', 'docx'];
 
-if (isset($_FILES['document']) && $_FILES['document']['error'] == 0) {
-    $allowed_exts = ['pdf', 'docx'];
-    $file_ext = pathinfo($_FILES['document']['name'], PATHINFO_EXTENSION);
-    
-    if (in_array($file_ext, $allowed_exts)) {
-        $new_filename = uniqid() . '.' . $file_ext;
-        $document_path = $upload_dir . $new_filename;
-        move_uploaded_file($_FILES['document']['tmp_name'], $document_path);
+        if (in_array($file_ext, $allowed_ext)) {
+            $s3_key = $folder . time() . "_" . preg_replace("/[^a-zA-Z0-9.]/", "_", $file_name);
+
+            try {
+                $result = $s3->putObject([
+                    'Bucket' => $bucket,
+                    'Key'    => $s3_key,
+                    'SourceFile' => $file_tmp,
+                    'ACL'    => 'private',
+                ]);
+
+                $document_path = $result['ObjectURL'];
+
+                $stmt = $conn->prepare("INSERT INTO newcomers (full_name, email, phone, country, languages, document_path, housing_budget, data_consent, registration_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                $stmt->bind_param("sssssssis", $full_name, $email, $phone, $country, $languages, $document_path, $housing_budget, $data_consent, $registration_date);
+                $stmt->execute();
+
+                echo "Cadastro realizado com sucesso!";
+            } catch (AwsException $e) {
+                echo "Erro ao enviar para S3: " . $e->getMessage();
+            }
+        } else {
+            echo "Formato de arquivo não permitido.";
+        }
     } else {
-        die("Formato de arquivo inválido. Aceito apenas PDF ou DOCX.");
+        echo "Nenhum documento enviado.";
     }
 }
-
-// Data atual
-$registration_date = date('Y-m-d H:i:s');
-
-// Prepara e executa o INSERT
-$stmt = $conn->prepare("INSERT INTO newcomers (full_name, email, phone, country, languages, document_path, housing_budget, data_consent, registration_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-$stmt->bind_param("sssssssds", $full_name, $email, $phone, $country, $languages, $document_path, $housing_budget, $data_consent, $registration_date);
-
-if ($stmt->execute()) {
-    echo "Cadastro realizado com sucesso!";
-} else {
-    echo "Erro ao cadastrar: " . $stmt->error;
-}
-
-$stmt->close();
 $conn->close();
 ?>
