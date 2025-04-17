@@ -92,7 +92,7 @@
     }
     .image-container,
     .image-container-right {
-      position: fixed;
+      position: absolute;
       top: 50%;
       transform: translateY(-50%);
       z-index: 10;
@@ -107,6 +107,13 @@
     .image-container-right img {
       width: 360px;
       height: auto;
+    }
+
+    .main-image {
+      max-width: 100%;
+      height: auto;
+      margin-top: 2rem;
+      border-radius: 8px;
     }
 
     @media (max-width: 1024px) {
@@ -135,6 +142,9 @@
     <div class="intro">
       <p>Bogoboom is your bridge to a smooth landing in Bogotá. Whether you're a newcomer, an HR department, or a real estate agency, our platform helps you connect and thrive.</p>
     </div>
+
+    <!-- Insert the image here -->
+    <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/bogoboom/bogoboom-front.png" alt="Bogoboom Front" class="main-image">
 
     <section>
       <h3 id="vacancies">With Bogoboom, your company´s HR team can:</h3>
