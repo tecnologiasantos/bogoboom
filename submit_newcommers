@@ -3,67 +3,72 @@ require 'vendor/autoload.php';
 use Aws\S3\S3Client;
 use Aws\Exception\AwsException;
 
+// AWS and MariaDB configuration
 $bucket = 'tecnologiasantos-mira';
 $region = 'us-east-1';
 $folder = 'newcomers/documents/';
 
-$s3 = new S3Client([
-    'version' => 'latest',
-    'region'  => $region,
-    'credentials' => [
-        'key'    => 'YOUR_AWS_ACCESS_KEY',
-        'secret' => 'YOUR_AWS_SECRET_KEY',
-    ],
-]);
+// MariaDB credentials
+$host = 'localhost';
+$db = 'bogoboom';
+$user = 'mira_admin';
+$pass = 'Gottmitmir2025!';
 
-$conn = new mysqli("localhost", "mira_admin", "Gottmitmir2025!", "bogoboom");
+// Connect to MariaDB
+$conn = new mysqli($host, $user, $pass, $db);
 if ($conn->connect_error) {
-    die("Erro na conexão: " . $conn->connect_error);
+    die("DB connection failed: " . $conn->connect_error);
 }
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $full_name = $_POST["full_name"];
-    $email = $_POST["email"];
-    $phone = $_POST["phone"];
-    $country = $_POST["country"];
-    $languages = $_POST["languages"];
-    $housing_budget = $_POST["housing_budget"];
-    $data_consent = isset($_POST["data_consent"]) ? 1 : 0;
-    $registration_date = date("Y-m-d");
+// Validate and upload file
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if (isset($_FILES['document']) && $_FILES['document']['error'] == 0) {
+        $file = $_FILES['document'];
+        $filename = basename($file['name']);
+        $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+        $allowed = ['pdf', 'docx'];
 
-    if (isset($_FILES["document"])) {
-        $file_name = basename($_FILES["document"]["name"]);
-        $file_tmp = $_FILES["document"]["tmp_name"];
-        $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
-        $allowed_ext = ['pdf', 'docx'];
-
-        if (in_array($file_ext, $allowed_ext)) {
-            $s3_key = $folder . time() . "_" . preg_replace("/[^a-zA-Z0-9.]/", "_", $file_name);
-
-            try {
-                $result = $s3->putObject([
-                    'Bucket' => $bucket,
-                    'Key'    => $s3_key,
-                    'SourceFile' => $file_tmp,
-                    'ACL'    => 'private',
-                ]);
-
-                $document_path = $result['ObjectURL'];
-
-                $stmt = $conn->prepare("INSERT INTO newcomers (full_name, email, phone, country, languages, document_path, housing_budget, data_consent, registration_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-                $stmt->bind_param("sssssssis", $full_name, $email, $phone, $country, $languages, $document_path, $housing_budget, $data_consent, $registration_date);
-                $stmt->execute();
-
-                echo "Cadastro realizado com sucesso!";
-            } catch (AwsException $e) {
-                echo "Erro ao enviar para S3: " . $e->getMessage();
-            }
-        } else {
-            echo "Formato de arquivo não permitido.";
+        if (!in_array($extension, $allowed)) {
+            die("Only PDF and DOCX files are allowed.");
         }
+
+        // S3 client with IAM role
+        $s3 = new S3Client([
+            'version' => 'latest',
+            'region'  => $region,
+        ]);
+
+        $key = $folder . time() . '-' . $filename;
+
+        try {
+            $s3->putObject([
+                'Bucket' => $bucket,
+                'Key'    => $key,
+                'SourceFile' => $file['tmp_name'],
+                'ACL'    => 'private',
+            ]);
+        } catch (AwsException $e) {
+            die('Upload error: ' . $e->getMessage());
+        }
+
+        // Insert data
+        $stmt = $conn->prepare("INSERT INTO newcomers (full_name, email, phone, country, languages, document_path, housing_budget, data_consent, registration_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())");
+        $stmt->bind_param("ssssssds", 
+            $_POST['full_name'], $_POST['email'], $_POST['phone'], $_POST['country'],
+            $_POST['languages'], $key, $_POST['housing_budget'], $_POST['data_consent']
+        );
+
+        if ($stmt->execute()) {
+            echo "Newcomer registered successfully.";
+        } else {
+            echo "DB error: " . $stmt->error;
+        }
+
+        $stmt->close();
     } else {
-        echo "Nenhum documento enviado.";
+        echo "Please upload a valid document.";
     }
 }
+
 $conn->close();
 ?>
