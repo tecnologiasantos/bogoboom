@@ -1,0 +1,56 @@
+<?php
+// Conexão com MariaDB
+$servername = "localhost";
+$username = "mira_admin";
+$password = "Gottmitmir2025!";
+$dbname = "bogoboom";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Verifica conexão
+if ($conn->connect_error) {
+    die("Erro de conexão: " . $conn->connect_error);
+}
+
+// Prepara os dados do formulário
+$full_name = $_POST['full_name'];
+$email = $_POST['email'];
+$phone = $_POST['phone'];
+$country = $_POST['country'];
+$languages = $_POST['languages'];
+$housing_budget = $_POST['housing_budget'];
+$data_consent = isset($_POST['data_consent']) ? 1 : 0;
+
+// Trata o upload de arquivo
+$upload_dir = "uploads/";
+$document_path = "";
+
+if (isset($_FILES['document']) && $_FILES['document']['error'] == 0) {
+    $allowed_exts = ['pdf', 'docx'];
+    $file_ext = pathinfo($_FILES['document']['name'], PATHINFO_EXTENSION);
+    
+    if (in_array($file_ext, $allowed_exts)) {
+        $new_filename = uniqid() . '.' . $file_ext;
+        $document_path = $upload_dir . $new_filename;
+        move_uploaded_file($_FILES['document']['tmp_name'], $document_path);
+    } else {
+        die("Formato de arquivo inválido. Aceito apenas PDF ou DOCX.");
+    }
+}
+
+// Data atual
+$registration_date = date('Y-m-d H:i:s');
+
+// Prepara e executa o INSERT
+$stmt = $conn->prepare("INSERT INTO newcomers (full_name, email, phone, country, languages, document_path, housing_budget, data_consent, registration_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+$stmt->bind_param("sssssssds", $full_name, $email, $phone, $country, $languages, $document_path, $housing_budget, $data_consent, $registration_date);
+
+if ($stmt->execute()) {
+    echo "Cadastro realizado com sucesso!";
+} else {
+    echo "Erro ao cadastrar: " . $stmt->error;
+}
+
+$stmt->close();
+$conn->close();
+?>
