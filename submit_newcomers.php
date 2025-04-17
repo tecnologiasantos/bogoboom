@@ -1,74 +1,91 @@
 <?php
-require 'vendor/autoload.php';
+// Database config
+$host = "localhost";
+$dbname = "bogoboom";
+$username = "mira_admin";
+$password = "Gottmitmir2025!";
+
+// Load AWS SDK for PHP
+require 'vendor/autoload.php'; // Composer autoload
+
 use Aws\S3\S3Client;
 use Aws\Exception\AwsException;
 
-// AWS and MariaDB configuration
+// Create S3 client using EC2 IAM role (no credentials required)
+$s3 = new S3Client([
+    'region'  => 'us-east-1',
+    'version' => 'latest',
+]);
+
 $bucket = 'tecnologiasantos-mira';
-$region = 'us-east-1';
 $folder = 'newcomers/documents/';
 
-// MariaDB credentials
-$host = 'localhost';
-$db = 'bogoboom';
-$user = 'mira_admin';
-$pass = 'Gottmitmir2025!';
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Sanitize form data
+    $fullname = $_POST['fullname'] ?? '';
+    $email = $_POST['email'] ?? '';
+    $phone = $_POST['phone'] ?? '';
+    $country = $_POST['country'] ?? '';
+    $languages = $_POST['languages'] ?? '';
+    $budget = $_POST['budget'] ?? '';
+    $data_consent = isset($_POST['data_consent']) ? 1 : 0;
+    $registration_date = date('Y-m-d H:i:s');
 
-// Connect to MariaDB
-$conn = new mysqli($host, $user, $pass, $db);
-if ($conn->connect_error) {
-    die("DB connection failed: " . $conn->connect_error);
-}
+    // Handle file upload
+    $file = $_FILES['document'];
+    $file_name = basename($file['name']);
+    $file_tmp = $file['tmp_name'];
+    $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
 
-// Validate and upload file
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (isset($_FILES['document']) && $_FILES['document']['error'] == 0) {
-        $file = $_FILES['document'];
-        $filename = basename($file['name']);
-        $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-        $allowed = ['pdf', 'docx'];
+    // Allow only PDF and DOCX
+    if (!in_array($file_ext, ['pdf', 'docx'])) {
+        die("❌ Invalid file type. Only PDF and DOCX files are allowed.");
+    }
 
-        if (!in_array($extension, $allowed)) {
-            die("Only PDF and DOCX files are allowed.");
-        }
+    $new_file_name = uniqid("doc_") . "." . $file_ext;
+    $s3_key = $folder . $new_file_name;
 
-        // S3 client with IAM role
-        $s3 = new S3Client([
-            'version' => 'latest',
-            'region'  => $region,
+    try {
+        // Upload to S3
+        $result = $s3->putObject([
+            'Bucket' => $bucket,
+            'Key'    => $s3_key,
+            'SourceFile' => $file_tmp,
+            'ACL'    => 'private'
         ]);
 
-        $key = $folder . time() . '-' . $filename;
-
-        try {
-            $s3->putObject([
-                'Bucket' => $bucket,
-                'Key'    => $key,
-                'SourceFile' => $file['tmp_name'],
-                'ACL'    => 'private',
-            ]);
-        } catch (AwsException $e) {
-            die('Upload error: ' . $e->getMessage());
-        }
-
-        // Insert data
-        $stmt = $conn->prepare("INSERT INTO newcomers (full_name, email, phone, country, languages, document_path, housing_budget, data_consent, registration_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())");
-        $stmt->bind_param("ssssssds", 
-            $_POST['full_name'], $_POST['email'], $_POST['phone'], $_POST['country'],
-            $_POST['languages'], $key, $_POST['housing_budget'], $_POST['data_consent']
-        );
-
-        if ($stmt->execute()) {
-            echo "Newcomer registered successfully.";
-        } else {
-            echo "DB error: " . $stmt->error;
-        }
-
-        $stmt->close();
-    } else {
-        echo "Please upload a valid document.";
+        $document_path = $result['ObjectURL'];
+    } catch (AwsException $e) {
+        die("❌ File upload failed: " . $e->getMessage());
     }
-}
 
-$conn->close();
+    // Save to MariaDB
+    try {
+        $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        $stmt = $pdo->prepare("INSERT INTO newcomers 
+            (fullname, email, phone, country, languages, document_path, housing_budget, data_consent, registration_date) 
+            VALUES 
+            (:fullname, :email, :phone, :country, :languages, :document_path, :budget, :data_consent, :registration_date)");
+
+        $stmt->execute([
+            ':fullname' => $fullname,
+            ':email' => $email,
+            ':phone' => $phone,
+            ':country' => $country,
+            ':languages' => $languages,
+            ':document_path' => $document_path,
+            ':budget' => $budget,
+            ':data_consent' => $data_consent,
+            ':registration_date' => $registration_date
+        ]);
+
+        echo "✅ Registration successful!";
+    } catch (PDOException $e) {
+        die("❌ Database error: " . $e->getMessage());
+    }
+} else {
+    echo "Invalid request.";
+}
 ?>
