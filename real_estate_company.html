@@ -11,7 +11,6 @@
       padding: 0;
       background: #f5f5f5;
     }
-    /* Logo styles */
     .image-container,
     .image-container-right {
       position: fixed;
@@ -30,14 +29,12 @@
       width: 360px;
       height: auto;
     }
-
     @media (max-width: 1024px) {
       .image-container,
       .image-container-right {
         display: none;
       }
     }
-
     header {
       background-color: #004a8f;
       color: white;
@@ -158,12 +155,17 @@
           <label for="company_document">📄 Upload Company Document (optional):</label>
           <input type="file" id="company_document" name="company_document" accept=".pdf,.doc,.docx">
         </div>
+        <div>
+          <input type="checkbox" id="dataConsent" name="dataConsent" required>
+          <label for="dataConsent">
+            I acknowledge and consent to the treatment and usage of my personal data in accordance with the site's <a href="/privacy_policy.html" target="_blank">privacy policy</a>.
+          </label>
+        </div>
         <div style="text-align: center;">
           <button type="submit">🚀 Register Now</button>
         </div>
       </form>
     </section>
-
   </main>
 
   <footer>
