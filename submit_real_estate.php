@@ -8,8 +8,8 @@ $region = 'us-east-1';
 $folder = 'real_estate/documents/';
 
 $host = 'localhost';
-$db = 'bogoboom';
-$user = 'mira_admin';
+$db = 'bogoboom_db';
+$user = 'bogoboom_user';
 $pass = 'Gottmitmir2025!';
 
 $conn = new mysqli($host, $user, $pass, $db);
