@@ -1,3 +1,4 @@
+<?php
 // Database config
 $host = "localhost";
 $dbname = "bogoboom_db";
@@ -85,5 +86,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("❌ Database error: " . $e->getMessage());
     }
 } else {
-    echo "Invalid request.";
+    // HTML form with correct field names and file input
+    echo <<<HTML
+    <form action="submit_newcomers.php" method="POST" enctype="multipart/form-data">
+        <input type="text" name="fullname" placeholder="Full Name" required><br>
+        <input type="email" name="email" placeholder="Email" required><br>
+        <input type="tel" name="phone" placeholder="Phone Number" required><br>
+        <input type="text" name="country" placeholder="Country" required><br>
+        <input type="text" name="languages" placeholder="Languages Spoken"><br>
+        <input type="number" step="0.01" name="budget" placeholder="Housing Budget"><br>
+
+        <label for="document">Upload CV or ID (PDF or DOCX):</label><br>
+        <input type="file" name="document" accept=".pdf,.docx" required><br><br>
+
+        <label>
+            <input type="checkbox" name="data_consent" value="1"> I consent to data collection
+        </label><br><br>
+
+        <button type="submit">Register</button>
+    </form>
+    HTML;
 }
+?>
