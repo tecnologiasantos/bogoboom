@@ -1,8 +1,7 @@
-<?php
 // Database config
 $host = "localhost";
-$dbname = "bogoboom";
-$username = "mira_admin";
+$dbname = "bogoboom_db";
+$username = "bogoboom_user";  // Updated username
 $password = "Gottmitmir2025!";
 
 // Load AWS SDK for PHP
@@ -88,4 +87,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 } else {
     echo "Invalid request.";
 }
-?>
