@@ -127,6 +127,3 @@ mysql -u bogoboom_user -p bogoboom_db < schema.sql
 MIT © 2025 Bogoboom
 ```
 
----
-
-Would you like a ready-to-download ZIP with this structure and placeholder files? Or should I auto-generate the folders for you now with dummy content?
