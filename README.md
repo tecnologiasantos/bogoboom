@@ -1,12 +1,7 @@
-Here’s a clean and professional **GitHub-style `README.md`** tailored for your **Bogoboom** project — structured for collaboration, setup clarity, and scalability. Feel free to copy it directly into your project root.
-
----
-
-```markdown
 # 🌆 Bogoboom
 
-**Connecting newcomers in Bogotá with homes and jobs.**  
-Bogoboom is a digital platform that bridges newcomers, HR departments, and real estate agencies in Bogotá, streamlining housing and employment integration.
+**Connecting newcomers in Colombia with homes and jobs.**  
+Bogoboom is a digital platform that bridges newcomers, HR departments, and real estate agencies in Colombia, streamlining housing and employment integration.
 
 ---
 
