@@ -1,5 +1,5 @@
 <?php
-require 'db_connection.php'; // file with mysqli connection code
+require '../backend/db_connection.php'; // Adjust the path if necessary
 
 function generate_uuid() {
     return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
@@ -12,20 +12,41 @@ function generate_uuid() {
 }
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $email = $_POST['email'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    // Validate user inputs (you can expand these validations)
+    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+    $password = $_POST['password'];
     $role = $_POST['role'];
+
+    // Basic validation (you can expand this)
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo "Invalid email format.";
+        exit;
+    }
+
+    if (empty($password)) {
+        echo "Password cannot be empty.";
+        exit;
+    }
+
+    // Hash the password
+    $password_hash = password_hash($password, PASSWORD_DEFAULT);
+
+    // Generate a UUID for the new user
     $uuid = generate_uuid();
 
+    // Prepare and execute the insert query
     $stmt = $conn->prepare("INSERT INTO Users (id, email, password_hash, role) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssss", $uuid, $email, $password, $role);
+    $stmt->bind_param("ssss", $uuid, $email, $password_hash, $role);
 
     if ($stmt->execute()) {
-        echo "User registered!";
-        // Optionally redirect to role-specific profile form
+        // Optionally, redirect after successful registration
+        header('Location: login.html'); // Redirect to login page or another appropriate page
+        exit;
     } else {
         echo "Error: " . $stmt->error;
     }
+
+    // Close the statement
     $stmt->close();
 }
 ?>
