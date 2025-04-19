@@ -1,7 +1,8 @@
-# 🌆 Bogoboom
+```markdown
+# 🌍 Bogoboom
 
 **Connecting newcomers in Colombia with homes and jobs.**  
-Bogoboom is a digital platform that bridges newcomers, HR departments, and real estate agencies in Colombia, streamlining housing and employment integration.
+Bogoboom is a digital platform that bridges newcomers, HR departments, and real estate agencies across Colombia, streamlining housing and employment integration.
 
 ---
 
@@ -9,19 +10,57 @@ Bogoboom is a digital platform that bridges newcomers, HR departments, and real 
 
 ```
 /bogoboom_project
-├── /public/                # HTML frontend
-├── /backend/               # PHP backend
-│   ├── /auth/              # Login & registration
-│   ├── /profiles/          # Profile submissions
-│   ├── /utils/             # DB, S3, helpers
-│   ├── /config/            # Constants, API keys
-├── /assets/                # Static files (CSS, JS, images)
-├── /uploads/               # Local uploads (optional)
-├── /logs/                  # Error/debug logs
-├── .env                    # Environment variables
-├── composer.json           # AWS SDK and PHP deps
-├── .gitignore
-└── README.md
+├── /public/                        # Publicly accessible HTML files
+│   ├── index.html
+│   ├── register.html
+│   ├── login.html
+│   ├── newcomer_profile.html
+│   ├── hr_profile.html
+│   └── agency_profile.html
+│
+├── /backend/                      # All backend logic (PHP)
+│   ├── /auth/
+│   │   ├── register.php
+│   │   ├── login.php
+│   │   └── logout.php
+│   │
+│   ├── /profiles/
+│   │   ├── save_newcomer.php
+│   │   ├── save_hr.php
+│   │   └── save_agency.php
+│   │
+│   ├── /utils/
+│   │   ├── db_connection.php
+│   │   ├── s3_upload.php
+│   │   └── helpers.php             # (Optional: reusable functions)
+│   │
+│   ├── /middleware/               # (Optional: form validation, auth checks)
+│   │   └── validate_input.php
+│   │
+│   ├── /notifications/            # (Optional: alert logic)
+│   │   └── send_notification.php
+│   │
+│   └── /config/
+│       └── constants.php
+│
+├── /uploads/                      # (Optional: temp uploads if not using S3)
+│   └── temp_files/
+│
+├── /logs/                         # (Optional: for audits, debugging, etc.)
+│   └── error.log
+│
+├── /assets/                       # Images, JS, CSS
+│   ├── /css/
+│   │   └── styles.css
+│   ├── /js/
+│   │   └── main.js
+│   └── /images/
+│       └── logo.png
+│
+├── .env                           # (Optional: environment variables)
+├── composer.json                  # AWS SDK dependencies, etc.
+├── .gitignore                     # To ignore sensitive files and folders
+└── README.md                      # Project setup instructions
 ```
 
 ---
@@ -32,7 +71,7 @@ Bogoboom is a digital platform that bridges newcomers, HR departments, and real 
 
 ```bash
 git clone https://github.com/yourusername/bogoboom.git
-cd bogoboom
+cd bogoboom_project
 ```
 
 ### 2. Backend Requirements
@@ -48,7 +87,7 @@ cd bogoboom
 composer install
 ```
 
-This installs the **AWS SDK for PHP** and other dependencies.
+This installs the **AWS SDK for PHP** and other PHP packages.
 
 ### 4. Configure Environment
 
@@ -64,66 +103,65 @@ AWS_BUCKET=tecnologiasantos-mira
 AWS_REGION=us-east-1
 ```
 
-Alternatively, you can use `/backend/config/constants.php` if not using `.env`.
+Alternatively, you can define these in `/backend/config/constants.php`.
 
 ### 5. Set Up the Database
 
-Run your SQL schema file to initialize tables in MariaDB.
+Import your schema:
 
 ```bash
 mysql -u bogoboom_user -p bogoboom_db < schema.sql
 ```
 
-### 6. Set Up Apache/Nginx
+### 6. Configure Your Web Server
 
-- Make `/public/` your web root
-- Ensure file uploads and PHP are enabled
+- Set `/public/` as the web root.
+- Ensure `uploads/` is writable (if used).
+- Enable PHP, mod_rewrite, and file permissions as needed.
 
 ---
 
 ## 🌐 Main Pages
 
-| URL                       | Purpose                      |
-|---------------------------|------------------------------|
-| `/public/index.html`     | Landing page                 |
-| `/public/register.html`  | Newcomer registration        |
-| `/public/login.html`     | User login                   |
-| `/public/newcomer_profile.html` | Profile dashboard |
-| `/public/hr_profile.html`       | HR dashboard          |
-| `/public/agency_profile.html`   | Agency dashboard      |
+| File                            | Description                    |
+|----------------------------------|--------------------------------|
+| `/public/index.html`            | Landing page                   |
+| `/public/register.html`         | User registration              |
+| `/public/login.html`            | Login form                     |
+| `/public/newcomer_profile.html` | Newcomer dashboard             |
+| `/public/hr_profile.html`       | HR dashboard                   |
+| `/public/agency_profile.html`   | Real estate agency dashboard   |
 
 ---
 
-## 📦 Features
+## ✅ Features
 
-- ✅ Clean newcomer onboarding
-- ✅ Profile creation & document upload
-- ✅ AWS S3 integration
-- ✅ Secure data handling with consent
-- ✅ Role-based workflows
-- ✅ Modular file structure
-
----
-
-## 🛡️ Security Notes
-
-- All sensitive information (DB, S3) should be stored securely and never committed to Git.
-- Add `uploads/`, `.env`, and `logs/` to `.gitignore`.
+- Secure newcomer onboarding
+- Role-specific profile creation
+- AWS S3 document uploads
+- Clean folder structure for scalability
+- Optional modules for notifications and validation
+- Modern PHP best practices
 
 ---
 
-## 👥 Contributing
+## 🔐 Security Recommendations
 
-1. Fork the repo
-2. Create a new branch (`feature/profile-form`)
-3. Commit your changes
-4. Push to the branch
-5. Open a Pull Request
+- Never commit your `.env` file, `uploads/`, or log files.
+- Sanitize and validate all user input.
+- Protect endpoints using session or token-based auth.
 
 ---
 
-## 📄 License
+## 🛠️ Development Workflow
 
-MIT © 2025 Bogoboom
-```
+1. Create a new branch: `git checkout -b feature/your-feature-name`
+2. Make changes and commit: `git commit -m "Add your message"`
+3. Push to GitHub: `git push origin feature/your-feature-name`
+4. Open a Pull Request
 
+---
+
+
+
+MIRA job portal and Bogoboom are assets from Tecnologia Santos company.
