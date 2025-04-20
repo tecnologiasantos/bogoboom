@@ -1,5 +1,5 @@
 <?php
-require '../backend/db_connection.php'; // Adjust the path if necessary
+require '../secret/db_connection.php'; // Adjust the path if necessary
 
 function generate_uuid() {
     return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
