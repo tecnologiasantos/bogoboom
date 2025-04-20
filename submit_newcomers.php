@@ -3,22 +3,22 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Use absolute path to the db_connection.php
-require '/var/www/html/bogoboom_project/safe/db_connection.php'; 
+// Start the session
+session_start();
 
-// Assuming session is used for user authentication and user_id is stored in the session
-session_start();  // Start session to retrieve user ID
-
-// Check if the user is logged in, otherwise handle error
+// Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {
     die("Error: User is not logged in.");
 }
+
+// Include the DB connection
+require '/var/www/html/bogoboom_project/safe/db_connection.php'; 
 
 // Retrieve the logged-in user's ID
 $user_id = $_SESSION['user_id'];
 $created_by = $user_id;  // Assuming the creator of the profile is the logged-in user
 
-// Set default values for optional fields if not provided
+// Retrieve and sanitize form data
 $fullname = isset($_POST['fullname']) ? mysqli_real_escape_string($conn, trim($_POST['fullname'])) : '';
 $email = isset($_POST['email']) ? mysqli_real_escape_string($conn, trim($_POST['email'])) : '';
 $phone = isset($_POST['phone']) ? mysqli_real_escape_string($conn, trim($_POST['phone'])) : '';
