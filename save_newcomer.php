@@ -1,5 +1,5 @@
 <?php
-require_once '../utils/db_connection.php'; // adjust path if needed
+require '../safe/db_connection.php'; // Adjust the path if needed
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $fullname = $_POST['fullname'];
