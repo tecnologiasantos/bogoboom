@@ -1,5 +1,17 @@
 <?php
-require '../safe/db_connection.php'; // Adjust the path if needed
+// Enable error reporting for debugging
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Debug: Check if the file exists and provide error message if not
+$connection_file = '../../safe/db_connection.php';  // Adjusted path based on your folder structure
+
+if (!file_exists($connection_file)) {
+    die("Error: db_connection.php file not found.");
+}
+
+require $connection_file; // Include database connection file
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Collect and sanitize form inputs
@@ -17,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $document = null;
     if (isset($_FILES['document']) && $_FILES['document']['error'] == 0) {
         // Define file upload destination
-        $uploadDir = '../uploads/temp_files/';
+        $uploadDir = '../../uploads/temp_files/'; // Adjusted path for file upload location
         $uploadFile = $uploadDir . basename($_FILES['document']['name']);
         
         // Validate file type (optional, adjust as needed)
