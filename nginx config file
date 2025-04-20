@@ -20,17 +20,17 @@ server {
         include fastcgi_params;
     }
 
-    # ✅ Serve PHP files from backend/profiles
+    # Serve PHP files from backend/profiles
     location ~ ^/bogoboom_project/backend/profiles/(.+\.php)$ {
-        alias /var/www/html/bogoboom_project/backend/profiles/$1;
+        root /var/www/html/bogoboom_project;
         include snippets/fastcgi-php.conf;
         fastcgi_pass unix:/run/php/php8.3-fpm.sock;
-        fastcgi_param SCRIPT_FILENAME /var/www/html/bogoboom_project/backend/profiles/$1;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         include fastcgi_params;
     }
 
-    # ❌ Deny access to all other non-PHP files in /backend
-    location ~ ^/bogoboom_project/backend/profiles/(?!.*\.php$).*$ {
+    # Deny access to non-PHP files in /backend
+    location ~ ^/bogoboom_project/backend/profiles/.*\.(?!php).* {
         deny all;
     }
 
@@ -38,4 +38,8 @@ server {
     location ~ /\. {
         deny all;
     }
+
+    # Access and error logs
+    access_log /var/log/nginx/access.log;
+    error_log /var/log/nginx/error.log;
 }
