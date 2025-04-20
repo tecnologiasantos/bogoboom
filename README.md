@@ -11,10 +11,15 @@ Welcome to the **Bogoboom** project! Below is the organized folder structure for
 ├── /public/                         # Publicly accessible HTML files
 │   ├── index.html                   # Home page for the platform
 │   ├── register.html                # Newcomer registration form
-│   ├── login.html                   # Login page for users
-│   ├── newcomer_profile.html        # Profile page for newcomers
-│   ├── hr_profile.html              # Profile page for HR teams
-│   └── agency_profile.html          # Profile page for real estate agencies
+│   ├── real_estate_company.html     # Real estate company details page
+│   ├── register_newcomers.html      # Newcomer registration form
+│   ├── company_hiring.html          # HR team hiring page
+│   ├── privacy_policy.html          # Privacy policy page
+│   └── /api/                         # API endpoints for form submissions
+│       ├── submit_companies.php      # Handle company submissions
+│       ├── submit_real_estate.php    # Handle real estate agency submissions
+│       └── submit_newcomers.php      # Handle newcomer submissions
+│   └── whoami.html                  # User info page
 │
 ├── /backend/                         # Backend logic and API
 │   ├── /auth/
@@ -23,18 +28,14 @@ Welcome to the **Bogoboom** project! Below is the organized folder structure for
 │   │   └── logout.php                # Logout logic
 │   │
 │   ├── /profiles/
-│   │   ├── save_newcomer.php         # Save draft or update newcomer profile
-│   │   ├── save_hr.php               # Save HR profile
-│   │   ├── save_agency.php           # Save agency profile
-│   │   ├── submit_newcomers.php      # Final submission of newcomer profile
+│   │   ├── testconnection.php       # Test DB connection
 │   │   ├── submit_companies.php      # Final submission of HR/company
-│   │   └── submit_real_estate.php    # Final submission of agency
+│   │   ├── submit_real_estate.php    # Final submission of real estate agency
+│   │   └── submit_newcomers.php      # Final submission of newcomer profile
 │   │
 │   ├── /utils/
 │   │   ├── db_connection.php         # ✅ USE THIS: Central DB connection
-│   │   ├── connection.php            # 🔁 DEPRECATED: Likely safe to remove if unused
-│   │   ├── s3_upload.php             # Upload files to AWS S3
-│   │   └── helpers.php               # Reusable helper functions
+│   │   └── s3_upload.php             # Upload files to AWS S3
 │   │
 │   ├── /middleware/
 │   │   └── validate_input.php        # Optional form validation logic
@@ -49,23 +50,13 @@ Welcome to the **Bogoboom** project! Below is the organized folder structure for
 │   └── /temp_files/                  # Used only if not fully relying on S3
 │       └── leidy.docx                # Example uploaded file
 │
+├── /safe/                            # Safe directory (for sensitive files)
+│
 ├── /logs/
 │   └── error.log                     # Logs for debugging and audits
 │
-├── /assets/
-│   ├── /css/
-│   │   └── styles.css                # Project styling
-│   ├── /js/
-│   │   └── main.js                   # Client-side logic
-│   └── /images/
-│       └── logo.png                  # Site branding
+├── /assets/                          # Static assets
 │
-├── /database/
-│   └── bogoboom_mvp_schema.sql      # SQL schema of your DB
-│
-├── composer.json                    # AWS SDK and other PHP packages
+├── .env                              # Environment variables for configuration
 ├── .gitignore                       # Ignore sensitive/system files
 └── README.md                        # Project documentation (optional)
-```
-
-
