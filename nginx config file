@@ -20,16 +20,16 @@ server {
         include fastcgi_params;
     }
 
-    # Serve PHP files from backend/profiles
-    location ~ ^/bogoboom_project/backend/profiles/(.+\.php)$ {
-        root /var/www/html/bogoboom_project;
+    # Serve PHP files from /backend/profiles
+    location ~ ^/bogoboom_project/backend/profiles/.*\.php$ {
+        root /var/www/html;  # Root path is set to '/var/www/html' for backend files
         include snippets/fastcgi-php.conf;
         fastcgi_pass unix:/run/php/php8.3-fpm.sock;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         include fastcgi_params;
     }
 
-    # Deny access to non-PHP files in /backend
+    # Deny access to other non-PHP files in /backend
     location ~ ^/bogoboom_project/backend/profiles/.*\.(?!php).* {
         deny all;
     }
