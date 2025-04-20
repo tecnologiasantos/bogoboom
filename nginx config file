@@ -1,0 +1,42 @@
+# Serve frontend content from the public folder
+    root /var/www/html/bogoboom_project/public;
+    index index.php index.html index.htm;
+
+    client_max_body_size 50M;
+
+    # Serve static files and HTML pages
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    # Process PHP files in /public (if any)
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php8.3-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+
+    # Serve PHP API endpoints from /backend/profiles/
+    location /backend/profiles/ {
+        alias /var/www/html/bogoboom_project/backend/profiles/;
+
+        # Match only .php files inside this backend folder
+        location ~ ^/backend/profiles/(.+\.php)$ {
+            include snippets/fastcgi-php.conf;
+            fastcgi_pass unix:/run/php/php8.3-fpm.sock;
+            fastcgi_param SCRIPT_FILENAME /var/www/html/bogoboom_project/backend/profiles/$1;
+            include fastcgi_params;
+        }
+
+        # (Optional) Deny access to non-PHP files in backend
+        location ~ ^/backend/profiles/(.*)$ {
+            deny all;
+        }
+    }
+
+    # Deny access to hidden files like .htaccess
+    location ~ /\. {
+        deny all;
+    }
+}
