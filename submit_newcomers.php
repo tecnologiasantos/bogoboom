@@ -1,5 +1,5 @@
 <?php
-require '../backend/utils/db_connection.php'; // Adjust the path if needed
+require '../safe/db_connection.php'; // Adjust the path if needed
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Collect and sanitize form inputs
