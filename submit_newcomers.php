@@ -15,6 +15,7 @@ $email = isset($_POST['email']) ? mysqli_real_escape_string($conn, trim($_POST['
 $phone = isset($_POST['phone']) ? mysqli_real_escape_string($conn, trim($_POST['phone'])) : '';
 $country = isset($_POST['country']) ? mysqli_real_escape_string($conn, trim($_POST['country'])) : '';
 $languages = isset($_POST['languages']) ? mysqli_real_escape_string($conn, trim($_POST['languages'])) : '';
+
 // Generate a unique ID for the newcomer
 $id = uniqid('', true);
 
@@ -50,9 +51,9 @@ if (isset($_FILES['document']) && $_FILES['document']['error'] == 0) {
     }
 }
 
-// SQL query to insert data into the Newcomers table
-$query = "INSERT INTO Newcomers (id, full_name, email, phone, country, city_of_contract, arrival_date, preferences, languages, document, allow_contact) 
-          VALUES ('$id', '$fullname', '$email', '$phone', '$country', '$city_of_contract', '$arrival_date', '$preferences', '$languages', '$document', '$allow_contact')";
+// SQL query to insert data into the Newcomers table (updated to match the form)
+$query = "INSERT INTO Newcomers (id, full_name, email, phone, country, languages, document) 
+          VALUES ('$id', '$fullname', '$email', '$phone', '$country', '$languages', '$document')";
 
 // Execute the query using the database connection
 if (mysqli_query($conn, $query)) {
