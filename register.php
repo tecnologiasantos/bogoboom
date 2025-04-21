@@ -1,5 +1,9 @@
 <?php
-require '../secret/db_connection.php'; // Adjust the path if necessary
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+require '../../safe/db_connection.php';
 
 function generate_uuid() {
     return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
@@ -12,41 +16,42 @@ function generate_uuid() {
 }
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    // Validate user inputs (you can expand these validations)
     $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
     $password = $_POST['password'];
     $role = $_POST['role'];
 
-    // Basic validation (you can expand this)
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        echo "Invalid email format.";
+        echo "Formato de email inválido.";
         exit;
     }
 
     if (empty($password)) {
-        echo "Password cannot be empty.";
+        echo "La contraseña no puede estar vacía.";
         exit;
     }
 
-    // Hash the password
     $password_hash = password_hash($password, PASSWORD_DEFAULT);
-
-    // Generate a UUID for the new user
     $uuid = generate_uuid();
 
-    // Prepare and execute the insert query
     $stmt = $conn->prepare("INSERT INTO Users (id, email, password_hash, role) VALUES (?, ?, ?, ?)");
+
+    if (!$stmt) {
+        die("Error al preparar la consulta: " . $conn->error);
+    }
+
     $stmt->bind_param("ssss", $uuid, $email, $password_hash, $role);
 
     if ($stmt->execute()) {
-        // Optionally, redirect after successful registration
-        header('Location: login.html'); // Redirect to login page or another appropriate page
+        header('Location: /public/login.html');
         exit;
     } else {
-        echo "Error: " . $stmt->error;
+        if ($stmt->errno === 1062) {
+            echo "Este correo ya está registrado. Por favor intenta con otro.";
+        } else {
+            echo "Error al insertar en la base de datos: " . $stmt->error;
+        }
     }
 
-    // Close the statement
     $stmt->close();
 }
 ?>
