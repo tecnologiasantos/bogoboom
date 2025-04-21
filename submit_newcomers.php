@@ -3,20 +3,11 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Start the session
+// Start the session (you can remove this if you're not using sessions)
 session_start();
-
-// Check if the user is logged in
-if (!isset($_SESSION['user_id'])) {
-    die("Error: User is not logged in.");
-}
 
 // Include the DB connection
 require '/var/www/html/bogoboom_project/safe/db_connection.php'; 
-
-// Retrieve the logged-in user's ID
-$user_id = $_SESSION['user_id'];
-$created_by = $user_id;  // Assuming the creator of the profile is the logged-in user
 
 // Retrieve and sanitize form data
 $fullname = isset($_POST['fullname']) ? mysqli_real_escape_string($conn, trim($_POST['fullname'])) : '';
@@ -60,8 +51,8 @@ if (isset($_FILES['document']) && $_FILES['document']['error'] == 0) {
 }
 
 // SQL query to insert data into the Newcomers table
-$query = "INSERT INTO Newcomers (id, user_id, full_name, email, phone, country, city_of_contract, arrival_date, preferences, languages, document, allow_contact, created_by, uploaded_documents, housing_budget) 
-          VALUES ('$id', '$user_id', '$fullname', '$email', '$phone', '$country', '$city_of_contract', '$arrival_date', '$preferences', '$languages', '$document', '$allow_contact', '$created_by', '$uploaded_documents', '$housing_budget')";
+$query = "INSERT INTO Newcomers (id, full_name, email, phone, country, city_of_contract, arrival_date, preferences, languages, document, allow_contact) 
+          VALUES ('$id', '$fullname', '$email', '$phone', '$country', '$city_of_contract', '$arrival_date', '$preferences', '$languages', '$document', '$allow_contact')";
 
 // Execute the query using the database connection
 if (mysqli_query($conn, $query)) {
