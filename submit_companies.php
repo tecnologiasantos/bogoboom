@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Prepare and execute insert
     $stmt = $conn->prepare("INSERT INTO companies 
-        (company_name, email, phone, contact_person, address, website, industry, data_consent, registration_date) 
+        (name, email, phone, contact_person, address, website, industry, allow_agency_contact, created_at) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())");
 
     if (!$stmt) {
