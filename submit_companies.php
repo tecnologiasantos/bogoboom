@@ -20,33 +20,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $company_industry = trim($_POST['company_industry']);
     $dataConsent = isset($_POST['dataConsent']) ? 1 : 0;
 
-    // Prepare and execute insert
-    $stmt = $conn->prepare("INSERT INTO companies 
-        (name, email, phone, contact_person, address, website, industry, allow_agency_contact, created_at) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())");
+    // Generate UUID for the company id (you can use uniqid() or a library like RAMSEY\UUID)
+    $company_id = uniqid('comp_', true); // You can use a better UUID library if needed
 
-    if (!$stmt) {
-        die("Prepare failed: " . $conn->error);
-    }
+    // Prepare the insert query
+    $query = "INSERT INTO companies 
+        (id, name, email, phone, contact_person, address, website, industry, allow_agency_contact, created_at) 
+        VALUES ('$company_id', '$company_name', '$company_email', '$company_phone', '$responsible_name', '$company_address', '$company_website', '$company_industry', '$dataConsent', NOW())";
 
-    $stmt->bind_param("sssssssi", 
-        $company_name, 
-        $company_email, 
-        $company_phone, 
-        $responsible_name, 
-        $company_address, 
-        $company_website, 
-        $company_industry, 
-        $dataConsent
-    );
-
-    if ($stmt->execute()) {
+    // Execute the query using the database connection
+    if (mysqli_query($conn, $query)) {
         echo "✅ Company registered successfully.";
     } else {
-        echo "❌ Database error: " . $stmt->error;
+        echo "❌ Error: " . mysqli_error($conn);
     }
-
-    $stmt->close();
 }
 
 $conn->close();
