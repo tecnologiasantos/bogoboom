@@ -1,67 +1,52 @@
 <?php
-require 'vendor/autoload.php';
-use Aws\S3\S3Client;
-use Aws\Exception\AwsException;
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-$bucket = 'tecnologiasantos-mira';
-$region = 'us-east-1';
-$folder = 'companies/documents/';
+// Start session if needed
+session_start();
 
-$host = 'localhost';
-$db = 'bogoboom_db';
-$user = 'bogoboom_user';
-$pass = 'Gottmitmir2025!';
+// Securely include DB connection
+require '/var/www/html/bogoboom_project/safe/db_connection.php';
 
-$conn = new mysqli($host, $user, $pass, $db);
-if ($conn->connect_error) {
-    die("DB connection failed: " . $conn->connect_error);
-}
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Sanitize and collect inputs
+    $company_name = trim($_POST['company_name']);
+    $company_email = trim($_POST['company_email']);
+    $company_phone = trim($_POST['company_phone']);
+    $responsible_name = trim($_POST['responsible_name']);
+    $company_address = trim($_POST['company_address']);
+    $company_website = trim($_POST['company_website']);
+    $company_industry = trim($_POST['company_industry']);
+    $dataConsent = isset($_POST['dataConsent']) ? 1 : 0;
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (isset($_FILES['document']) && $_FILES['document']['error'] == 0) {
-        $file = $_FILES['document'];
-        $filename = basename($file['name']);
-        $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-        $allowed = ['pdf', 'docx'];
+    // Prepare and execute insert
+    $stmt = $conn->prepare("INSERT INTO companies 
+        (company_name, email, phone, contact_person, address, website, industry, data_consent, registration_date) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())");
 
-        if (!in_array($extension, $allowed)) {
-            die("Only PDF and DOCX files are allowed.");
-        }
-
-        $s3 = new S3Client([
-            'version' => 'latest',
-            'region'  => $region,
-        ]);
-
-        $key = $folder . time() . '-' . $filename;
-
-        try {
-            $s3->putObject([
-                'Bucket' => $bucket,
-                'Key'    => $key,
-                'SourceFile' => $file['tmp_name'],
-                'ACL'    => 'private',
-            ]);
-        } catch (AwsException $e) {
-            die('Upload error: ' . $e->getMessage());
-        }
-
-        $stmt = $conn->prepare("INSERT INTO companies (company_name, contact_person, email, phone, website, document_path, registration_date) VALUES (?, ?, ?, ?, ?, ?, NOW())");
-        $stmt->bind_param("ssssss", 
-            $_POST['company_name'], $_POST['contact_person'], $_POST['email'], 
-            $_POST['phone'], $_POST['website'], $key
-        );
-
-        if ($stmt->execute()) {
-            echo "Company registered successfully.";
-        } else {
-            echo "DB error: " . $stmt->error;
-        }
-
-        $stmt->close();
-    } else {
-        echo "Please upload a valid document.";
+    if (!$stmt) {
+        die("Prepare failed: " . $conn->error);
     }
+
+    $stmt->bind_param("sssssssi", 
+        $company_name, 
+        $company_email, 
+        $company_phone, 
+        $responsible_name, 
+        $company_address, 
+        $company_website, 
+        $company_industry, 
+        $dataConsent
+    );
+
+    if ($stmt->execute()) {
+        echo "✅ Company registered successfully.";
+    } else {
+        echo "❌ Database error: " . $stmt->error;
+    }
+
+    $stmt->close();
 }
 
 $conn->close();
