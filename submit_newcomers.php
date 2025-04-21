@@ -24,12 +24,6 @@ $email = isset($_POST['email']) ? mysqli_real_escape_string($conn, trim($_POST['
 $phone = isset($_POST['phone']) ? mysqli_real_escape_string($conn, trim($_POST['phone'])) : '';
 $country = isset($_POST['country']) ? mysqli_real_escape_string($conn, trim($_POST['country'])) : '';
 $languages = isset($_POST['languages']) ? mysqli_real_escape_string($conn, trim($_POST['languages'])) : '';
-$budget = isset($_POST['budget']) ? (float)$_POST['budget'] : 0.00;
-$allow_contact = isset($_POST['allow_contact']) ? 1 : 0;  // Assuming checkbox for allow_contact
-$city_of_contract = isset($_POST['city_of_contract']) ? mysqli_real_escape_string($conn, trim($_POST['city_of_contract'])) : ''; 
-$arrival_date = isset($_POST['arrival_date']) && $_POST['arrival_date'] != '' ? mysqli_real_escape_string($conn, $_POST['arrival_date']) : null; 
-$preferences = isset($_POST['preferences']) ? json_encode($_POST['preferences']) : ''; // Encode preferences as JSON
-
 // Generate a unique ID for the newcomer
 $id = uniqid('', true);
 
