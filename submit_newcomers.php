@@ -57,7 +57,7 @@ $query = "INSERT INTO Newcomers (id, full_name, email, phone, country, languages
 
 // Execute the query using the database connection
 if (mysqli_query($conn, $query)) {
-    echo "Newcomer registered successfully!";
+    echo "✅ Company registered successfully.";
 } else {
     echo "Error: " . mysqli_error($conn);
 }
