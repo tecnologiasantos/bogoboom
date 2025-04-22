@@ -11,28 +11,27 @@ require '/var/www/html/bogoboom_project/safe/db_connection.php';
 
 // Retrieve and sanitize form data
 $agency_name = isset($_POST['agency_name']) ? mysqli_real_escape_string($conn, trim($_POST['agency_name'])) : '';
-$agent_name = isset($_POST['agent_name']) ? mysqli_real_escape_string($conn, trim($_POST['agent_name'])) : '';
-$email = isset($_POST['email']) ? mysqli_real_escape_string($conn, trim($_POST['email'])) : '';
-$phone = isset($_POST['phone']) ? mysqli_real_escape_string($conn, trim($_POST['phone'])) : '';
-$region = isset($_POST['region']) ? mysqli_real_escape_string($conn, trim($_POST['region'])) : '';
+$location = isset($_POST['location']) ? mysqli_real_escape_string($conn, trim($_POST['location'])) : '';
+$description = isset($_POST['description']) ? mysqli_real_escape_string($conn, trim($_POST['description'])) : '';
+$subscription_status = isset($_POST['subscription_status']) ? mysqli_real_escape_string($conn, trim($_POST['subscription_status'])) : 'inactive'; // Default value
 
-// Generate a unique ID for the agency registration (you can adjust this depending on the use case)
-$registration_id = uniqid('', true);
+// Generate a unique ID for the agency registration
+$agency_id = uniqid('', true);
 
 // Handle file upload if there is a document uploaded
 $document = null;
 if (isset($_FILES['document']) && $_FILES['document']['error'] == 0) {
     // Define the absolute file upload directory
     $uploadDir = '/var/www/html/bogoboom_project/uploads/temp_files/';
-    
+
     // Ensure the directory exists
     if (!file_exists($uploadDir)) {
         mkdir($uploadDir, 0777, true);  // Create the directory if it doesn't exist
     }
-    
+
     // Set the path to where the uploaded file will be moved
     $uploadFile = $uploadDir . basename($_FILES['document']['name']);
-    
+
     // Validate file type (optional)
     $allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
     $fileType = mime_content_type($_FILES['document']['tmp_name']);
@@ -51,13 +50,13 @@ if (isset($_FILES['document']) && $_FILES['document']['error'] == 0) {
     }
 }
 
-// SQL query to insert data into the real_estate table (updated to match the form)
-$query = "INSERT INTO real_estate (registration_id, agency_name, agent_name, email, phone, region, document_path, registration_date) 
-          VALUES ('$registration_id', '$agency_name', '$agent_name', '$email', '$phone', '$region', '$document', NOW())";
+// SQL query to insert data into the agencies table (updated to match the form)
+$query = "INSERT INTO agencies (id, name, location, description, subscription_status, created_at) 
+          VALUES ('$agency_id', '$agency_name', '$location', '$description', '$subscription_status', NOW())";
 
 // Execute the query using the database connection
 if (mysqli_query($conn, $query)) {
-    echo "✅ Company registered successfully.";
+    echo "✅ Agency registered successfully.";
 } else {
     echo "Error: " . mysqli_error($conn);
 }
