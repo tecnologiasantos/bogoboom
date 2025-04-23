@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $company_id = uniqid('comp_', true); // You can use a better UUID library if needed
 
     // Prepare the insert query
-    $query = "INSERT INTO companies 
+    $query = "INSERT INTO Companies 
         (id, name, email, phone, contact_person, address, website, industry, allow_agency_contact, created_at) 
         VALUES ('$company_id', '$company_name', '$company_email', '$company_phone', '$responsible_name', '$company_address', '$company_website', '$company_industry', '$dataConsent', NOW())";
 
