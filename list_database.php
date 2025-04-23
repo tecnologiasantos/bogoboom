@@ -6,9 +6,9 @@ error_reporting(E_ALL);
 // DB connection
 require '/var/www/html/bogoboom_project/safe/db_connection.php';
 
-// List of tables to fetch data from (with correct capitalization)
+// List of tables to fetch data from
 $tables = [
-    "Newcomers", "agencies", "companies", "devices"  // Added "devices" table for recursion example
+    "Newcomers", "Agencies", "Companies"
 ];
 
 echo "<!DOCTYPE html><html lang='en'><head>";
@@ -76,36 +76,6 @@ echo "<style>
       background-color: #004a8f;
       color: white;
     }
-    .card-container {
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      flex-wrap: wrap;
-      margin-top: 2rem;
-    }
-    .card {
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      padding: 1.5rem;
-      width: 250px;
-    }
-    .card h3 {
-      color: #004a8f;
-    }
-    .card p {
-      font-size: 0.95rem;
-      color: #333;
-    }
-    .card a {
-      display: inline-block;
-      margin-top: 1rem;
-      text-decoration: none;
-      color: white;
-      background-color: #004a8f;
-      padding: 0.5rem 1rem;
-      border-radius: 4px;
-    }
     footer {
       margin-top: 2rem;
       text-align: center;
@@ -152,7 +122,6 @@ foreach ($tables as $table) {
             }
             echo "</tr></thead><tbody>";
 
-            // Recursively handle devices (or other hierarchical data)
             while ($row = $result->fetch_assoc()) {
                 echo "<tr>";
                 foreach ($row as $col) {
@@ -160,15 +129,6 @@ foreach ($tables as $table) {
                     echo "<td>$display</td>";
                 }
                 echo "</tr>";
-
-                // Handle recursive structure (e.g., devices with parent-child relationship)
-                if ($table == "devices") {
-                    $parent_id = $row['parent_id'] ?? null;
-                    if ($parent_id) {
-                        echo "<tr><td colspan='" . count($row) . "'><strong>Child Device (Parent ID: $parent_id)</strong></td></tr>";
-                        displayChildDevices($parent_id, $conn);
-                    }
-                }
             }
 
             echo "</tbody></table>";
@@ -194,20 +154,4 @@ echo "<footer>
 $conn->close();
 
 echo "</body></html>";
-
-// Recursive function to display child devices
-function displayChildDevices($parent_id, $conn) {
-    $query = "SELECT * FROM devices WHERE parent_id = $parent_id";
-    $result = $conn->query($query);
-
-    if ($result && $result->num_rows > 0) {
-        echo "<table><thead><tr><th>Child Device</th><th>Details</th></tr></thead><tbody>";
-        while ($row = $result->fetch_assoc()) {
-            echo "<tr><td>" . htmlspecialchars($row['device_name']) . "</td><td>" . htmlspecialchars($row['device_details']) . "</td></tr>";
-        }
-        echo "</tbody></table>";
-    } else {
-        echo "<tr><td colspan='2'>No child devices found.</td></tr>";
-    }
-}
 ?>
