@@ -11,7 +11,7 @@
       padding: 0;
       background: #f5f5f5;
     }
-    /* Logo styles */
+
     .image-container,
     .image-container-right {
       position: fixed;
@@ -66,14 +66,9 @@
       color: #004a8f;
       margin-bottom: 1rem;
     }
-    section form {
-      display: grid;
-      gap: 1rem;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-    section form div {
-      margin-bottom: 1.5rem;
+    .option-button {
+      text-align: center;
+      margin-top: 1rem;
     }
     label {
       font-weight: bold;
@@ -101,15 +96,23 @@
     button:hover {
       background-color: #003c6e;
     }
+    .social-login-buttons {
+      margin-top: 1.5rem;
+      text-align: center;
+    }
+    .social-login-buttons a {
+      display: inline-block;
+      margin: 0.5rem;
+    }
+    .social-login-buttons button {
+      width: auto;
+      padding: 0.6rem 1.2rem;
+    }
     footer {
       margin-top: 2rem;
       text-align: center;
       font-size: 0.9rem;
       color: #666;
-    }
-    .option-button {
-      text-align: center;
-      margin-top: 1rem;
     }
   </style>
 </head>
@@ -148,8 +151,21 @@
           <button>🔑 Login</button>
         </a>
       </div>
-    </section>
 
+      <!-- Social login options -->
+      <div class="social-login-buttons">
+        <p>Or sign in with your social account:</p>
+        <a href="/backend/auth/social_login.php?provider=Google&role=newcomer">
+          <button>🔗 Sign in with Google</button>
+        </a>
+        <a href="/backend/auth/social_login.php?provider=Facebook&role=newcomer">
+          <button>🔗 Sign in with Facebook</button>
+        </a>
+        <a href="/backend/auth/social_login.php?provider=LinkedIn&role=newcomer">
+          <button>🔗 Sign in with LinkedIn</button>
+        </a>
+      </div>
+    </section>
   </main>
 
   <footer>
