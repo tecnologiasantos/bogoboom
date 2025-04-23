@@ -111,6 +111,18 @@
       text-align: center;
       margin-top: 1rem;
     }
+    .social-login-buttons {
+      margin-top: 1.5rem;
+      text-align: center;
+    }
+    .social-login-buttons a {
+      display: inline-block;
+      margin: 0.5rem;
+    }
+    .social-login-buttons button {
+      width: auto;
+      padding: 0.6rem 1.2rem;
+    }
   </style>
 </head>
 <body>
@@ -146,6 +158,20 @@
       <div class="option-button">
         <a href="/login.html">
           <button>🔑 Login</button>
+        </a>
+      </div>
+
+      <!-- Social login options -->
+      <div class="social-login-buttons">
+        <p>Or sign in with your social account:</p>
+        <a href="/backend/auth/social_login.php?provider=Google&role=company">
+          <button>🔗 Sign in with Google</button>
+        </a>
+        <a href="/backend/auth/social_login.php?provider=Facebook&role=company">
+          <button>🔗 Sign in with Facebook</button>
+        </a>
+        <a href="/backend/auth/social_login.php?provider=LinkedIn&role=company">
+          <button>🔗 Sign in with LinkedIn</button>
         </a>
       </div>
     </section>
