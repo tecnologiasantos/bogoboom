@@ -10,9 +10,9 @@ session_start();
 require '/var/www/html/bogoboom_project/safe/db_connection.php'; 
 
 // Retrieve and sanitize form data
-$agency_name = isset($_POST['agency_name']) ? mysqli_real_escape_string($conn, trim($_POST['agency_name'])) : '';
-$location = isset($_POST['location']) ? mysqli_real_escape_string($conn, trim($_POST['location'])) : '';
-$description = isset($_POST['description']) ? mysqli_real_escape_string($conn, trim($_POST['description'])) : '';
+$agency_name = isset($_POST['company_name']) ? mysqli_real_escape_string($conn, trim($_POST['company_name'])) : '';
+$location = isset($_POST['company_address']) ? mysqli_real_escape_string($conn, trim($_POST['company_address'])) : '';
+$description = isset($_POST['responsible_name']) ? mysqli_real_escape_string($conn, trim($_POST['responsible_name'])) : '';
 $subscription_status = isset($_POST['subscription_status']) ? mysqli_real_escape_string($conn, trim($_POST['subscription_status'])) : 'inactive'; // Default value
 
 // Generate a unique ID for the agency registration
@@ -20,7 +20,7 @@ $agency_id = uniqid('', true);
 
 // Handle file upload if there is a document uploaded
 $document = null;
-if (isset($_FILES['document']) && $_FILES['document']['error'] == 0) {
+if (isset($_FILES['company_document']) && $_FILES['company_document']['error'] == 0) {
     // Define the absolute file upload directory
     $uploadDir = '/var/www/html/bogoboom_project/uploads/temp_files/';
 
@@ -30,15 +30,15 @@ if (isset($_FILES['document']) && $_FILES['document']['error'] == 0) {
     }
 
     // Set the path to where the uploaded file will be moved
-    $uploadFile = $uploadDir . basename($_FILES['document']['name']);
+    $uploadFile = $uploadDir . basename($_FILES['company_document']['name']);
 
     // Validate file type (optional)
     $allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-    $fileType = mime_content_type($_FILES['document']['tmp_name']);
+    $fileType = mime_content_type($_FILES['company_document']['tmp_name']);
 
     if (in_array($fileType, $allowedTypes)) {
         // Move the uploaded file
-        if (move_uploaded_file($_FILES['document']['tmp_name'], $uploadFile)) {
+        if (move_uploaded_file($_FILES['company_document']['tmp_name'], $uploadFile)) {
             $document = $uploadFile; // Store file path in the database
         } else {
             echo "Error: Could not upload the document.";
