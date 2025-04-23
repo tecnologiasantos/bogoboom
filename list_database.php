@@ -6,9 +6,11 @@ error_reporting(E_ALL);
 // DB connection
 require '/var/www/html/bogoboom_project/safe/db_connection.php';
 
-// List of tables to fetch data from
+// List of all tables in your schema
 $tables = [
-    "Newcomers", "Agencies", "Companies"
+    "users", "companies", "hr_profiles", "newcomers", "agencies", "agency_profiles",
+    "properties", "favorites", "subscriptions", "notifications", "messages",
+    "uploads", "downloads", "audit_logs"
 ];
 
 echo "<!DOCTYPE html><html lang='en'><head>";
@@ -47,7 +49,7 @@ echo "<style>
       padding: 1.5rem;
       border-radius: 8px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      overflow-x: auto; /* Allows horizontal scrolling if content overflows */
+      overflow-x: auto;
     }
     section h3 {
       color: #004a8f;
@@ -63,8 +65,8 @@ echo "<style>
       border-collapse: collapse;
       margin-top: 1.5rem;
       background-color: #fff;
-      table-layout: fixed; /* Prevents wide columns */
-      overflow-wrap: break-word; /* Ensures long words break into the next line */
+      table-layout: fixed;
+      overflow-wrap: break-word;
     }
     table th, table td {
       padding: 1rem;
@@ -106,13 +108,11 @@ foreach ($tables as $table) {
     echo "<section>
             <h3>Records from $table</h3>";
 
-    // Check if the table exists before querying
     $check_table_query = "SHOW TABLES LIKE '$table'";
     $check_result = $conn->query($check_table_query);
 
     if ($check_result && $check_result->num_rows > 0) {
-        // Table exists, proceed with the query
-        $query = "SELECT * FROM $table";
+        $query = "SELECT * FROM $table LIMIT 100"; // Optional: add LIMIT to prevent overload
         $result = $conn->query($query);
 
         if ($result && $result->num_rows > 0) {
