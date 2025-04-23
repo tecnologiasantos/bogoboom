@@ -52,7 +52,7 @@ if (isset($_FILES['document']) && $_FILES['document']['error'] == 0) {
 }
 
 // SQL query to insert data into the Newcomers table (updated to match the form)
-$query = "INSERT INTO Newcomers (id, full_name, email, phone, country, languages, document) 
+$query = "INSERT INTO newcomers (id, full_name, email, phone, country, languages, document) 
           VALUES ('$id', '$fullname', '$email', '$phone', '$country', '$languages', '$document')";
 
 // Execute the query using the database connection
