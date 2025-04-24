@@ -182,11 +182,19 @@
   </footer>
 
   <script>
-    // Fetch country list from external API (Restcountries)
     fetch('https://restcountries.com/v3.1/all')
       .then(response => response.json())
       .then(data => {
         const countrySelect = document.getElementById('country');
+
+        // Sort countries by name
+        data.sort((a, b) => {
+          const nameA = a.name.common.toUpperCase();
+          const nameB = b.name.common.toUpperCase();
+          return nameA.localeCompare(nameB);
+        });
+
+        // Add sorted countries to the select dropdown
         data.forEach(country => {
           const option = document.createElement('option');
           option.value = country.name.common;
