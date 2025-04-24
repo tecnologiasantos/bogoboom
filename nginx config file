@@ -1,6 +1,6 @@
 server {
     listen 80;
-    server_name 15.229.154.73;
+    server_name bogoboom.com www.bogoboom.com;
 
     # Root folder for public files like HTML, CSS, JS, images
     root /var/www/html/bogoboom_project/public;
