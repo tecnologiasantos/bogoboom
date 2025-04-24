@@ -15,6 +15,17 @@ $email = isset($_POST['email']) ? mysqli_real_escape_string($conn, trim($_POST['
 $phone = isset($_POST['phone']) ? mysqli_real_escape_string($conn, trim($_POST['phone'])) : '';
 $country = isset($_POST['country']) ? mysqli_real_escape_string($conn, trim($_POST['country'])) : '';
 $languages = isset($_POST['languages']) ? mysqli_real_escape_string($conn, trim($_POST['languages'])) : '';
+$password = isset($_POST['password']) ? $_POST['password'] : '';
+$confirm_password = isset($_POST['confirm_password']) ? $_POST['confirm_password'] : '';
+
+// Check if passwords match
+if ($password !== $confirm_password) {
+    echo "❌ Passwords do not match. Please try again.";
+    exit;
+}
+
+// Hash the password before storing it (use password_hash for better security)
+$password_hash = password_hash($password, PASSWORD_DEFAULT);
 
 // Generate a unique ID for the newcomer
 $id = uniqid('', true);
@@ -55,10 +66,18 @@ if (isset($_FILES['document']) && $_FILES['document']['error'] == 0) {
 $query = "INSERT INTO newcomers (id, full_name, email, phone, country, languages, document) 
           VALUES ('$id', '$fullname', '$email', '$phone', '$country', '$languages', '$document')";
 
-// Execute the query using the database connection
-if (mysqli_query($conn, $query)) {
-    echo "✅ Company registered successfully.";
+// Insert password hash into users table
+$query_user = "INSERT INTO users (id, email, password_hash, role) 
+               VALUES ('$id', '$email', '$password_hash', 'newcomer')";
+
+// Execute the queries using the database connection
+if (mysqli_query($conn, $query_user)) {
+    if (mysqli_query($conn, $query)) {
+        echo "✅ Newcomer registered successfully.";
+    } else {
+        echo "Error inserting into newcomers table: " . mysqli_error($conn);
+    }
 } else {
-    echo "Error: " . mysqli_error($conn);
+    echo "Error inserting into users table: " . mysqli_error($conn);
 }
 ?>
