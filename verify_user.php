@@ -1,5 +1,5 @@
 <?php
-require_once('../backend/config/db_connection.php'); // Update this path to your actual DB connection script
+require '/var/www/html/bogoboom_project/safe/db_connection.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
