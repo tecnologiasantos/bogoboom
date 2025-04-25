@@ -19,6 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $company_address = trim($_POST['company_address']);
     $company_password = $_POST['company_password'];
     $confirm_password = $_POST['confirm_password'];
+    $dataConsent = isset($_POST['dataConsent']) ? 1 : 0;  // Handling the consent checkbox
 
     // Check if passwords match
     if ($company_password !== $confirm_password) {
@@ -28,6 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Generate a unique ID for the agency registration
     $agency_id = uniqid('', true);
+    $user_id = uniqid('', true); // Unique ID for the user as well
 
     // Handle file upload if there is a document uploaded
     $document = null;
@@ -61,13 +63,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // SQL query to insert data into the agencies table (updated to match the form)
-    $query = "INSERT INTO agencies (id, name, email, phone, location, responsible_name, password, document, created_at) 
-              VALUES ('$agency_id', '$agency_name', '$company_email', '$company_phone', '$company_address', '$responsible_name', '" . password_hash($company_password, PASSWORD_DEFAULT) . "', '$document', NOW())";
+    // Hash the password before storing
+    $hashed_password = password_hash($company_password, PASSWORD_DEFAULT);
 
-    // Execute the query using the database connection
-    if (mysqli_query($conn, $query)) {
-        echo "✅ Agency registered successfully.";
+    // SQL query to insert data into the agencies table (updated to match the form and table schema)
+    $query_agency = "INSERT INTO agencies (id, company_name, company_email, company_phone, responsible_name, company_address, company_password_hash, company_document, data_consent, created_at) 
+                     VALUES ('$agency_id', '$agency_name', '$company_email', '$company_phone', '$responsible_name', '$company_address', '$hashed_password', '$document', '$dataConsent', NOW())";
+
+    // SQL query to insert data into the users table (adjusted to match your schema)
+    $query_user = "INSERT INTO users (id, email, password_hash, created_at) 
+                   VALUES ('$user_id', '$company_email', '$hashed_password', NOW())";
+
+    // Execute both queries using the database connection
+    if (mysqli_query($conn, $query_agency) && mysqli_query($conn, $query_user)) {
+        echo "✅ Agency and User registered successfully.";
     } else {
         echo "Error: " . mysqli_error($conn);
     }
