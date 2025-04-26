@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // SQL query to insert data into the users table (corrected to add role)
     $query_user = "INSERT INTO users (id, email, password_hash, role, created_at) 
-                   VALUES ('$user_id', '$company_email', '$hashed_password', 'agency', NOW())";
+                   VALUES ('$user_id', '$company_email', '$hashed_password', 'agencies', NOW())";
 
     // Execute both queries using the database connection
     if (mysqli_query($conn, $query_agency) && mysqli_query($conn, $query_user)) {
