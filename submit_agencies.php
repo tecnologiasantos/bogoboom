@@ -70,9 +70,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $query_agency = "INSERT INTO agencies (id, company_name, company_email, company_phone, responsible_name, company_address, company_password_hash, company_document, data_consent, created_at) 
                      VALUES ('$agency_id', '$agency_name', '$company_email', '$company_phone', '$responsible_name', '$company_address', '$hashed_password', '$document', '$dataConsent', NOW())";
 
-    // SQL query to insert data into the users table (adjusted to match your schema)
-    $query_user = "INSERT INTO users (id, email, password_hash, created_at) 
-                   VALUES ('$user_id', '$company_email', '$hashed_password', NOW())";
+    // SQL query to insert data into the users table (corrected to add role)
+    $query_user = "INSERT INTO users (id, email, password_hash, role, created_at) 
+                   VALUES ('$user_id', '$company_email', '$hashed_password', 'agency', NOW())";
 
     // Execute both queries using the database connection
     if (mysqli_query($conn, $query_agency) && mysqli_query($conn, $query_user)) {
