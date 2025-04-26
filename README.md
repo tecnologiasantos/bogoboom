@@ -7,56 +7,79 @@ Welcome to the **Bogoboom** project! Below is the organized folder structure for
 ## **🗂️ Project Folder Structure**
 
 ```plaintext
-/bogoboom_project
-├── /public/                         # Publicly accessible HTML files
-│   ├── index.html                   # Home page for the platform
-│   ├── register.html                # Newcomer registration form
-│   ├── real_estate_company.html     # Real estate company details page
-│   ├── register_newcomers.html      # Newcomer registration form
-│   ├── company_hiring.html          # HR team hiring page
-│   ├── privacy_policy.html          # Privacy policy page
-│   └── /api/                         # API endpoints for form submissions
-│       ├── submit_companies.php      # Handle company submissions
-│       ├── submit_real_estate.php    # Handle real estate agency submissions
-│       └── submit_newcomers.php      # Handle newcomer submissions
-│   └── whoami.html                  # User info page
-│
-├── /backend/                         # Backend logic and API
-│   ├── /auth/
-│   │   ├── register.php              # Handles user account registration
-│   │   ├── login.php                 # Login logic
-│   │   └── logout.php                # Logout logic
-│   │
-│   ├── /profiles/
-│   │   ├── testconnection.php       # Test DB connection
-│   │   ├── submit_companies.php      # Final submission of HR/company
-│   │   ├── submit_real_estate.php    # Final submission of real estate agency
-│   │   └── submit_newcomers.php      # Final submission of newcomer profile
-│   │
-│   ├── /utils/
-│   │   
-│   │   
-│   │
-│   ├── /middleware/
-│   │   └── validate_input.php        # Optional form validation logic
-│   │
-│   ├── /notifications/
-│   │   └── send_notification.php     # Optional: alerts/messages/emails
-│   │
-│   └── /config/
-│       └── constants.php             # Constants (e.g., S3 bucket, DB credentials)
-│
-├── /uploads/
-│   └── /temp_files/                  # Used only if not fully relying on S3
-│       └──                           # Example uploaded file
-│
-├── /safe/                            # Safe directory (for sensitive files)
-│        ├── db_connection.php         # ✅ USE THIS: Central DB connection
-├── /logs/
-│   └── error.log                     # Logs for debugging and audits
-│
-├── /assets/                          # Static assets
-│
-├── .env                              # Environment variables for configuration
-├── .gitignore                       # Ignore sensitive/system files
-└── README.md                        # Project documentation (optional)
+/var/www/html/bogoboom_project
+├── backend
+│   ├── auth
+│   │   ├── login.php/     (empty directory)
+│   │   ├── logout.php/    (empty directory)
+│   │   └── register.php
+│   ├── config
+│   │   └── constants.php/ (empty directory)
+│   ├── middleware
+│   │   └── validate_input.php/ (empty directory)
+│   ├── notifications
+│   │   └── send_notification.php/ (empty directory)
+│   ├── profiles
+│   │   ├── composer.json
+│   │   ├── composer.lock
+│   │   ├── list_database.php
+│   │   ├── login.php
+│   │   ├── register.php
+│   │   ├── submint_newcomers.php
+│   │   ├── submit_agencies.php
+│   │   ├── submit_companies.php
+│   │   ├── submit_newcomers.php
+│   │   ├── testconnection.php
+│   │   ├── verify_user.php
+│   │   └── vendor
+│   │       ├── autoload.php
+│   │       ├── composer
+│   │       │   ├── (files like ClassLoader.php, InstalledVersions.php, etc.)
+│   │       └── hybridauth
+│   │           ├── hybridauth
+│   │           │   ├── CHANGELOG.md
+│   │           │   ├── CODE_OF_CONDUCT.md
+│   │           │   ├── CONTRIBUTING.md
+│   │           │   ├── COPYING.md
+│   │           │   ├── ISSUE_TEMPLATE.md
+│   │           │   ├── PULL_REQUEST_TEMPLATE.md
+│   │           │   ├── README.md
+│   │           │   ├── composer.json
+│   │           │   ├── phpunit.xml
+│   │           │   ├── examples
+│   │           │   │   ├── example_01.php
+│   │           │   │   ├── example_02.php
+│   │           │   │   ├── example_03.php
+│   │           │   │   ├── example_04.php
+│   │           │   │   ├── example_05.php
+│   │           │   │   ├── example_06/
+│   │           │   │   │   ├── callback.php
+│   │           │   │   │   ├── config.php
+│   │           │   │   │   └── index.php
+│   │           │   │   ├── example_07/
+│   │           │   │   │   ├── callback.php
+│   │           │   │   │   ├── config.php
+│   │           │   │   │   └── index.php
+│   │           │   │   └── index.html
+│   │           │   ├── src
+│   │           │   │   ├── Adapter/
+│   │           │   │   │   ├── AbstractAdapter.php, OAuth1.php, OAuth2.php, etc.
+│   │           │   │   ├── Data/
+│   │           │   │   ├── Exception/
+│   │           │   │   ├── HttpClient/
+│   │           │   │   ├── Logger/
+│   │           │   │   ├── Provider/
+│   │           │   │   ├── Storage/
+│   │           │   │   ├── Thirdparty/
+│   │           │   │   └── User/
+│   │           │   └── tests/
+│   │           │       └── (test files)
+│   │           └── index.html
+│   └── utils
+│       └── validate_input.php/ (empty directory)
+├── public
+│   └── (public-facing files, no detailed listing)
+├── safe
+│   └── (no detailed listing)
+└── uploads
+    └── (no detailed listing)
