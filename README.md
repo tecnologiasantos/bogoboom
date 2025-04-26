@@ -34,8 +34,8 @@ Welcome to the **Bogoboom** project! Below is the organized folder structure for
 │   │   └── submit_newcomers.php      # Final submission of newcomer profile
 │   │
 │   ├── /utils/
-│   │   ├── db_connection.php         # ✅ USE THIS: Central DB connection
-│   │   └── s3_upload.php             # Upload files to AWS S3
+│   │   
+│   │   
 │   │
 │   ├── /middleware/
 │   │   └── validate_input.php        # Optional form validation logic
@@ -48,10 +48,10 @@ Welcome to the **Bogoboom** project! Below is the organized folder structure for
 │
 ├── /uploads/
 │   └── /temp_files/                  # Used only if not fully relying on S3
-│       └── leidy.docx                # Example uploaded file
+│       └──                           # Example uploaded file
 │
 ├── /safe/                            # Safe directory (for sensitive files)
-│
+│        ├── db_connection.php         # ✅ USE THIS: Central DB connection
 ├── /logs/
 │   └── error.log                     # Logs for debugging and audits
 │
