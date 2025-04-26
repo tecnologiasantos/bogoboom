@@ -68,7 +68,7 @@ $query = "INSERT INTO newcomers (id, full_name, email, phone, country, languages
 
 // Insert password hash into users table
 $query_user = "INSERT INTO users (id, email, password_hash, role) 
-               VALUES ('$id', '$email', '$password_hash', 'newcomer')";
+               VALUES ('$id', '$email', '$password_hash', 'newcomers')";
 
 // Execute the queries using the database connection
 if (mysqli_query($conn, $query_user)) {
