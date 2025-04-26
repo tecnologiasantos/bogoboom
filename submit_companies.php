@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Prepare the insert query for the users table
     $query_user = "INSERT INTO users (id, email, password_hash, role) 
-                   VALUES ('$company_id', '$company_email', '$hashed_password', 'companies'; NOW())";
+                   VALUES ('$company_id', '$company_email', '$hashed_password', 'companies')";
 
     // Execute the company insert query
     if (mysqli_query($conn, $query)) {
@@ -59,3 +59,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $conn->close();
 ?>
+

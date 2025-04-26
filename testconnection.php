@@ -10,3 +10,4 @@ if ($conn->connect_error) {
 // Step 3: If the connection is successful, print a success message
 echo "Connected successfully";
 ?>
+
