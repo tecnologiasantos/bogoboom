@@ -11,13 +11,13 @@ require '/var/www/html/bogoboom_project/safe/db_connection.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Sanitize and collect inputs
-    $company_name = trim($_POST['company_name']);
-    $company_email = trim($_POST['company_email']);
-    $company_phone = trim($_POST['company_phone']);
-    $responsible_name = trim($_POST['responsible_name']);
-    $company_address = trim($_POST['company_address']);
-    $company_website = trim($_POST['company_website']);
-    $company_industry = trim($_POST['company_industry']);
+    $company_name = mysqli_real_escape_string($conn, trim($_POST['company_name']));
+    $company_email = mysqli_real_escape_string($conn, trim($_POST['company_email']));
+    $company_phone = mysqli_real_escape_string($conn, trim($_POST['company_phone']));
+    $responsible_name = mysqli_real_escape_string($conn, trim($_POST['responsible_name']));
+    $company_address = mysqli_real_escape_string($conn, trim($_POST['company_address']));
+    $company_website = mysqli_real_escape_string($conn, trim($_POST['company_website']));
+    $company_industry = mysqli_real_escape_string($conn, trim($_POST['company_industry']));
     $company_password = $_POST['company_password'];
     $confirm_password = $_POST['confirm_password'];
 
@@ -32,17 +32,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $dataConsent = isset($_POST['dataConsent']) ? 1 : 0;
 
-    // Generate UUID for the company id (you can use uniqid() or a library like RAMSEY\UUID)
-    $company_id = uniqid('comp_', true); // You can use a better UUID library if needed
+    // Generate UUID for the company id
+    $company_id = uniqid('comp_', true); // Unique company ID
 
-    // Prepare the insert query
+    // Prepare the insert query for the companies table
     $query = "INSERT INTO companies 
-        (id, name, email, phone, contact_person, address, website, industry, password, allow_agency_contact, created_at) 
-        VALUES ('$company_id', '$company_name', '$company_email', '$company_phone', '$responsible_name', '$company_address', '$company_website', '$company_industry', '$hashed_password', '$dataConsent', NOW())";
+        (id, company_name, company_email, company_phone, responsible_name, company_address, company_website, company_industry, company_password_hash, data_consent, allow_agency_contact, created_at) 
+        VALUES ('$company_id', '$company_name', '$company_email', '$company_phone', '$responsible_name', '$company_address', '$company_website', '$company_industry', '$hashed_password', '$dataConsent', 1, NOW())";
 
-    // Execute the query using the database connection
+    // Prepare the insert query for the users table
+    $query_user = "INSERT INTO users (id, email, password_hash, role) 
+                   VALUES ('$company_id', '$company_email', '$hashed_password', 'companies')";
+
+    // Execute the company insert query
     if (mysqli_query($conn, $query)) {
-        echo "✅ Company registered successfully.";
+        // Execute the user insert query if company insertion was successful
+        if (mysqli_query($conn, $query_user)) {
+            echo "✅ Company registered successfully.";
+        } else {
+            echo "❌ Error inserting into users table: " . mysqli_error($conn);
+        }
     } else {
         echo "❌ Error: " . mysqli_error($conn);
     }
