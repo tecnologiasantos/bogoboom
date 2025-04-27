@@ -144,8 +144,10 @@ foreach ($tables as $table => $fields) {
                 echo "<th>" . htmlspecialchars($field_labels[$field_name] ?? $field_name) . "</th>";
             }
 
-            // Add an extra column for "Action" buttons
-            echo "<th>Action</th>"; // Action column for Activate/Deactivate
+            // Add an extra column for "Action" buttons only for users table
+            if ($table === 'users') {
+                echo "<th>Action</th>"; // Action column for Activate/Deactivate
+            }
             echo "</tr></thead><tbody>";
 
             while ($row = $result->fetch_assoc()) {
