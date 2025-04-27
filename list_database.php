@@ -8,10 +8,10 @@ require '/var/www/html/bogoboom_project/safe/db_connection.php';
 
 // Tables and fields to display
 $tables = [
-    "users" => ["id", "email", "role", "status", "created_at"],
-    "companies" => ["id", "company_name AS name", "company_email AS email", "company_phone", "created_at"],
-    "agencies" => ["id", "company_name AS name", "company_email AS email", "company_phone", "created_at"],
-    "newcomers" => ["id", "full_name AS name", "email", "phone", "country", "created_at"]
+    "users" => ["id", "email", "role", "status", "created at"],
+    "companies" => ["id", "company_name AS name", "company_email AS email", "company phone", "created at"],
+    "agencies" => ["id", "company_name AS name", "company_email AS email", "company phone", "created at"],
+    "newcomers" => ["id", "full_name AS name", "email", "phone", "country", "created at"]
 ];
 
 // Start HTML
