@@ -6,16 +6,18 @@ error_reporting(E_ALL);
 // DB connection
 require '/var/www/html/bogoboom_project/safe/db_connection.php';
 
-// List of all tables in your schema
+// Tables and fields to display
 $tables = [
-    "users", "companies", "hr_profiles", "newcomers", "agencies", "agency_profiles",
-    "properties", "favorites", "subscriptions", "notifications", "messages",
-    "uploads", "downloads", "audit_logs"
+    "users" => ["id", "email", "role", "status", "created_at"],
+    "companies" => ["id", "company_name AS name", "company_email AS email", "company_phone", "created_at"],
+    "agencies" => ["id", "company_name AS name", "company_email AS email", "company_phone", "created_at"],
+    "newcomers" => ["id", "full_name AS name", "email", "phone", "country", "created_at"]
 ];
 
+// Start HTML
 echo "<!DOCTYPE html><html lang='en'><head>";
 echo "<meta charset='UTF-8' />";
-echo "<meta name='viewport' content='width=device-width, initial-scale=1.0'/>";
+echo "<meta name='viewport' content='width=device-width, initial-scale=1.0' />";
 echo "<title>Bogoboom | Database Viewer</title>";
 echo "<style>
     body {
@@ -101,10 +103,13 @@ echo "<header>
 
 echo "<main>
     <div class='intro'>
-        <p>Welcome to the database viewer for Bogoboom. Below are the records from different tables in our system.</p>
+        <p>Welcome to the database viewer for Bogoboom. Below are the records from selected tables.</p>
     </div>";
 
-foreach ($tables as $table) {
+// Loop through tables
+foreach ($tables as $table => $fields) {
+    $fieldList = implode(", ", $fields);
+
     echo "<section>
             <h3>Records from $table</h3>";
 
@@ -112,14 +117,18 @@ foreach ($tables as $table) {
     $check_result = $conn->query($check_table_query);
 
     if ($check_result && $check_result->num_rows > 0) {
-        $query = "SELECT * FROM $table LIMIT 100"; // Optional: add LIMIT to prevent overload
+        $query = "SELECT $fieldList FROM $table LIMIT 100";
         $result = $conn->query($query);
 
         if ($result && $result->num_rows > 0) {
             echo "<table><thead><tr>";
-            while ($field = $result->fetch_field()) {
+
+            // Get column names
+            $fieldsInfo = $result->fetch_fields();
+            foreach ($fieldsInfo as $field) {
                 echo "<th>" . htmlspecialchars($field->name) . "</th>";
             }
+
             echo "</tr></thead><tbody>";
 
             while ($row = $result->fetch_assoc()) {
@@ -155,4 +164,3 @@ $conn->close();
 
 echo "</body></html>";
 ?>
-
