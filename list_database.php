@@ -6,6 +6,20 @@ error_reporting(E_ALL);
 // DB connection
 require '/var/www/html/bogoboom_project/safe/db_connection.php';
 
+// Friendly field labels
+$field_labels = [
+    "id" => "ID",
+    "email" => "Email Address",
+    "role" => "User Role",
+    "status" => "Account Status",
+    "created_at" => "Creation Date",
+    "name" => "Name",
+    "company_email" => "Company Email",
+    "company_phone" => "Company Phone",
+    "phone" => "Phone Number",
+    "country" => "Country"
+];
+
 // Tables and fields to display
 $tables = [
     "users" => ["id", "email", "role", "status", "created_at"],
@@ -123,12 +137,15 @@ foreach ($tables as $table => $fields) {
         if ($result && $result->num_rows > 0) {
             echo "<table><thead><tr>";
 
-            // Get column names
+            // Get column names and apply friendly labels
             $fieldsInfo = $result->fetch_fields();
             foreach ($fieldsInfo as $field) {
-                echo "<th>" . htmlspecialchars($field->name) . "</th>";
+                $field_name = $field->name;
+                echo "<th>" . htmlspecialchars($field_labels[$field_name] ?? $field_name) . "</th>";
             }
 
+            // Add an extra column for "Action" buttons
+            echo "<th>Action</th>"; // Action column for Activate/Deactivate
             echo "</tr></thead><tbody>";
 
             while ($row = $result->fetch_assoc()) {
@@ -137,6 +154,21 @@ foreach ($tables as $table => $fields) {
                     $display = is_null($col) ? "NULL" : htmlspecialchars($col);
                     echo "<td>$display</td>";
                 }
+
+                // Add a button to activate/deactivate users in the "users" table
+                if ($table === 'users') {
+                    $user_id = $row['id'];
+                    $current_status = strtolower($row['status']);
+
+                    // If the status is 'active', show the deactivate button
+                    if ($current_status == 'active') {
+                        echo "<td><a href='toggle_user_status.php?id=$user_id&action=deactivate' style='color: red;'>Deactivate</a></td>";
+                    } else {
+                        // If the status is 'inactive', show the activate button
+                        echo "<td><a href='toggle_user_status.php?id=$user_id&action=activate' style='color: green;'>Activate</a></td>";
+                    }
+                }
+
                 echo "</tr>";
             }
 
