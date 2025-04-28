@@ -49,6 +49,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Execute the user insert query if company insertion was successful
         if (mysqli_query($conn, $query_user)) {
             echo "✅ Company registered successfully.";
+            // Redirect after 5 seconds
+            echo '<meta http-equiv="refresh" content="5;url=https://bogoboom.com">';
         } else {
             echo "❌ Error inserting into users table: " . mysqli_error($conn);
         }
@@ -59,4 +61,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $conn->close();
 ?>
-
