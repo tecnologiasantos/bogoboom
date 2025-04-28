@@ -76,9 +76,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Execute both queries using the database connection
     if (mysqli_query($conn, $query_agency) && mysqli_query($conn, $query_user)) {
-        echo "✅ Agency and User registered successfully.";
+        echo "✅ Agency registered successfully.";
         // Redirect after 5 seconds
-        echo '<meta http-equiv="refresh" content="5;url=https://boogobom.com">';
+        echo '<meta http-equiv="refresh" content="5;url=https://bogoboom.com">';
     } else {
         echo "Error: " . mysqli_error($conn);
     }
