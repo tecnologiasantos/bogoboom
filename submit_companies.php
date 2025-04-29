@@ -32,30 +32,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $dataConsent = isset($_POST['dataConsent']) ? 1 : 0;
 
-    // Generate UUID for the company id
-    $company_id = uniqid('comp_', true); // Unique company ID
+    // Generate UUID for both user and company (same id)
+    $company_id = uniqid('comp_', true); // Use UUID or a better unique id generator if needed
 
-    // Prepare the insert query for the companies table
-    $query = "INSERT INTO companies 
-        (id, company_name, company_email, company_phone, responsible_name, company_address, company_website, company_industry, company_password_hash, data_consent, allow_agency_contact, created_at) 
-        VALUES ('$company_id', '$company_name', '$company_email', '$company_phone', '$responsible_name', '$company_address', '$company_website', '$company_industry', '$hashed_password', '$dataConsent', 1, NOW())";
-
-    // Prepare the insert query for the users table
+    // 1️⃣ First Insert into users table
     $query_user = "INSERT INTO users (id, email, password_hash, role) 
                    VALUES ('$company_id', '$company_email', '$hashed_password', 'companies')";
 
-    // Execute the company insert query
-    if (mysqli_query($conn, $query)) {
-        // Execute the user insert query if company insertion was successful
-        if (mysqli_query($conn, $query_user)) {
+    if (mysqli_query($conn, $query_user)) {
+        // 2️⃣ Then Insert into companies table
+        $query = "INSERT INTO companies 
+            (id, user_id, company_name, company_email, company_phone, responsible_name, company_address, company_website, company_industry, company_password_hash, data_consent, allow_agency_contact, created_at) 
+            VALUES ('$company_id', '$company_id', '$company_name', '$company_email', '$company_phone', '$responsible_name', '$company_address', '$company_website', '$company_industry', '$hashed_password', '$dataConsent', 1, NOW())";
+
+        if (mysqli_query($conn, $query)) {
             echo "✅ Company registered successfully.";
-            // Redirect after 5 seconds
             echo '<meta http-equiv="refresh" content="5;url=https://bogoboom.com">';
         } else {
-            echo "❌ Error inserting into users table: " . mysqli_error($conn);
+            echo "❌ Error inserting into companies table: " . mysqli_error($conn);
         }
     } else {
-        echo "❌ Error: " . mysqli_error($conn);
+        echo "❌ Error inserting into users table: " . mysqli_error($conn);
     }
 }
 
