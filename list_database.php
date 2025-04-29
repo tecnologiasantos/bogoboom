@@ -159,15 +159,13 @@ foreach ($tables as $table => $fields) {
 
                 // Add a button to activate/deactivate users in the "users" table
                 if ($table === 'users') {
-                    $user_id = $row['id'];
+                    $user_email = $row['email'];  // Use email instead of id
                     $current_status = strtolower($row['status']);
 
-                    // If the status is 'active', show the deactivate button
                     if ($current_status == 'active') {
-                        echo "<td><a href='toggle_user_status.php?id=$user_id&action=deactivate' style='color: red;'>Deactivate</a></td>";
+                        echo "<td><a href='toggle_user_status.php?email=$user_email&action=deactivate' style='color: red;'>Deactivate</a></td>";
                     } else {
-                        // If the status is 'inactive', show the activate button
-                        echo "<td><a href='toggle_user_status.php?id=$user_id&action=activate' style='color: green;'>Activate</a></td>";
+                        echo "<td><a href='toggle_user_status.php?email=$user_email&action=activate' style='color: green;'>Activate</a></td>";
                     }
                 }
 
