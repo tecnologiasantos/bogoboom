@@ -1,13 +1,13 @@
 <?php
 require '/var/www/html/bogoboom_project/safe/db_connection.php';
 
-if (isset($_GET['id']) && isset($_GET['action'])) {
-    $user_id = trim($_GET['id']);
+if (isset($_GET['email']) && isset($_GET['action'])) {
+    $user_email = trim($_GET['email']);
     $action = $_GET['action'];
 
-    // Validate 32-character hex UUID (no dashes)
-    if (!preg_match('/^[0-9a-fA-F]{32}$/', $user_id)) {
-        die('Invalid user ID format.');
+    // Validate email format
+    if (!filter_var($user_email, FILTER_VALIDATE_EMAIL)) {
+        die('Invalid email format.');
     }
 
     if ($action === 'deactivate') {
@@ -19,8 +19,8 @@ if (isset($_GET['id']) && isset($_GET['action'])) {
     }
 
     // Prepare the query
-    $stmt = $conn->prepare("UPDATE users SET status = ? WHERE id = ?");
-    $stmt->bind_param('ss', $new_status, $user_id);
+    $stmt = $conn->prepare("UPDATE users SET status = ? WHERE email = ?");
+    $stmt->bind_param('ss', $new_status, $user_email);
     $stmt->execute();
 
     if ($stmt->affected_rows > 0) {
