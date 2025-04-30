@@ -8,7 +8,7 @@ require '/var/www/html/bogoboom_project/safe/db_connection.php';
 // Check if the user is logged in
 if (!isset($_SESSION['user_email'])) {
     // Redirect to the login page if not logged in
-    header('Location: login.php');
+    header('Location: login.html');
     exit();
 }
 
