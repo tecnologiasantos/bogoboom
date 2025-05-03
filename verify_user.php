@@ -6,7 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST['password'];
 
     // Prepare and execute the query
-    $stmt = $conn->prepare("SELECT id, password_hash, role, is_verified FROM users WHERE email = ?");
+    $stmt = $conn->prepare("SELECT id, password_hash, role, status FROM users WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (password_verify($password, $user['password_hash'])) {
             echo "<h2>✅ Login Successful</h2>";
             echo "<p>User Role: <strong>" . htmlspecialchars($user['role']) . "</strong></p>";
-            echo "<p>Email Verified: <strong>" . ($user['is_verified'] ? "Yes" : "No") . "</strong></p>";
+            echo "<p>Account Status: <strong>" . htmlspecialchars($user['status']) . "</strong></p>";
         } else {
             echo "<h2>❌ Invalid password.</h2>";
         }
@@ -34,11 +34,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>User Verification</title>
+    <title>User Status Checker</title>
     <meta charset="UTF-8">
 </head>
 <body>
-    <h1>Verify User Login</h1>
+    <h1>Check User Login</h1>
     <form method="POST" action="verify_user.php">
         <label for="email">Email:</label><br>
         <input type="email" name="email" required><br><br>
@@ -46,7 +46,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <label for="password">Password:</label><br>
         <input type="password" name="password" required><br><br>
 
-        <input type="submit" value="Verify">
+        <input type="submit" value="Check User">
+    </form>
+
+    <form method="GET" action="verify_user.php" style="margin-top: 20px;">
+        <button type="submit">🔄 Refresh / Check Another User</button>
     </form>
 </body>
 </html>
