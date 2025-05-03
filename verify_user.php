@@ -5,8 +5,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    // Prepare and execute the query
-    $stmt = $conn->prepare("SELECT id, password_hash, role, status FROM users WHERE email = ?");
+    // Prepare and execute the query to fetch user details
+    $stmt = $conn->prepare("SELECT id, email, password_hash, role, status FROM users WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -17,6 +17,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if (password_verify($password, $user['password_hash'])) {
             echo "<h2>✅ Login Successful</h2>";
+            echo "<p>Email: <strong>" . htmlspecialchars($user['email']) . "</strong></p>";
+
+            // Role-based Name fetch
+            $nameValue = '';
+            if ($user['role'] === 'newcomers') {
+                $q = $conn->prepare("SELECT full_name AS name FROM newcomers WHERE user_id = ?");
+            } elseif ($user['role'] === 'companies') {
+                $q = $conn->prepare("SELECT company_name AS name FROM companies WHERE user_id = ?");
+            } else { // 'agencies'
+                $q = $conn->prepare("SELECT company_name AS name FROM agencies WHERE user_id = ?");
+            }
+            $q->bind_param("s", $user['id']);
+            $q->execute();
+            $r = $q->get_result();
+            if ($r->num_rows === 1) {
+                $row = $r->fetch_assoc();
+                $nameValue = htmlspecialchars($row['name']);
+            }
+            $q->close();
+
+            echo "<p>Name: <strong>{$nameValue}</strong></p>";
             echo "<p>User Role: <strong>" . htmlspecialchars($user['role']) . "</strong></p>";
             echo "<p>Account Status: <strong>" . htmlspecialchars($user['status']) . "</strong></p>";
         } else {
