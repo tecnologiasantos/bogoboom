@@ -6,119 +6,94 @@ error_reporting(E_ALL);
 // DB connection
 require '/var/www/html/bogoboom_project/safe/db_connection.php';
 
-session_start();
+// Prompt for login
+$authenticated = false;
+$current_user_email = "";
 
-// Function to sanitize user inputs
-function cleanInput($data) {
-    return htmlspecialchars(stripslashes(trim($data)));
-}
+if (!isset($_SERVER['PHP_AUTH_USER'])) {
+    header('WWW-Authenticate: Basic realm="Bogoboom Viewer"');
+    header('HTTP/1.0 401 Unauthorized');
+    echo 'Authentication required.';
+    exit;
+} else {
+    $email = $_SERVER['PHP_AUTH_USER'];
+    $password = $_SERVER['PHP_AUTH_PW'];
 
-// Check if the user is already logged in
-if (isset($_SESSION['user_id'])) {
-    // Redirect logged-in users to their profile page based on their role
-    if ($_SESSION['user_role'] == 'newcomer') {
-        header("Location: /backend/profiles/newcomer_profile.php");
-    } elseif ($_SESSION['user_role'] == 'company') {
-        header("Location: /backend/profiles/company_profile.php");
-    } else {
-        header("Location: /backend/profiles/default_profile.php");
-    }
-    exit();
-}
-
-$error_message = ''; // Variable to store error messages
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Clean input data
-    $email = cleanInput($_POST["email"]);
-    $password = cleanInput($_POST["password"]);
-
-    // Prepare the SQL query to check if the user exists
-    $stmt = $conn->prepare("SELECT id, email, password_hash, role FROM users WHERE email = ?");
+    // Fetch user from DB
+    $stmt = $conn->prepare("SELECT * FROM users WHERE email = ? AND status = 'active' LIMIT 1");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $result = $stmt->get_result();
 
-    // Check if the user exists and validate the password
-    if ($result->num_rows > 0) {
+    if ($result && $result->num_rows === 1) {
         $user = $result->fetch_assoc();
-
-        // Verify the password
-        if (password_verify($password, $user['password_hash'])) {
-            // Start the session and store user information
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['user_email'] = $user['email'];
-            $_SESSION['user_role'] = $user['role'];
-
-            // Redirect based on user role
-            if ($user['role'] == 'newcomer') {
-                header("Location: /backend/profiles/newcomer_profile.php");
-            } elseif ($user['role'] == 'company') {
-                header("Location: /backend/profiles/company_profile.php");
-            } else {
-                header("Location: /backend/profiles/default_profile.php");
-            }
-            exit();
-        } else {
-            $error_message = "Incorrect password. Please try again.";
+        if (password_verify($password, $user['password'])) {
+            $authenticated = true;
+            $current_user_email = $user['email'];
         }
-    } else {
-        $error_message = "No user found with that email address.";
     }
 
-    $stmt->close();
+    if (!$authenticated) {
+        header('WWW-Authenticate: Basic realm="Bogoboom Viewer"');
+        header('HTTP/1.0 403 Forbidden');
+        echo 'Access denied.';
+        exit;
+    }
 }
-?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Bogoboom | Login</title>
-  <style>
+// Friendly field labels
+$field_labels = [
+    "id" => "ID",
+    "email" => "Email Address",
+    "role" => "User Role",
+    "status" => "Account Status",
+    "created_at" => "Creation Date",
+    "name" => "Name",
+    "company_email" => "Company Email",
+    "company_phone" => "Company Phone",
+    "phone" => "Phone Number",
+    "country" => "Country"
+];
+
+// Tables and fields to display
+$tables = [
+    "users" => ["id", "email", "role", "status", "created_at"],
+    "companies" => ["id", "company_name AS name", "company_email AS email", "company_phone", "created_at"],
+    "agencies" => ["id", "company_name AS name", "company_email AS email", "company_phone", "created_at"],
+    "newcomers" => ["id", "full_name AS name", "email", "phone", "country", "created_at"]
+];
+
+// Start HTML
+echo "<!DOCTYPE html><html lang='en'><head>";
+echo "<meta charset='UTF-8' />";
+echo "<meta name='viewport' content='width=device-width, initial-scale=1.0' />";
+echo "<title>Bogoboom | Database Viewer</title>";
+echo "<style>
     body {
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
       background: #f5f5f5;
     }
-    /* Logo styles */
-    .image-container,
-    .image-container-right {
-      position: fixed;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 10;
-    }
-    .image-container {
-      left: 10px;
-    }
-    .image-container-right {
-      right: 10px;
-    }
-    .image-container img,
-    .image-container-right img {
-      width: 360px;
-      height: auto;
-    }
-
-    @media (max-width: 1024px) {
-      .image-container,
-      .image-container-right {
-        display: none;
-      }
-    }
-
     header {
       background-color: #004a8f;
       color: white;
       padding: 1rem 2rem;
       text-align: center;
+      position: relative;
+    }
+    .user-info {
+      position: absolute;
+      right: 2rem;
+      top: 1rem;
+      font-size: 0.9rem;
+      font-style: italic;
     }
     main {
       padding: 2rem;
       text-align: center;
+      max-width: 1200px;
+      margin: 0 auto;
     }
     .intro {
       max-width: 600px;
@@ -126,52 +101,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       font-size: 1.2rem;
     }
     section {
-      max-width: 700px;
+      width: 100%;
       margin: 2rem auto;
       text-align: left;
       background: #fff;
-      padding: 2rem;
+      padding: 1.5rem;
       border-radius: 8px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      overflow-x: auto;
     }
     section h3 {
       color: #004a8f;
       margin-bottom: 1rem;
     }
-    section form {
-      display: grid;
-      gap: 1rem;
-      max-width: 600px;
-      margin: 0 auto;
+    .no-records {
+      font-style: italic;
+      color: #888;
+      margin-bottom: 20px;
     }
-    section form div {
-      margin-bottom: 1.5rem;
-    }
-    label {
-      font-weight: bold;
-      color: #004a8f;
-    }
-    input, button {
+    table {
       width: 100%;
-      padding: 0.8rem;
-      border-radius: 6px;
-      font-size: 1rem;
+      border-collapse: collapse;
+      margin-top: 1.5rem;
+      background-color: #fff;
+      table-layout: fixed;
+      overflow-wrap: break-word;
+    }
+    table th, table td {
+      padding: 1rem;
       border: 1px solid #ddd;
-      box-sizing: border-box;
+      text-align: left;
+      word-wrap: break-word;
     }
-    input[type="text"], input[type="email"], input[type="password"] {
-      background-color: #f9f9f9;
-    }
-    button {
+    table th {
       background-color: #004a8f;
       color: white;
-      font-size: 1.1rem;
-      border: none;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    button:hover {
-      background-color: #003c6e;
     }
     footer {
       margin-top: 2rem;
@@ -179,60 +143,99 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       font-size: 0.9rem;
       color: #666;
     }
-    .error-message {
-      color: red;
-      font-weight: bold;
-      margin-bottom: 1rem;
+    footer .links {
+      margin-top: 0.5rem;
     }
-  </style>
-</head>
-<body>
+    footer .links a {
+      margin: 0 1rem;
+      text-decoration: none;
+      color: #004a8f;
+    }
+</style></head><body>";
 
-  <!-- Logo containers -->
-  <div class="image-container">
-    <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/mira/MIRA-powered.png" alt="MIRA Project Logo">
-  </div>
+echo "<header>
+    <h1>Bogoboom Database Viewer</h1>
+    <p>Check the records of our platform tables</p>
+    <div class='user-info'>Logged in as: " . htmlspecialchars($current_user_email) . "</div>
+</header>";
 
-  <div class="image-container-right">
-    <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/mira/logo-print-hd.jpg" alt="MIRA Project Logo Right">
-  </div>
+echo "<main>
+    <div class='intro'>
+        <p>Welcome to the database viewer for Bogoboom. Below are the records from selected tables.</p>
+    </div>";
 
-  <header>
-    <h1>Welcome to Bogoboom</h1>
-    <p>Connecting newcomers in Bogotá with jobs and homes</p>
-  </header>
+// Loop through tables
+foreach ($tables as $table => $fields) {
+    $fieldList = implode(", ", $fields);
 
-  <main>
-    <div class="intro">
-      <p>Bogoboom is your bridge to a smooth landing in Bogotá. Whether you're a newcomer, an HR department, or a real estate agency, our platform helps you connect and thrive.</p>
-    </div>
+    echo "<section>
+            <h3>Records from $table</h3>";
 
-    <!-- Login Section -->
-    <section>
-      <h3>Login</h3>
-      <?php if (!empty($error_message)): ?>
-        <div class="error-message"><?php echo $error_message; ?></div>
-      <?php endif; ?>
-      <form action="/backend/profiles/login.php" method="POST">
-        <div>
-          <label for="login-email">📧 Email:</label>
-          <input type="email" id="login-email" name="email" required>
-        </div>
-        <div>
-          <label for="login-password">🔒 Password:</label>
-          <input type="password" id="login-password" name="password" required>
-        </div>
-        <div style="text-align: center;">
-          <button type="submit">🔑 Login</button>
-        </div>
-      </form>
-    </section>
+    $check_table_query = "SHOW TABLES LIKE '$table'";
+    $check_result = $conn->query($check_table_query);
 
-  </main>
+    if ($check_result && $check_result->num_rows > 0) {
+        $query = "SELECT $fieldList FROM $table LIMIT 100";
+        $result = $conn->query($query);
 
-  <footer>
+        if ($result && $result->num_rows > 0) {
+            echo "<table><thead><tr>";
+
+            // Get column names and apply friendly labels
+            $fieldsInfo = $result->fetch_fields();
+            foreach ($fieldsInfo as $field) {
+                $field_name = $field->name;
+                echo "<th>" . htmlspecialchars($field_labels[$field_name] ?? $field_name) . "</th>";
+            }
+
+            // Add an extra column for "Action" buttons only for users table
+            if ($table === 'users') {
+                echo "<th>Action</th>";
+            }
+            echo "</tr></thead><tbody>";
+
+            while ($row = $result->fetch_assoc()) {
+                echo "<tr>";
+                foreach ($row as $col) {
+                    $display = is_null($col) ? "NULL" : htmlspecialchars($col);
+                    echo "<td>$display</td>";
+                }
+
+                // Add toggle action
+                if ($table === 'users') {
+                    $user_email = $row['email'];
+                    $current_status = strtolower($row['status']);
+
+                    if ($current_status == 'active') {
+                        echo "<td><a href='toggle_user_status.php?email=$user_email&action=deactivate' style='color: red;'>Deactivate</a></td>";
+                    } else {
+                        echo "<td><a href='toggle_user_status.php?email=$user_email&action=activate' style='color: green;'>Activate</a></td>";
+                    }
+                }
+
+                echo "</tr>";
+            }
+
+            echo "</tbody></table>";
+        } else {
+            echo "<p class='no-records'>No records found in <strong>$table</strong>.</p>";
+        }
+    } else {
+        echo "<p class='no-records'>The table <strong>$table</strong> does not exist.</p>";
+    }
+
+    echo "</section>";
+}
+
+echo "</main>";
+
+echo "<footer>
     &copy; 2025 Bogoboom. All rights reserved.
-  </footer>
+    <div class='links'>
+        <a href='https://tecnologiasantos.com' target='_blank'>Visit MIRA IT job portal - a Tecnologia Santos IT project</a>
+    </div>
+</footer>";
 
-</body>
-</html>
+$conn->close();
+echo "</body></html>";
+?>
