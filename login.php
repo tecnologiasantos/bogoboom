@@ -61,6 +61,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
       padding: 0;
       background: #f5f5f5;
     }
+    /* Logo styles */
+    .image-container,
+    .image-container-right {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+    }
+    .image-container {
+      left: 10px;
+    }
+    .image-container-right {
+      right: 10px;
+    }
+    .image-container img,
+    .image-container-right img {
+      width: 360px;
+      height: auto;
+    }
+
+    @media (max-width: 1024px) {
+      .image-container,
+      .image-container-right {
+        display: none;
+      }
+    }
+
     header {
       background-color: #004a8f;
       color: white;
@@ -133,6 +160,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
   </style>
 </head>
 <body>
+  
+
   <header>
     <h1>Welcome to Bogoboom</h1>
     <p>Connecting newcomers in Bogotá with jobs and homes</p>
