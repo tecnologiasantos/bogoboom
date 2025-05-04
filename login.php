@@ -160,6 +160,14 @@ foreach ($tables as $table => $fields) {
     // If role is newcomers, show only active agencies
     if ($current_user_role === "newcomers") {
         $stmt = $conn->prepare("SELECT $fieldList FROM users WHERE role = 'agencies' AND status = 'active' LIMIT 100");
+    } 
+    // If role is agencies, show only active newcomers
+    elseif ($current_user_role === "agencies") {
+        $stmt = $conn->prepare("SELECT $fieldList FROM users WHERE role = 'newcomers' AND status = 'active' LIMIT 100");
+    } 
+    // If role is companies, show only active agencies
+    elseif ($current_user_role === "companies") {
+        $stmt = $conn->prepare("SELECT $fieldList FROM users WHERE role = 'agencies' AND status = 'active' LIMIT 100");
     } else {
         $stmt = $conn->prepare("SELECT $fieldList FROM users LIMIT 100");
     }
@@ -172,8 +180,8 @@ foreach ($tables as $table => $fields) {
         $fieldsInfo = $result->fetch_fields();
         foreach ($fieldsInfo as $field) {
             $field_name = $field->name;
-            // Skip Account Status, Creation Date, and Action columns for newcomers
-            if ($current_user_role === "newcomers" && in_array($field_name, ["status", "created_at", "action"])) {
+            // Skip Account Status, Creation Date, and Action columns for newcomers or agencies
+            if (($current_user_role === "newcomers" || $current_user_role === "agencies") && in_array($field_name, ["status", "created_at", "action"])) {
                 continue;
             }
             echo "<th>" . htmlspecialchars($field_labels[$field_name] ?? $field_name) . "</th>";
@@ -183,8 +191,8 @@ foreach ($tables as $table => $fields) {
         while ($row = $result->fetch_assoc()) {
             echo "<tr>";
             foreach ($row as $field_name => $col) {
-                // Skip Account Status, Creation Date, and Action columns for newcomers
-                if ($current_user_role === "newcomers" && in_array($field_name, ["status", "created_at", "action"])) {
+                // Skip Account Status, Creation Date, and Action columns for newcomers or agencies
+                if (($current_user_role === "newcomers" || $current_user_role === "agencies") && in_array($field_name, ["status", "created_at", "action"])) {
                     continue;
                 }
                 echo "<td>" . (is_null($col) ? "NULL" : htmlspecialchars($col)) . "</td>";
