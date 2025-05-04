@@ -11,6 +11,7 @@ session_start();
 
 $authenticated = false;
 $current_user_email = "";
+$current_user_role = "";
 
 // Login logic
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] == 'login') {
@@ -27,7 +28,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         if ($user['status'] === 'active' && password_verify($password, $user['password_hash'])) {
             $authenticated = true;
             $_SESSION['user_email'] = $user['email'];
+            $_SESSION['user_role'] = $user['role'];  // Store user role
             $current_user_email = $user['email'];
+            $current_user_role = $user['role'];  // Set current user role
         }
     }
 
@@ -41,6 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     exit;
 } elseif (isset($_SESSION['user_email'])) {
     $current_user_email = $_SESSION['user_email'];
+    $current_user_role = $_SESSION['user_role'];  // Get the current user role from session
 } else {
     echo "<!DOCTYPE html>
 <html lang='en'>
@@ -153,45 +157,44 @@ foreach ($tables as $table => $fields) {
     $fieldList = implode(", ", $fields);
     echo "<section><h3>Records from $table</h3>";
 
-    $check_table_query = "SHOW TABLES LIKE '$table'";
-    $check_result = $conn->query($check_table_query);
-
-    if ($check_result && $check_result->num_rows > 0) {
-        $query = "SELECT $fieldList FROM $table LIMIT 100";
-        $result = $conn->query($query);
-
-        if ($result && $result->num_rows > 0) {
-            echo "<table><thead><tr>";
-            $fieldsInfo = $result->fetch_fields();
-            foreach ($fieldsInfo as $field) {
-                $field_name = $field->name;
-                echo "<th>" . htmlspecialchars($field_labels[$field_name] ?? $field_name) . "</th>";
-            }
-            echo "<th>Action</th></tr></thead><tbody>";
-
-            while ($row = $result->fetch_assoc()) {
-                echo "<tr>";
-                foreach ($row as $col) {
-                    echo "<td>" . (is_null($col) ? "NULL" : htmlspecialchars($col)) . "</td>";
-                }
-
-                $user_email = $row['email'];
-                $current_status = strtolower($row['status']);
-                if ($current_status == 'active') {
-                    echo "<td><a href='toggle_user_status.php?email=$user_email&action=deactivate' style='color: red;'>Deactivate</a></td>";
-                } else {
-                    echo "<td><a href='toggle_user_status.php?email=$user_email&action=activate' style='color: green;'>Activate</a></td>";
-                }
-
-                echo "</tr>";
-            }
-
-            echo "</tbody></table>";
-        } else {
-            echo "<p class='no-records'>No records found in <strong>$table</strong>.</p>";
-        }
+    // If role is newcomers, show only active agencies
+    if ($current_user_role === "newcomers") {
+        $stmt = $conn->prepare("SELECT $fieldList FROM users WHERE role = 'agencies' AND status = 'active' LIMIT 100");
     } else {
-        echo "<p class='no-records'>The table <strong>$table</strong> does not exist.</p>";
+        $stmt = $conn->prepare("SELECT $fieldList FROM users LIMIT 100");
+    }
+
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result && $result->num_rows > 0) {
+        echo "<table><thead><tr>";
+        $fieldsInfo = $result->fetch_fields();
+        foreach ($fieldsInfo as $field) {
+            $field_name = $field->name;
+            // Skip Account Status, Creation Date, and Action columns for newcomers
+            if ($current_user_role === "newcomers" && in_array($field_name, ["status", "created_at", "action"])) {
+                continue;
+            }
+            echo "<th>" . htmlspecialchars($field_labels[$field_name] ?? $field_name) . "</th>";
+        }
+        echo "</tr></thead><tbody>";
+
+        while ($row = $result->fetch_assoc()) {
+            echo "<tr>";
+            foreach ($row as $field_name => $col) {
+                // Skip Account Status, Creation Date, and Action columns for newcomers
+                if ($current_user_role === "newcomers" && in_array($field_name, ["status", "created_at", "action"])) {
+                    continue;
+                }
+                echo "<td>" . (is_null($col) ? "NULL" : htmlspecialchars($col)) . "</td>";
+            }
+            echo "</tr>";
+        }
+
+        echo "</tbody></table>";
+    } else {
+        echo "<p class='no-records'>No records found in <strong>$table</strong>.</p>";
     }
 
     echo "</section>";
