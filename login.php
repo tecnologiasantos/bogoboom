@@ -33,10 +33,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             $current_user_email = $user['email'];
             $current_user_role = $user['role'];  // Set current user role
 
-            // Fetch full name if available (assumed to be in the 'newcomers' table)
-            if ($user['role'] == 'newcomers') {
+            // Fetch full name based on role (newcomers, agencies, companies)
+            if ($current_user_role == 'newcomers') {
                 $stmt_name = $conn->prepare("SELECT full_name FROM newcomers WHERE email = ? LIMIT 1");
-                $stmt_name->bind_param("s", $email);
+                $stmt_name->bind_param("s", $current_user_email);
+                $stmt_name->execute();
+                $result_name = $stmt_name->get_result();
+                if ($result_name && $result_name->num_rows > 0) {
+                    $user_name = $result_name->fetch_assoc();
+                    $current_user_name = $user_name['full_name'];
+                }
+            } elseif ($current_user_role == 'agencies') {
+                $stmt_name = $conn->prepare("SELECT responsible_name AS full_name FROM agencies WHERE user_id = (SELECT id FROM users WHERE email = ?) LIMIT 1");
+                $stmt_name->bind_param("s", $current_user_email);
+                $stmt_name->execute();
+                $result_name = $stmt_name->get_result();
+                if ($result_name && $result_name->num_rows > 0) {
+                    $user_name = $result_name->fetch_assoc();
+                    $current_user_name = $user_name['full_name'];
+                }
+            } elseif ($current_user_role == 'companies') {
+                $stmt_name = $conn->prepare("SELECT responsible_name AS full_name FROM companies WHERE user_id = (SELECT id FROM users WHERE email = ?) LIMIT 1");
+                $stmt_name->bind_param("s", $current_user_email);
                 $stmt_name->execute();
                 $result_name = $stmt_name->get_result();
                 if ($result_name && $result_name->num_rows > 0) {
@@ -59,9 +77,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $current_user_email = $_SESSION['user_email'];
     $current_user_role = $_SESSION['user_role'];  // Get the current user role from session
 
-    // Fetch full name if available (assumed to be in the 'newcomers' table)
+    // Fetch full name based on role (newcomers, agencies, companies)
     if ($current_user_role == 'newcomers') {
         $stmt_name = $conn->prepare("SELECT full_name FROM newcomers WHERE email = ? LIMIT 1");
+        $stmt_name->bind_param("s", $current_user_email);
+        $stmt_name->execute();
+        $result_name = $stmt_name->get_result();
+        if ($result_name && $result_name->num_rows > 0) {
+            $user_name = $result_name->fetch_assoc();
+            $current_user_name = $user_name['full_name'];
+        }
+    } elseif ($current_user_role == 'agencies') {
+        $stmt_name = $conn->prepare("SELECT responsible_name AS full_name FROM agencies WHERE user_id = (SELECT id FROM users WHERE email = ?) LIMIT 1");
+        $stmt_name->bind_param("s", $current_user_email);
+        $stmt_name->execute();
+        $result_name = $stmt_name->get_result();
+        if ($result_name && $result_name->num_rows > 0) {
+            $user_name = $result_name->fetch_assoc();
+            $current_user_name = $user_name['full_name'];
+        }
+    } elseif ($current_user_role == 'companies') {
+        $stmt_name = $conn->prepare("SELECT responsible_name AS full_name FROM companies WHERE user_id = (SELECT id FROM users WHERE email = ?) LIMIT 1");
         $stmt_name->bind_param("s", $current_user_email);
         $stmt_name->execute();
         $result_name = $stmt_name->get_result();
@@ -196,51 +232,34 @@ foreach ($tables as $table => $fields) {
     } else {
         $stmt = $conn->prepare("SELECT $fieldList FROM users LIMIT 100");
     }
-
+    
     $stmt->execute();
     $result = $stmt->get_result();
 
-    if ($result && $result->num_rows > 0) {
+    if ($result->num_rows > 0) {
         echo "<table><thead><tr>";
-        $fieldsInfo = $result->fetch_fields();
-        foreach ($fieldsInfo as $field) {
-            $field_name = $field->name;
-            // Skip Account Status, Creation Date, and Action columns for newcomers or agencies
-            if (($current_user_role === "newcomers" || $current_user_role === "agencies") && in_array($field_name, ["status", "created_at", "action"])) {
-                continue;
-            }
-            echo "<th>" . htmlspecialchars($field_labels[$field_name] ?? $field_name) . "</th>";
+        foreach ($fields as $field) {
+            echo "<th>{$field_labels[$field]}</th>";
         }
         echo "</tr></thead><tbody>";
-
         while ($row = $result->fetch_assoc()) {
             echo "<tr>";
-            foreach ($row as $field_name => $col) {
-                // Skip Account Status, Creation Date, and Action columns for newcomers or agencies
-                if (($current_user_role === "newcomers" || $current_user_role === "agencies") && in_array($field_name, ["status", "created_at", "action"])) {
-                    continue;
-                }
-                echo "<td>" . (is_null($col) ? "NULL" : htmlspecialchars($col)) . "</td>";
+            foreach ($fields as $field) {
+                echo "<td>" . htmlspecialchars($row[$field]) . "</td>";
             }
             echo "</tr>";
         }
-
         echo "</tbody></table>";
     } else {
-        echo "<p class='no-records'>No records found in <strong>$table</strong>.</p>";
+        echo "<p class='no-records'>No records found.</p>";
     }
-
     echo "</section>";
 }
 
 echo "</main>";
 
 echo "<footer>
-  &copy; 2025 Bogoboom. All rights reserved.
-  <div class='links'>
-    <a href='https://tecnologiasantos.com'>About Us</a>
-    <a href='/terms'>Terms & Conditions</a>
-    <a href='/privacy'>Privacy Policy</a>
-  </div>
-</footer></body></html>";
-?>
+    &copy; 2025 Bogoboom. All rights reserved.
+</footer>";
+
+echo "</body></html>";
