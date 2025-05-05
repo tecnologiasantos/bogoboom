@@ -12,6 +12,7 @@ session_start();
 $authenticated = false;
 $current_user_email = "";
 $current_user_role = "";
+$current_user_name = "";  // To hold the user's full name
 
 // Login logic
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] == 'login') {
@@ -31,6 +32,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             $_SESSION['user_role'] = $user['role'];  // Store user role
             $current_user_email = $user['email'];
             $current_user_role = $user['role'];  // Set current user role
+
+            // Fetch full name if available (assumed to be in the 'newcomers' table)
+            if ($user['role'] == 'newcomers') {
+                $stmt_name = $conn->prepare("SELECT full_name FROM newcomers WHERE email = ? LIMIT 1");
+                $stmt_name->bind_param("s", $email);
+                $stmt_name->execute();
+                $result_name = $stmt_name->get_result();
+                if ($result_name && $result_name->num_rows > 0) {
+                    $user_name = $result_name->fetch_assoc();
+                    $current_user_name = $user_name['full_name'];
+                }
+            }
         }
     }
 
@@ -45,6 +58,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 } elseif (isset($_SESSION['user_email'])) {
     $current_user_email = $_SESSION['user_email'];
     $current_user_role = $_SESSION['user_role'];  // Get the current user role from session
+
+    // Fetch full name if available (assumed to be in the 'newcomers' table)
+    if ($current_user_role == 'newcomers') {
+        $stmt_name = $conn->prepare("SELECT full_name FROM newcomers WHERE email = ? LIMIT 1");
+        $stmt_name->bind_param("s", $current_user_email);
+        $stmt_name->execute();
+        $result_name = $stmt_name->get_result();
+        if ($result_name && $result_name->num_rows > 0) {
+            $user_name = $result_name->fetch_assoc();
+            $current_user_name = $user_name['full_name'];
+        }
+    }
 } else {
     echo "<!DOCTYPE html>
 <html lang='en'>
@@ -141,7 +166,7 @@ echo "<!DOCTYPE html><html lang='en'><head>
 echo "<header>
   <h1>Bogoboom Database Viewer</h1>
   <p>Check the records of our platform tables</p>
-  <div class='user-info'>Logged in as: " . htmlspecialchars($current_user_email) . "</div>
+  <div class='user-info'>Logged in as: " . htmlspecialchars($current_user_name) . "</div>
   <form method='POST' action='' style='display: inline;'>
     <input type='hidden' name='action' value='logout'>
     <button type='submit' class='logoff-button'>Log off</button>
