@@ -28,9 +28,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         if ($user['status'] === 'active' && password_verify($password, $user['password_hash'])) {
             $authenticated = true;
             $_SESSION['user_email'] = $user['email'];
-            $_SESSION['user_role'] = $user['role'];  // Store user role
+            $_SESSION['user_role'] = $user['role'];
             $current_user_email = $user['email'];
-            $current_user_role = $user['role'];  // Set current user role
+            $current_user_role = $user['role'];
         }
     }
 
@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     exit;
 } elseif (isset($_SESSION['user_email'])) {
     $current_user_email = $_SESSION['user_email'];
-    $current_user_role = $_SESSION['user_role'];  // Get the current user role from session
+    $current_user_role = $_SESSION['user_role'];
 } else {
     echo "<!DOCTYPE html>
 <html lang='en'>
@@ -102,18 +102,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     exit;
 }
 
-// Field labels
+// Field labels (removed id, status, created_at)
 $field_labels = [
-    "id" => "ID",
     "email" => "Email Address",
-    "role" => "User Role",
-    "status" => "Account Status",
-    "created_at" => "Creation Date"
+    "role" => "User Role"
 ];
 
-// Only display users table
+// Only display specific fields from users table (removed id, status, created_at)
 $tables = [
-    "users" => ["id", "email", "role", "status", "created_at"]
+    "users" => ["email", "role"]
 ];
 
 // Start HTML output
@@ -157,16 +154,11 @@ foreach ($tables as $table => $fields) {
     $fieldList = implode(", ", $fields);
     echo "<section><h3>Records from $table</h3>";
 
-    // If role is newcomers, show only active agencies
     if ($current_user_role === "newcomers") {
         $stmt = $conn->prepare("SELECT $fieldList FROM users WHERE role = 'agencies' AND status = 'active' LIMIT 100");
-    } 
-    // If role is agencies, show only active newcomers
-    elseif ($current_user_role === "agencies") {
+    } elseif ($current_user_role === "agencies") {
         $stmt = $conn->prepare("SELECT $fieldList FROM users WHERE role = 'newcomers' AND status = 'active' LIMIT 100");
-    } 
-    // If role is companies, show only active agencies
-    elseif ($current_user_role === "companies") {
+    } elseif ($current_user_role === "companies") {
         $stmt = $conn->prepare("SELECT $fieldList FROM users WHERE role = 'agencies' AND status = 'active' LIMIT 100");
     } else {
         $stmt = $conn->prepare("SELECT $fieldList FROM users LIMIT 100");
@@ -180,10 +172,6 @@ foreach ($tables as $table => $fields) {
         $fieldsInfo = $result->fetch_fields();
         foreach ($fieldsInfo as $field) {
             $field_name = $field->name;
-            // Skip Account Status, Creation Date, and Action columns for newcomers or agencies
-            if (($current_user_role === "newcomers" || $current_user_role === "agencies") && in_array($field_name, ["status", "created_at", "action"])) {
-                continue;
-            }
             echo "<th>" . htmlspecialchars($field_labels[$field_name] ?? $field_name) . "</th>";
         }
         echo "</tr></thead><tbody>";
@@ -191,10 +179,6 @@ foreach ($tables as $table => $fields) {
         while ($row = $result->fetch_assoc()) {
             echo "<tr>";
             foreach ($row as $field_name => $col) {
-                // Skip Account Status, Creation Date, and Action columns for newcomers or agencies
-                if (($current_user_role === "newcomers" || $current_user_role === "agencies") && in_array($field_name, ["status", "created_at", "action"])) {
-                    continue;
-                }
                 echo "<td>" . (is_null($col) ? "NULL" : htmlspecialchars($col)) . "</td>";
             }
             echo "</tr>";
