@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (mysqli_query($conn, $query_user)) {
         // 2️⃣ Then Insert into companies table
         $query = "INSERT INTO companies 
-            (id, user_id, company_name, company_email, company_phone, responsible_name, company_address, company_website, company_industry, company_password_hash, data_consent, allow_agency_contact, created_at) 
+            (id, user_id, name, email, phone, responsible_name, address, website, industry, password_hash, data_consent, allow_agency_contact, created_at) 
             VALUES ('$company_id', '$company_id', '$name', '$email', '$phone', '$responsible_name', '$address', '$website', '$industry', '$hashed_password', '$dataConsent', 1, NOW())";
 
         if (mysqli_query($conn, $query)) {
