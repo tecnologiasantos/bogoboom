@@ -9,11 +9,7 @@ session_start();
 // Include the DB connection
 require '/var/www/html/bogoboom_project/safe/db_connection.php';
 
-// Check if user is logged in and session has user_id
-if (!isset($_SESSION['user_id'])) {
-    echo "You must be logged in to submit this form.";
-    exit;
-}
+
 
 $user_id = $_SESSION['user_id'];
 
