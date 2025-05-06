@@ -68,7 +68,7 @@ if (!empty($_FILES['document']) && $_FILES['document']['error'] === UPLOAD_ERR_O
 // Use prepared statements to avoid SQL Injection
 try {
     // Insert into users table
-    $stmtUser = $conn->prepare("INSERT INTO users (id, email, password, role) VALUES (?, ?, ?, 'newcomer')");
+    $stmtUser = $conn->prepare("INSERT INTO users (id, email, password, role) VALUES (?, ?, ?, 'newcomers')");
     $stmtUser->bind_param("sss", $id, $email, $password_hash);
 
     // Insert into newcomers table
