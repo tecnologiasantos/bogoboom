@@ -1,11 +1,7 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 // Prompt for login
 $valid_username = 'bogoboom';
-$valid_password = 'Gottmitmir2025!; // Adjust as needed or fetch from a more secure source
+$valid_password = 'Gottmitmir2025!'; // Adjust as needed or fetch from a more secure source
 
 if (!isset($_SERVER['PHP_AUTH_USER']) || 
     $_SERVER['PHP_AUTH_USER'] !== $valid_username || 
