@@ -10,7 +10,7 @@ session_start();
 require '/var/www/html/bogoboom_project/safe/db_connection.php'; 
 
 // Retrieve and sanitize form data
-$fullname = trim($_POST['fullname'] ?? '');
+$name = trim($_POST['name'] ?? '');
 $email = trim($_POST['email'] ?? '');
 $phone = trim($_POST['phone'] ?? '');
 $country = trim($_POST['country'] ?? '');
@@ -67,11 +67,13 @@ if (!empty($_FILES['document']) && $_FILES['document']['error'] === UPLOAD_ERR_O
 
 // Use prepared statements to avoid SQL Injection
 try {
-    $stmtUser = $conn->prepare("INSERT INTO users (id, email, password_hash, role) VALUES (?, ?, ?, 'newcomers')");
+    // Insert into users table
+    $stmtUser = $conn->prepare("INSERT INTO users (id, email, password, role) VALUES (?, ?, ?, 'newcomer')");
     $stmtUser->bind_param("sss", $id, $email, $password_hash);
 
-    $stmtNewcomer = $conn->prepare("INSERT INTO newcomers (id, full_name, email, phone, country, languages, document) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    $stmtNewcomer->bind_param("sssssss", $id, $fullname, $email, $phone, $country, $languages, $document);
+    // Insert into newcomers table
+    $stmtNewcomer = $conn->prepare("INSERT INTO newcomers (id, name, email, phone, country, languages, document) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $stmtNewcomer->bind_param("sssssss", $id, $name, $email, $phone, $country, $languages, $document);
 
     if ($stmtUser->execute()) {
         if ($stmtNewcomer->execute()) {
