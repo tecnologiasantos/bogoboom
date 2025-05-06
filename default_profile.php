@@ -1,6 +1,12 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// DB connection
+require '/var/www/html/bogoboom_project/safe/db_connection.php';
+
 session_start();
-require_once '/path/to/your/db_connection.php';
 
 if (!isset($_SESSION['user_id'])) {
     // Redirect to login page if not logged in
@@ -44,3 +50,4 @@ $user_role = $_SESSION['user_role'];
 
 </body>
 </html>
+

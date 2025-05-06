@@ -1,212 +1,178 @@
 <?php
-// Start the session to retrieve the user role
 session_start();
+require_once '../config/db_connection.php'; // adjust the path if needed
 
-// Include the database connection
-require '/var/www/html/bogoboom_project/safe/db_connection.php';
+$title = "Bogoboom | User Panel";
+$userRole = "";
+$users = [];
 
-// Check if the user is logged in
-if (!isset($_SESSION['user_email'])) {
-    // Redirect to the login page if not logged in
-    header('Location: https://bogoboom.com/login.html');
-    exit();
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $email = $_POST['email'] ?? '';
+    $password = $_POST['password'] ?? '';
+
+    $stmt = $conn->prepare("SELECT id, role, password FROM users WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->store_result();
+
+    if ($stmt->num_rows === 1) {
+        $stmt->bind_result($userId, $role, $hashedPassword);
+        $stmt->fetch();
+
+        if (password_verify($password, $hashedPassword)) {
+            $userRole = ucfirst($role);
+            $title = "Bogoboom | Logged in as $userRole";
+
+            // Fetch all users
+            $result = $conn->query("SELECT id, name, email, role FROM users ORDER BY role, name");
+            if ($result && $result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $users[] = $row;
+                }
+            }
+        } else {
+            $error = "Invalid password.";
+        }
+    } else {
+        $error = "No user found with that email.";
+    }
+    $stmt->close();
 }
-
-// Get the logged-in user information from session
-$user_email = $_SESSION['user_email'];
-
-// Query the database to get the user role
-$query = "SELECT role FROM users WHERE email = ?";
-$stmt = $conn->prepare($query);
-$stmt->bind_param('s', $user_email);
-$stmt->execute();
-$stmt->bind_result($user_role);
-$stmt->fetch();
-$stmt->close();
-
-// Start the HTML
-echo "<!DOCTYPE html>
-<html lang='en'>
+?>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset='UTF-8' />
-  <meta name='viewport' content='width=device-width, initial-scale=1.0'/>
-  <title>Bogoboom | Search Newcomers</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title><?= htmlspecialchars($title) ?></title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f5f5f5;
+    /* (Same CSS as before — unchanged for brevity) */
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
+    .image-container, .image-container-right {
+      position: fixed; top: 50%; transform: translateY(-50%); z-index: 10;
     }
-    /* Logo styles */
-    .image-container,
-    .image-container-right {
-      position: fixed;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 10;
+    .image-container { left: 10px; }
+    .image-container-right { right: 10px; }
+    .image-container img, .image-container-right img {
+      width: 360px; height: auto;
     }
-    .image-container {
-      left: 10px;
-    }
-    .image-container-right {
-      right: 10px;
-    }
-    .image-container img,
-    .image-container-right img {
-      width: 360px;
-      height: auto;
-    }
-
     @media (max-width: 1024px) {
-      .image-container,
-      .image-container-right {
-        display: none;
-      }
+      .image-container, .image-container-right { display: none; }
     }
-
     header {
-      background-color: #004a8f;
-      color: white;
-      padding: 1rem 2rem;
-      text-align: center;
+      background-color: #004a8f; color: white; padding: 1rem 2rem; text-align: center;
     }
-    main {
-      padding: 2rem;
-      text-align: center;
-    }
-    .intro {
-      max-width: 600px;
-      margin: 0 auto 2rem;
-      font-size: 1.2rem;
-    }
+    main { padding: 2rem; text-align: center; }
+    .intro { max-width: 600px; margin: 0 auto 2rem; font-size: 1.2rem; }
     section {
-      max-width: 700px;
-      margin: 2rem auto;
-      text-align: left;
-      background: #fff;
-      padding: 2rem;
-      border-radius: 8px;
+      max-width: 700px; margin: 2rem auto; text-align: left;
+      background: #fff; padding: 2rem; border-radius: 8px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
-    section h3 {
-      color: #004a8f;
-      margin-bottom: 1rem;
-    }
-    section form {
-      display: grid;
-      gap: 1rem;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-    section form div {
-      margin-bottom: 1.5rem;
-    }
-    label {
-      font-weight: bold;
-      color: #004a8f;
-    }
+    section h3 { color: #004a8f; margin-bottom: 1rem; }
+    label { font-weight: bold; color: #004a8f; }
     input, button {
-      width: 100%;
-      padding: 0.8rem;
-      border-radius: 6px;
-      font-size: 1rem;
-      border: 1px solid #ddd;
-      box-sizing: border-box;
+      width: 100%; padding: 0.8rem; border-radius: 6px; font-size: 1rem;
+      border: 1px solid #ddd; box-sizing: border-box;
     }
-    input[type='text'], input[type='email'], input[type='password'] {
+    input[type="text"], input[type="email"], input[type="password"] {
       background-color: #f9f9f9;
     }
     button {
-      background-color: #004a8f;
-      color: white;
-      font-size: 1.1rem;
-      border: none;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
+      background-color: #004a8f; color: white; font-size: 1.1rem;
+      border: none; cursor: pointer; transition: background-color 0.3s ease;
     }
-    button:hover {
-      background-color: #003c6e;
-    }
+    button:hover { background-color: #003c6e; }
     footer {
-      margin-top: 2rem;
-      text-align: center;
-      font-size: 0.9rem;
-      color: #666;
+      margin-top: 2rem; text-align: center; font-size: 0.9rem; color: #666;
     }
+    table {
+      width: 100%; border-collapse: collapse; margin-top: 1rem;
+    }
+    th, td {
+      padding: 0.8rem; text-align: left; border-bottom: 1px solid #ddd;
+    }
+    th { background-color: #004a8f; color: white; }
   </style>
 </head>
 <body>
 
   <!-- Logo containers -->
-  <div class='image-container'>
-    <img src='https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/mira/MIRA-powered.png' alt='MIRA Project Logo'>
+  <div class="image-container">
+    <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/mira/MIRA-powered.png" alt="MIRA Project Logo">
   </div>
 
-  <div class='image-container-right'>
-    <img src='https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/mira/logo-print-hd.jpg' alt='MIRA Project Logo Right'>
+  <div class="image-container-right">
+    <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/mira/logo-print-hd.jpg" alt="MIRA Project Logo Right">
   </div>
 
   <header>
-    <h1>Welcome to Bogoboom</h1>
+    <h1><?= htmlspecialchars($title) ?></h1>
     <p>Connecting newcomers in Bogotá with jobs and homes</p>
   </header>
 
   <main>
-    <div class='intro'>
-      <p>Bogoboom is your bridge to a smooth landing in Bogotá. Whether you're a newcomer, an HR department, or a real estate agency, our platform helps you connect and thrive.</p>
-    </div>";
+    <div class="intro">
+      <p>
+        <?php if (!empty($userRole)): ?>
+          Logged in as <strong><?= htmlspecialchars($userRole) ?></strong>.
+        <?php else: ?>
+          Please log in to view users.
+        <?php endif; ?>
+      </p>
+    </div>
 
-    // Check if the logged-in user is a newcomer
-    if ($user_role === 'newcomer') {
-        // Show agencies for newcomers
-        echo "<section>
-                <h3>Available Agencies</h3>
-                <p>Here are the agencies that are available for newcomers:</p>";
+    <!-- Login Section -->
+    <section>
+      <h3>Login</h3>
+      <?php if (!empty($error)): ?>
+        <p style="color: red;"><?= htmlspecialchars($error) ?></p>
+      <?php endif; ?>
+      <form method="POST">
+        <div>
+          <label for="login-email">📧 Email:</label>
+          <input type="email" id="login-email" name="email" required>
+        </div>
+        <div>
+          <label for="login-password">🔒 Password:</label>
+          <input type="password" id="login-password" name="password" required>
+        </div>
+        <div style="text-align: center;">
+          <button type="submit">🔑 Login</button>
+        </div>
+      </form>
+    </section>
 
-        // Query the database to get all agencies
-        $agency_query = "SELECT company_name, company_email, company_phone FROM agencies";
-        $agency_result = $conn->query($agency_query);
+    <!-- Display all users if logged in -->
+    <?php if (!empty($users)): ?>
+    <section>
+      <h3>All Users</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th><th>Name</th><th>Email</th><th>Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php foreach ($users as $u): ?>
+            <tr>
+              <td><?= $u['id'] ?></td>
+              <td><?= htmlspecialchars($u['name']) ?></td>
+              <td><?= htmlspecialchars($u['email']) ?></td>
+              <td><?= ucfirst($u['role']) ?></td>
+            </tr>
+          <?php endforeach; ?>
+        </tbody>
+      </table>
+    </section>
+    <?php endif; ?>
 
-        if ($agency_result->num_rows > 0) {
-            echo "<table style='width:100%; border-collapse: collapse;'>
-                    <thead>
-                        <tr>
-                            <th>Agency Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                        </tr>
-                    </thead>
-                    <tbody>";
-
-            while ($row = $agency_result->fetch_assoc()) {
-                echo "<tr>
-                        <td>" . htmlspecialchars($row['company_name']) . "</td>
-                        <td>" . htmlspecialchars($row['company_email']) . "</td>
-                        <td>" . htmlspecialchars($row['company_phone']) . "</td>
-                      </tr>";
-            }
-
-            echo "</tbody></table>";
-        } else {
-            echo "<p>No agencies available at the moment.</p>";
-        }
-
-        echo "</section>";
-    } else {
-        // Show message for non-newcomer roles
-        echo "<section>
-                <h3>Access Denied</h3>
-                <p>This page is only accessible to newcomers. Please contact support if you need further assistance.</p>
-              </section>";
-    }
-
-  echo "</main>
+  </main>
 
   <footer>
     &copy; 2025 Bogoboom. All rights reserved.
   </footer>
 
 </body>
-</html>";
-?>
+</html>
+
