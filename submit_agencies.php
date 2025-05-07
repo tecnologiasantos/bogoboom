@@ -7,7 +7,7 @@ error_reporting(E_ALL);
 session_start();
 
 // Include the DB connection
-require '/var/www/html/bogoboom_project/safe/db_connection.php'; 
+require '/var/www/html/bogoboom_project/safe/db_connection.php';
 
 // Process form data only if it's a POST request
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -17,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $company_phone = trim($_POST['company_phone']);
     $responsible_name = trim($_POST['responsible_name']);
     $company_address = trim($_POST['company_address']);
+    $company_website = trim($_POST['company_website']); // Collect the website
     $company_password = $_POST['company_password'];
     $confirm_password = $_POST['confirm_password'];
     $dataConsent = isset($_POST['dataConsent']) ? 1 : 0;  // Handling the consent checkbox
@@ -66,12 +67,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Hash the password before storing
     $hashed_password = password_hash($company_password, PASSWORD_DEFAULT);
 
-    // SQL query to insert data into the agencies table (updated to match the form and table schema)
-    $query_agency = "INSERT INTO agencies (id, company_name, company_email, company_phone, responsible_name, company_address, company_password_hash, company_document, data_consent, created_at) 
-                     VALUES ('$agency_id', '$agency_name', '$company_email', '$company_phone', '$responsible_name', '$company_address', '$hashed_password', '$document', '$dataConsent', NOW())";
+    // SQL query to insert data into the agencies table (updated to include company_website)
+    $query_agency = "INSERT INTO agencies (id, company_name, company_email, company_phone, responsible_name, company_address, company_website, company_password_hash, company_document, data_consent, created_at)
+                     VALUES ('$agency_id', '$agency_name', '$company_email', '$company_phone', '$responsible_name', '$company_address', '$company_website', '$hashed_password', '$document', '$dataConsent', NOW())";
 
     // SQL query to insert data into the users table (corrected to add role)
-    $query_user = "INSERT INTO users (id, email, password_hash, role, created_at) 
+    $query_user = "INSERT INTO users (id, email, password_hash, role, created_at)
                    VALUES ('$user_id', '$company_email', '$hashed_password', 'agencies', NOW())";
 
     // Execute both queries using the database connection
