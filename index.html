@@ -219,5 +219,66 @@ src="https://www.facebook.com/tr?id=699826945906215&ev=PageView&noscript=1"
       <a href="https://tecnologiasantos.com" target="_blank">Visit MIRA IT job portal - a Tecnologia Santos IT project - support@tecnologiasantos.com</a>
     </div>
   </footer>
+
+<!-- Chatbot Icon -->
+  <div id="chatbot-icon" onclick="toggleChatbot()">
+    <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/bogoboom/chatbot/bogoboom_robot.png" alt="Chatbot" width="60" height="60">
+  </div>
+
+  <!-- Chatbot Window -->
+  <div id="chatbot-window">
+    <div id="chatbot-messages"></div>
+    <div id="chatbot-input-container">
+      <input type="text" id="chatbot-input" placeholder="Type your question..." onkeypress="handleKeyPress(event)">
+      <button id="chatbot-send" onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <script>
+    function toggleChatbot() {
+      const chatWindow = document.getElementById("chatbot-window");
+      chatWindow.style.display = chatWindow.style.display === "none" ? "flex" : "none";
+    }
+
+    function handleKeyPress(e) {
+      if (e.key === 'Enter') {
+        sendMessage();
+      }
+    }
+
+    function sendMessage() {
+      const input = document.getElementById("chatbot-input");
+      const message = input.value.trim();
+      if (!message) return;
+
+      const messages = document.getElementById("chatbot-messages");
+      const userMsg = document.createElement("div");
+      userMsg.textContent = "You: " + message;
+      messages.appendChild(userMsg);
+      input.value = "";
+
+      fetch("/backend/profiles/chatbot.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message }),
+      })
+      .then(res => res.json())
+      .then(data => {
+        const botMsg = document.createElement("div");
+        botMsg.textContent = "Bot: " + data.response;
+        messages.appendChild(botMsg);
+        messages.scrollTop = messages.scrollHeight;
+      })
+      .catch(err => {
+        const errMsg = document.createElement("div");
+        errMsg.textContent = "Error: Could not contact bot.";
+        messages.appendChild(errMsg);
+      });
+    }
+  </script>
+
+  
 </body>
 </html>
