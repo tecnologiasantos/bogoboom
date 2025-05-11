@@ -105,12 +105,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 // Field labels (removed id, status, created_at)
 $field_labels = [
     "email" => "Email Address",
-    "role" => "User Role"
+    "role" => "User Role",
+    "full_name" => "Full name",
+    "company_name" => "Company name",
+    "phone" => "Phone number",
+    "company_name" => "Company Name",
+    "company_website" => "Web site"  
 ];
 
 // Only display specific fields from users table (removed id, status, created_at)
 $tables = [
-    "users" => ["email", "role"]
+	"users" => ["full_name","company_name","email","phone","company_website" ]
+	
+        	
 ];
 
 // Start HTML output
