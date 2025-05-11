@@ -10,7 +10,7 @@ session_start();
 require '/var/www/html/bogoboom_project/safe/db_connection.php'; 
 
 // Retrieve and sanitize form data
-$full_name = trim($_POST['fullname'] ?? '');
+$full_name = trim($_POST['full_name'] ?? '');
 $email = trim($_POST['email'] ?? '');
 $phone = trim($_POST['phone'] ?? '');
 $country = trim($_POST['country'] ?? '');
