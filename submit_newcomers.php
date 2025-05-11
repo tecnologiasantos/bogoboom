@@ -67,11 +67,15 @@ if (!empty($_FILES['document']) && $_FILES['document']['error'] === UPLOAD_ERR_O
 
 // Use prepared statements to avoid SQL Injection
 try {
-    $stmtUser = $conn->prepare("INSERT INTO users (id, email, password_hash, role) VALUES (?, ?, ?, 'newcomers')");
-    $stmtUser->bind_param("sss", $id, $email, $password_hash);
+    // Prepare and execute the insert for the users table
+$stmtUser = $conn->prepare("INSERT INTO users (id, email, full_name, company_name, phone, company_phone, company_address, password_hash, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'newcomers')");
+$stmtUser->bind_param("ssssssss", $id, $email, $fullname, $company_name, $phone, $company_phone, $company_address, $password_hash);
+$stmtUser->execute();
 
-    $stmtNewcomer = $conn->prepare("INSERT INTO newcomers (id, full_name, email, phone, country, languages, document) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    $stmtNewcomer->bind_param("sssssss", $id, $fullname, $email, $phone, $country, $languages, $document);
+// Prepare and execute the insert for the newcomers table
+$stmtNewcomer = $conn->prepare("INSERT INTO newcomers (id, full_name, email, phone, country, languages, document) VALUES (?, ?, ?, ?, ?, ?, ?)");
+$stmtNewcomer->bind_param("sssssss", $id, $fullname, $email, $phone, $country, $languages, $document);
+$stmtNewcomer->execute();
 
     if ($stmtUser->execute()) {
         if ($stmtNewcomer->execute()) {
