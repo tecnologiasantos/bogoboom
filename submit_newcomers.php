@@ -7,6 +7,19 @@ session_start();
 
 require '/var/www/html/bogoboom_project/safe/db_connection.php'; 
 
+// UUIDv4 generator
+function generate_uuid_v4() {
+    return sprintf(
+        '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+        mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+        mt_rand(0, 0xffff),
+        mt_rand(0, 0x0fff) | 0x4000,
+        mt_rand(0, 0x3fff) | 0x8000,
+        mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
+    );
+}
+
+// Collect and sanitize input
 $full_name = trim($_POST['full_name'] ?? '');
 $email = trim($_POST['email'] ?? '');
 $phone = trim($_POST['phone'] ?? '');
@@ -15,14 +28,20 @@ $languages = trim($_POST['languages'] ?? '');
 $password = $_POST['password'] ?? '';
 $confirm_password = $_POST['confirm_password'] ?? '';
 
+// Password match check
 if ($password !== $confirm_password) {
     echo "❌ Passwords do not match.";
     exit;
 }
 
-$password_hash = password_hash($password, PASSWORD_DEFAULT);
-$id = bin2hex(random_bytes(16));
+// Secure password hash
+$password_hash = password_hash($password, PASSWORD_BCRYPT);
 
+// Generate UUIDs
+$user_id = generate_uuid_v4();
+$newcomer_id = generate_uuid_v4();
+
+// Document upload handling
 $document = null;
 if (!empty($_FILES['document']) && $_FILES['document']['error'] === UPLOAD_ERR_OK) {
     $uploadDir = '/var/www/html/bogoboom_project/uploads/temp_files/';
@@ -41,7 +60,7 @@ if (!empty($_FILES['document']) && $_FILES['document']['error'] === UPLOAD_ERR_O
     $extension = pathinfo($_FILES['document']['name'], PATHINFO_EXTENSION);
     
     if (in_array($fileType, $allowedMimeTypes)) {
-        $newFileName = $id . '.' . $extension;
+        $newFileName = $newcomer_id . '.' . $extension;
         $uploadFile = $uploadDir . $newFileName;
 
         if (move_uploaded_file($_FILES['document']['tmp_name'], $uploadFile)) {
@@ -57,15 +76,14 @@ if (!empty($_FILES['document']) && $_FILES['document']['error'] === UPLOAD_ERR_O
 }
 
 try {
+    // Insert into users table
     $stmtUser = $conn->prepare("INSERT INTO users (id, email, full_name, phone, password_hash, role) VALUES (?, ?, ?, ?, ?, 'newcomers')");
-    $stmtUser->bind_param("sssss", $id, $email, $full_name, $phone, $password_hash);
+    $stmtUser->bind_param("sssss", $user_id, $email, $full_name, $phone, $password_hash);
     $stmtUser->execute();
 
-    $stmtNewcomer = $conn->prepare("INSERT INTO newcomers (id, full_name, email, phone, country, languages, document) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    
-    // Avoid passing a function directly (like move_uploaded_file() return value) to bind_param
-    $doc_path = $document;
-    $stmtNewcomer->bind_param("sssssss", $id, $full_name, $email, $phone, $country, $languages, $doc_path);
+    // Insert into newcomers table
+    $stmtNewcomer = $conn->prepare("INSERT INTO newcomers (id, user_id, full_name, email, phone, country, languages, document) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmtNewcomer->bind_param("ssssssss", $newcomer_id, $user_id, $full_name, $email, $phone, $country, $languages, $document);
     $stmtNewcomer->execute();
 
     echo "✅ Newcomer registered successfully.";
@@ -74,7 +92,6 @@ try {
     $stmtUser->close();
     $stmtNewcomer->close();
 } catch (Exception $e) {
-    // Development-time debugging: Show exact error
     echo "❌ Exception: " . $e->getMessage();
 }
 
