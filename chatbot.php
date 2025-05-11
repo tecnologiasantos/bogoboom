@@ -1,5 +1,5 @@
 <?php
-require 'var/www/html/bogoboom_project/backend/profiles';
+require 'var/www/html/bogoboom_project/backend/profiles/config.php';
 
 header('Content-Type: application/json');
 
