@@ -69,12 +69,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // SQL query to insert data into the agencies table (updated to include company_website)
     $query_agency = "INSERT INTO agencies (id, company_name, company_email, company_phone, responsible_name, company_address, company_website, company_password_hash, company_document, data_consent, created_at)
-                     VALUES ('$agency_id', '$agency_name', '$company_email', '$company_phone', '$responsible_name', '$company_address', '$company_website', '$hashed_password', '$document', '$dataConsent', NOW())";
+                     VALUES ('$agency_id', '$company_name', '$company_email', '$company_phone', '$responsible_name', '$company_address', '$company_website', '$hashed_password', '$document', '$dataConsent', NOW())";
 
-    // SQL query to insert data into the users table (corrected to add role)
-  $query_user = "INSERT INTO users (id, company_name, company_email, company_phone, company_website, password_hash, role, created_at)
-               VALUES ('$user_id', '$company_email', '$company_name', '$company_phone', '$company_website', '$hashed_password', 'agencies', NOW())";
-
+    // SQL query to insert data into the users table (corrected to add role and fix column order)
+    $query_user = "INSERT INTO users (id, company_name, email, phone, company_website, password_hash, role, created_at)
+                   VALUES ('$user_id', '$company_name', '$company_email', '$company_phone', '$company_website', '$hashed_password', 'agencies', NOW())";
 
     // Execute both queries using the database connection
     if (mysqli_query($conn, $query_agency) && mysqli_query($conn, $query_user)) {
