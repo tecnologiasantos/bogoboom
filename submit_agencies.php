@@ -12,7 +12,7 @@ require '/var/www/html/bogoboom_project/safe/db_connection.php';
 // Process form data only if it's a POST request
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Sanitize and collect inputs
-    $agency_name = trim($_POST['company_name']);
+    $company_name = trim($_POST['company_name']);
     $company_email = trim($_POST['company_email']);
     $company_phone = trim($_POST['company_phone']);
     $responsible_name = trim($_POST['responsible_name']);
@@ -72,8 +72,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                      VALUES ('$agency_id', '$agency_name', '$company_email', '$company_phone', '$responsible_name', '$company_address', '$company_website', '$hashed_password', '$document', '$dataConsent', NOW())";
 
     // SQL query to insert data into the users table (corrected to add role)
-  $query_user = "INSERT INTO users (id, email, full_name, phone, password_hash, role, created_at)
-               VALUES ('$user_id', '$company_email', '$agency_name', '$company_phone', '$hashed_password', 'agencies', NOW())";
+  $query_user = "INSERT INTO users (id, company_name, company_email, company_phone, company_website, password_hash, role, created_at)
+               VALUES ('$user_id', '$company_email', '$company_name', '$company_phone', '$company_website', '$hashed_password', 'agencies', NOW())";
 
 
     // Execute both queries using the database connection
