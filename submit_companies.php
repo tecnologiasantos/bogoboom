@@ -35,8 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Generate UUID for both user and company (same id)
     $company_id = uniqid('comp_', true); // Use UUID or a better unique id generator if needed
 
-    $query_user = "INSERT INTO users (id, company_email, password_hash, role, company_name, company_phone, company_website)
-               VALUES ('$company_id', '$company_email', '$hashed_password', 'companies', '$company_name', '$company_phone', '$company_website')";
+    $query_user = "INSERT INTO users (id, email, company_email, password_hash, role, company_name, company_phone, company_address, company_website)
+               VALUES ('$company_id', '$company_email', '$company_email', '$hashed_password', 'companies', '$company_name', '$company_phone', '$company_address', '$company_website')";
 
 
     if (mysqli_query($conn, $query_user)) {
