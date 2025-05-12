@@ -117,22 +117,32 @@ if ($current_user_role === 'newcomers') {
     $tables = [
         "users" => ["company_name", "email", "phone", "company_website"]
     ];
-    // Query for newcomers (show only active agencies)
     $stmt = $conn->prepare("SELECT " . implode(", ", $tables['users']) . " FROM users WHERE role = 'agencies' AND status = 'active' LIMIT 100");
 } elseif ($current_user_role === 'agencies') {
     $tables = [
         "users" => ["full_name", "email", "phone"]
     ];
-    // Query for agencies (show only active newcomers)
-    $stmt = $conn->prepare("SELECT " . implode(", ", $tables['users']) . " FROM users WHERE role = 'newcomers' AND status = 'active' LIMIT 100");
+
+    if (isset($_POST['generate_report']) && isset($_POST['start_date']) && isset($_POST['end_date'])) {
+        $start_date = $_POST['start_date'] . ' 00:00:00';
+        $end_date = $_POST['end_date'] . ' 23:59:59';
+
+        $stmt = $conn->prepare(
+            "SELECT " . implode(", ", $tables['users']) . "
+             FROM users
+             WHERE role = 'newcomers' AND status = 'active' AND created_at BETWEEN ? AND ?
+             LIMIT 100"
+        );
+        $stmt->bind_param("ss", $start_date, $end_date);
+    } else {
+        $stmt = $conn->prepare("SELECT " . implode(", ", $tables['users']) . " FROM users WHERE role = 'newcomers' AND status = 'active' LIMIT 100");
+    }
 } elseif ($current_user_role === 'companies') {
     $tables = [
         "users" => ["company_name", "email", "phone", "company_website"]
     ];
-    // Query for companies (show only active agencies)
     $stmt = $conn->prepare("SELECT " . implode(", ", $tables['users']) . " FROM users WHERE role = 'agencies' AND status = 'active' LIMIT 100");
 } else {
-    // Default query for any other roles (or logged-out state)
     $tables = [
         "users" => ["full_name", "email", "phone"]
     ];
@@ -143,7 +153,6 @@ if ($current_user_role === 'newcomers') {
 $stmt->execute();
 $result = $stmt->get_result();
 
-// Check for results and display them
 echo "<!DOCTYPE html><html lang='en'><head>
 <meta charset='UTF-8' />
 <meta name='viewport' content='width=device-width, initial-scale=1.0' />
@@ -180,6 +189,26 @@ echo "<main>
     <p>Welcome to the database viewer. You can see user records below.</p>
   </div>";
 
+if ($current_user_role === 'agencies') {
+    echo "<section>
+        <h3>Generate Report for Newcomers</h3>
+        <form method='POST' action=''>
+            <label for='start_date'>Start Date:</label>
+            <input type='date' id='start_date' name='start_date' required>
+            <label for='end_date'>End Date:</label>
+            <input type='date' id='end_date' name='end_date' required>
+            <input type='hidden' name='generate_report' value='1'>
+            <button type='submit'>📄 Generate Report</button>
+        </form>
+    </section>";
+}
+
+if (isset($_POST['generate_report'])) {
+    $startFormatted = date("d/m/Y", strtotime($_POST['start_date']));
+    $endFormatted = date("d/m/Y", strtotime($_POST['end_date']));
+    echo "<section><strong>Showing registration date from " . $startFormatted . " to " . $endFormatted . "</strong></section>";
+}
+
 if ($result && $result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         echo "<section><table><thead><tr>";
@@ -208,4 +237,3 @@ echo "<footer>
   </div>
 </footer></body></html>";
 ?>
-
