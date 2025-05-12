@@ -39,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $update_stmt->execute();
             $update_stmt->close();
 
+            // Successful password change
             echo "<!DOCTYPE html>
             <html><head><meta charset='UTF-8'>
             <meta http-equiv='refresh' content='5;url=https://bogoboom.com/'>
@@ -59,6 +60,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <a href='https://bogoboom.com/'><button class='home-btn'>Back to Home Now</button></a>
             </div>
             </body></html>";
+
+            // Log out user after redirection
+            session_destroy();
             exit;
         }
     }
