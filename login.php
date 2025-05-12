@@ -177,11 +177,21 @@ echo "<!DOCTYPE html><html lang='en'><head>
 echo "<header>
   <h1>Bogoboom Database Viewer</h1>
   <p>Check the records of our platform tables</p>
-  <div class='user-info'>Logged in as: " . htmlspecialchars($current_user_email) . "</div>
-  <form method='POST' action='' style='display: inline;'>
-    <input type='hidden' name='action' value='logout'>
-    <button type='submit' class='logoff-button'>Log off</button>
-  </form>
+
+<div class='header-actions' style='display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;'>
+  <div class='user-info' style='font-size: 0.9rem; font-style: italic;'>Logged in as: " . htmlspecialchars($current_user_email) . "</div>
+  <div style='display: flex; gap: 1rem;'>
+    <form method='POST' action=''>
+      <input type='hidden' name='action' value='logout'>
+      <button type='submit' style='background-color: #ff4d4d; color: white; padding: 0.5rem 1rem; border: none; border-radius: 5px; cursor: pointer;'>Log off</button>
+    </form>
+    <form method='GET' action='change_password.php'>
+      <button type='submit' style='background-color: #ffa500; color: white; padding: 0.5rem 1rem; border: none; border-radius: 5px; cursor: pointer;'>Change Password</button>
+    </form>
+  </div>
+</div>
+
+  
 </header>";
 
 echo "<main>
