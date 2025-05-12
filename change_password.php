@@ -41,15 +41,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             echo "<!DOCTYPE html>
             <html><head><meta charset='UTF-8'>
-            <meta http-equiv='refresh' content='5;url=index.html'>
+            <meta http-equiv='refresh' content='5;url=https://bogoboom.com/'>
             <title>Password Changed</title>
             <style>
               body { font-family: Arial; background: #f9f9f9; text-align: center; padding: 50px; }
               .message { background: #d4edda; color: #155724; padding: 20px; border: 1px solid #c3e6cb; border-radius: 8px; display: inline-block; }
+              .home-btn { padding: 10px 20px; background-color: #004a8f; color: white; border: none; border-radius: 6px; font-size: 1rem; cursor: pointer; margin-top: 20px; }
+              .home-btn:hover { background-color: #003366; }
+              .container { display: flex; justify-content: center; align-items: center; }
+              .home-btn-container { margin-left: 20px; }
             </style>
             </head><body>
             <div class='message'>
               ✅ Password changed successfully. You will be redirected in 5 seconds...
+            </div>
+            <div class='container'>
+              <a href='https://bogoboom.com/'><button class='home-btn'>Back to Home Now</button></a>
             </div>
             </body></html>";
             exit;
