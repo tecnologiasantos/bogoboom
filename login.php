@@ -97,6 +97,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
   <footer>
     &copy; 2025 Bogoboom. All rights reserved.
   </footer>
+
+  <script>
+    window.onbeforeunload = function() {
+      // Trigger logoff when the user closes the page
+      var form = document.createElement('form');
+      form.method = 'POST';
+      form.action = '';
+      var actionInput = document.createElement('input');
+      actionInput.type = 'hidden';
+      actionInput.name = 'action';
+      actionInput.value = 'logout';
+      form.appendChild(actionInput);
+      document.body.appendChild(form);
+      form.submit();
+    };
+  </script>
 </body>
 </html>";
     exit;
