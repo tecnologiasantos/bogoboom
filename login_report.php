@@ -204,8 +204,9 @@ if ($current_user_role === 'agencies') {
 }
 
 if (isset($_POST['generate_report'])) {
-    echo "<section><strong>Showing report from " . htmlspecialchars($_POST['start_date']) . 
-         " to " . htmlspecialchars($_POST['end_date']) . ".</strong></section>";
+    $startFormatted = date("d/m/Y", strtotime($_POST['start_date']));
+    $endFormatted = date("d/m/Y", strtotime($_POST['end_date']));
+    echo "<section><strong>Showing registration date from " . $startFormatted . " to " . $endFormatted . "</strong></section>";
 }
 
 if ($result && $result->num_rows > 0) {
