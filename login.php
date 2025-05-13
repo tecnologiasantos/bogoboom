@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
 } elseif (isset($_POST['action']) && $_POST['action'] == 'logout') {
     session_destroy();
-    header("Location: " . $_SERVER['PHP_SELF']);
+    header("Location: https://bogoboom.com");
     exit;
 } elseif (isset($_SESSION['user_email'])) {
     $current_user_email = $_SESSION['user_email'];
