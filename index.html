@@ -16,7 +16,7 @@
             color: white;
             padding: 1rem 2rem;
             text-align: center;
-            position: relative; /* To allow absolute positioning of the login button */
+            position: relative;
         }
         header h1 {
             margin-bottom: 0.2rem;
@@ -33,13 +33,13 @@
             display: inline-block;
             text-decoration: none;
             color: white;
-            background-color: black; /* Now it's black! */
+            background-color: black;
             padding: 0.5rem 1rem;
             border-radius: 4px;
             font-size: 0.9rem;
         }
         .login-button a:hover {
-            background-color: #333; /* Darker shade for hover effect */
+            background-color: #333;
         }
         main {
             padding: 2rem;
@@ -132,14 +132,24 @@
             width: 360px;
             height: auto;
         }
-
         .main-image {
             max-width: 100%;
             height: auto;
             margin-top: 2rem;
             border-radius: 8px;
         }
-
+        .innovation-images-vertical {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .innovation-images-vertical img {
+            width: 80%;
+            max-width: 600px;
+            border-radius: 8px;
+        }
         @media (max-width: 1024px) {
             .image-container,
             .image-container-right {
@@ -148,22 +158,22 @@
         }
     </style>
     <!-- Meta Pixel Code -->
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '699826945906215');
-fbq('track', 'PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=699826945906215&ev=PageView&noscript=1"
-/></noscript>
-<!-- End Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '699826945906215');
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=699826945906215&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Meta Pixel Code -->
 </head>
 <body>
 
@@ -181,6 +191,17 @@ src="https://www.facebook.com/tr?id=699826945906215&ev=PageView&noscript=1"
         </div>
 
         <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/bogoboom/websiteimages/bogoboom-front.png" alt="Bogoboom Front" class="main-image">
+
+        <!-- Innovation images stacked vertically -->
+        <div class="innovation-images-vertical">
+            <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/bogoboom/inovation/inovation1.png" alt="Innovation 1">
+            <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/bogoboom/inovation/inovation2.png" alt="Innovation 2">
+            <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/bogoboom/inovation/inovation3.png" alt="Innovation 3">
+            <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/bogoboom/inovation/inovation4.png" alt="Innovation 4">
+            <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/bogoboom/inovation/inovation5.png" alt="Innovation 5">
+            <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/bogoboom/inovation/inovation6.png" alt="Innovation 6">
+            <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/bogoboom/inovation/inovation7.png" alt="Innovation 7">
+        </div>
 
         <section>
             <h3 id="vacancies">With Bogoboom, your company´s HR team can:</h3>
