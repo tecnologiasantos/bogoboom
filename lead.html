@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Partner With Us - Bogoboom</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #004a8f;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            background-color: #004a8f;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #003c75;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Partner With Us</h2>
+        <form action="submit_lead.php" method="POST">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="phone">Phone Number</label>
+            <input type="text" id="phone" name="phone">
+
+            <label for="country">Country</label>
+            <select id="country" name="country" required onchange="fetchStates(this.value)">
+                <option value="">Select Country</option>
+            </select>
+
+            <label for="state">State</label>
+            <select id="state" onchange="fetchCities(this.value)">
+                <option value="">Select State</option>
+            </select>
+
+            <label for="city">City</label>
+            <select id="city" name="city" required>
+                <option value="">Select City</option>
+            </select>
+
+            <label for="interest">How would you like to collaborate?</label>
+            <select name="interest" id="interest" required>
+                <option value="">Select an Option</option>
+                <option value="Real Estate Partner">Real Estate Partner</option>
+                <option value="Hiring Company Partner">Hiring Company Partner</option>
+                <option value="Associate Brand">Associate Brand</option>
+            </select>
+
+            <button type="submit">Submit Application</button>
+        </form>
+    </div>
+
+    <script src="geo-dropdown.js"></script>
+</body>
+</html>
