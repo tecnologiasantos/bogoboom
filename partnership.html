@@ -91,7 +91,6 @@
         <h2>Bogoboom partnership Form</h2>
 
         <form action="/backend/forms/partner_inquiry.php" method="POST" autocomplete="on">
-            <!-- Honeypot Anti-Spam Field -->
             <div style="display: none;">
                 <label for="website">Leave this field empty:</label>
                 <input type="text" name="website" id="website" tabindex="-1" autocomplete="off" />
@@ -115,10 +114,16 @@
                     <option value="">Loading countries...</option>
                 </select>
             </div>
+            <div class="form-group" id="stateOrDepartmentGroup" style="display: none;">
+                <label for="stateOrDepartment" id="stateOrDepartmentLabel">State/Department:</label>
+                <select id="stateOrDepartment" name="stateOrDepartment">
+                    <option value="">Select a country first</option>
+                </select>
+            </div>
             <div class="form-group">
                 <label for="city">City:</label>
                 <select id="city" name="city" required>
-                    <option value="">Select a country first</option>
+                    <option value="">Select a state/department first</option>
                 </select>
             </div>
             <div class="form-group">
@@ -135,39 +140,137 @@
     </div>
 
     <div class="footer">
-        <p>&copy; 2025 Bogoboom. All rights reserved. | <a href="/privacy-policy.html">Privacy Policy</a></p>
+        <p>&copy; 2025 Bogoboom. All rights reserved. | <a href="https://bogoboom.com/privacy_policy.html">Privacy Policy</a></p>
     </div>
 
     <script>
         $(document).ready(function () {
-            $.get("https://countriesnow.space/api/v0.1/countries", function (data) {
-                if (data && data.data) {
-                    let countryOptions = data.data.map(c =>
-                        `<option value="${c.country}">${c.country}</option>`
-                    );
-                    $("#country").html('<option value="">Select a country</option>' + countryOptions.join(""));
+            // Function to load countries
+            function loadCountries() {
+                $.get("https://countriesnow.space/api/v0.1/countries/positions", function (data) {
+                    if (data && data.data) {
+                        let countryOptions = data.data.map(c =>
+                            `<option value="${c.name}" data-iso2="${c.iso2}">${c.name}</option>`
+                        );
+                        $("#country").html('<option value="">Select a country</option>' + countryOptions.join(""));
+                    } else {
+                        $("#country").html('<option value="">Error loading countries</option>');
+                    }
+                }).fail(function() {
+                    $("#country").html('<option value="">Failed to load countries</option>');
+                });
+            }
+
+            // Load countries on page load
+            loadCountries();
+
+            // Handle country change
+            $("#country").change(function () {
+                let selectedCountry = $(this).val();
+                let selectedCountryIso2 = $(this).find(':selected').data('iso2');
+                
+                // Reset and hide state/department and city fields
+                $("#stateOrDepartment").html('<option value="">Select a country first</option>').attr('required', false);
+                $("#stateOrDepartmentGroup").hide();
+                $("#city").html('<option value="">Select a state/department first</option>').attr('required', false);
+
+                if (selectedCountry) {
+                    // Update label for State/Department based on country (e.g., Colombia uses Department)
+                    if (selectedCountry === "Colombia") {
+                        $("#stateOrDepartmentLabel").text("Department:");
+                    } else {
+                        $("#stateOrDepartmentLabel").text("State:");
+                    }
+
+                    // Fetch states/departments for the selected country
+                    $.ajax({
+                        type: "POST",
+                        url: "https://countriesnow.space/api/v0.1/countries/states",
+                        contentType: "application/json",
+                        data: JSON.stringify({ iso2: selectedCountryIso2 }),
+                        success: function (response) {
+                            if (response && response.data && response.data.states && response.data.states.length > 0) {
+                                let stateOptions = response.data.states.map(s =>
+                                    `<option value="${s.name}">${s.name}</option>`
+                                );
+                                $("#stateOrDepartment").html('<option value="">Select a ' + (selectedCountry === "Colombia" ? 'department' : 'state') + '</option>' + stateOptions.join("")).attr('required', true);
+                                $("#stateOrDepartmentGroup").show(); // Show state/department field
+                            } else {
+                                // No states/departments, proceed directly to cities if available
+                                $("#stateOrDepartment").html('<option value="">No states/departments found</option>');
+                                fetchCitiesForCountry(selectedCountry);
+                            }
+                        },
+                        error: function() {
+                            $("#stateOrDepartment").html('<option value="">Failed to load states/departments</option>');
+                            // Also try to load cities directly if state/department fetch fails
+                            fetchCitiesForCountry(selectedCountry);
+                        }
+                    });
                 }
             });
 
-            $("#country").change(function () {
-                let selectedCountry = $(this).val();
+            // Handle state/department change
+            $("#stateOrDepartment").change(function () {
+                let selectedCountry = $("#country").val();
+                let selectedState = $(this).val();
+
+                $("#city").html('<option value="">Loading cities...</option>').attr('required', false);
+
+                if (selectedCountry && selectedState) {
+                    fetchCitiesForState(selectedCountry, selectedState);
+                } else if (selectedCountry && !selectedState) {
+                    // If no state selected (or no states available for country), load all cities for the country
+                    fetchCitiesForCountry(selectedCountry);
+                }
+            });
+
+            // Function to fetch cities based on country and state
+            function fetchCitiesForState(country, state) {
+                $.ajax({
+                    type: "POST",
+                    url: "https://countriesnow.space/api/v0.1/countries/state/cities",
+                    contentType: "application/json",
+                    data: JSON.stringify({ country: country, state: state }),
+                    success: function (response) {
+                        if (response && response.data && response.data.length > 0) {
+                            let cityOptions = response.data.map(c =>
+                                `<option value="${c}">${c}</option>`
+                            );
+                            $("#city").html('<option value="">Select a city</option>' + cityOptions.join("")).attr('required', true);
+                        } else {
+                            $("#city").html('<option value="">No cities found for this state/department</option>');
+                        }
+                    },
+                    error: function() {
+                        $("#city").html('<option value="">Failed to load cities</option>');
+                    }
+                });
+            }
+
+            // Function to fetch all cities for a country (if no states/departments are applicable or selected)
+            function fetchCitiesForCountry(country) {
                 $.ajax({
                     type: "POST",
                     url: "https://countriesnow.space/api/v0.1/countries/cities",
                     contentType: "application/json",
-                    data: JSON.stringify({ country: selectedCountry }),
+                    data: JSON.stringify({ country: country }),
                     success: function (response) {
-                        if (response && response.data) {
+                        if (response && response.data && response.data.length > 0) {
                             let cityOptions = response.data.map(c =>
                                 `<option value="${c}">${c}</option>`
                             );
-                            $("#city").html('<option value="">Select a city</option>' + cityOptions.join(""));
+                            $("#city").html('<option value="">Select a city</option>' + cityOptions.join("")).attr('required', true);
+                        } else {
+                            $("#city").html('<option value="">No cities found for this country</option>');
                         }
+                    },
+                    error: function() {
+                        $("#city").html('<option value="">Failed to load cities</option>');
                     }
                 });
-            });
+            }
         });
     </script>
 </body>
 </html>
-
