@@ -11,6 +11,7 @@
             padding: 0;
             background: #f5f5f5;
         }
+
         header {
             background-color: #004a8f;
             color: white;
@@ -18,17 +19,21 @@
             text-align: center;
             position: relative;
         }
+
         header h1 {
             margin-bottom: 0.2rem;
         }
+
         header p {
             margin-top: 0;
         }
+
         .login-button {
             position: absolute;
             top: 1rem;
             right: 2rem;
         }
+
         .login-button a {
             display: inline-block;
             text-decoration: none;
@@ -38,18 +43,22 @@
             border-radius: 4px;
             font-size: 0.9rem;
         }
+
         .login-button a:hover {
             background-color: #333;
         }
+
         main {
             padding: 2rem;
             text-align: center;
         }
+
         .intro {
             max-width: 600px;
             margin: 0 auto 2rem;
             font-size: 1.2rem;
         }
+
         section {
             max-width: 700px;
             margin: 2rem auto;
@@ -59,17 +68,21 @@
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
+
         section h3 {
             color: #004a8f;
         }
+
         ul {
             margin-top: 1rem;
             padding-left: 1.2rem;
             font-size: 1rem;
         }
+
         ul li {
             margin-bottom: 0.7rem;
         }
+
         .card-container {
             display: flex;
             justify-content: center;
@@ -77,20 +90,25 @@
             flex-wrap: wrap;
             margin-top: 2rem;
         }
+
         .card {
             background: white;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             padding: 1.5rem;
             width: 250px;
+            margin: 1rem auto;
         }
+
         .card h3 {
             color: #004a8f;
         }
+
         .card p {
             font-size: 0.95rem;
             color: #333;
         }
+
         .card a {
             display: inline-block;
             margin-top: 1rem;
@@ -100,20 +118,24 @@
             padding: 0.5rem 1rem;
             border-radius: 4px;
         }
+
         footer {
             margin-top: 2rem;
             text-align: center;
             font-size: 0.9rem;
             color: #666;
         }
+
         footer .links {
             margin-top: 0.5rem;
         }
+
         footer .links a {
             margin: 0 1rem;
             text-decoration: none;
             color: #004a8f;
         }
+
         .image-container,
         .image-container-right {
             position: absolute;
@@ -121,23 +143,28 @@
             transform: translateY(-50%);
             z-index: 10;
         }
+
         .image-container {
             left: 10px;
         }
+
         .image-container-right {
             right: 10px;
         }
+
         .image-container img,
         .image-container-right img {
             width: 360px;
             height: auto;
         }
+
         .main-image {
             max-width: 100%;
             height: auto;
             margin-top: 2rem;
             border-radius: 8px;
         }
+
         .innovation-images-vertical {
             display: flex;
             flex-direction: column;
@@ -145,11 +172,13 @@
             gap: 1.5rem;
             margin-top: 2rem;
         }
+
         .innovation-images-vertical img {
             width: 80%;
             max-width: 600px;
             border-radius: 8px;
         }
+
         @media (max-width: 1024px) {
             .image-container,
             .image-container-right {
@@ -157,6 +186,7 @@
             }
         }
     </style>
+
     <!-- Meta Pixel Code -->
     <script>
     !function(f,b,e,v,n,t,s)
@@ -192,7 +222,6 @@
 
         <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/bogoboom/websiteimages/bogoboom-front.png" alt="Bogoboom Front" class="main-image">
 
-        <!-- Innovation images stacked vertically -->
         <div class="innovation-images-vertical">
             <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/bogoboom/inovation/inovation1.png" alt="Innovation 1">
             <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/bogoboom/inovation/inovation2.png" alt="Innovation 2">
@@ -203,9 +232,9 @@
             <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/bogoboom/inovation/inovation7.png" alt="Innovation 7">
         </div>
 
-        
         <section>
             <h3>With Bogoboom, you can be our most important partner:</h3>
+            <ul>
                 <li>✅ List real estate properties as an official partner</li>
                 <li>✅ Promote jobs and receive housing support for relocated hires</li>
                 <li>✅ Use Bogoboom's partner badge/logo on your website and media</li>
@@ -214,8 +243,7 @@
                 <li>✅ Earn rewards by referring businesses or newcomers</li>
             </ul>
         </section>
-        
-        
+
         <section>
             <h3 id="vacancies">With Bogoboom, your company´s HR team can:</h3>
             <ul id="vacanciesList">
@@ -250,14 +278,16 @@
             </ul>
         </section>
 
-        
-        
-        <div class="card">
-                <h3>I want to be bogoboom's partner</h3>
+        <!-- Centered Partner Card -->
+        <div style="display: flex; justify-content: center;">
+            <div class="card">
+                <h3>I want to be Bogoboom's partner</h3>
                 <p>Check out our inquiry form, submit it and get in touch with our partnership program based on your business needs.</p>
                 <a href="partnership.html">Submit this form</a>
             </div>
-            
+        </div>
+
+        <!-- Role Cards -->
         <div class="card-container">
             <div class="card">
                 <h3>I'm a Newcomer</h3>
@@ -285,11 +315,9 @@
             <a href="https://tecnologiasantos.com" target="_blank">
                 Visit MIRA IT job portal - a Tecnologia Santos IT project - support@tecnologiasantos.com
             </a>
-             <a href="https://bogoboom.com/privacy_policy.html" target="_blank">Visit our privacy policy to learn more about data protection</a>
+            <a href="https://bogoboom.com/privacy_policy.html" target="_blank">Visit our privacy policy to learn more about data protection</a>
             <br>
         </div>
     </footer>
 </body>
 </html>
-
-
