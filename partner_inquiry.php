@@ -59,7 +59,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     );
 
     if ($stmt->execute()) {
-        echo "Thank you! Your inquiry has been submitted.";
+        echo "✅ Your inquiry was successfully registered. Have in mind that our stuff will reach out to you in some days.";
+    echo '<meta http-equiv="refresh" content="5;url=https://bogoboom.com">';
     } else {
         http_response_code(500);
         echo "Error saving your information. Please try again later.";
