@@ -1,6 +1,6 @@
 <?php
 // Include your DB config file
-require_once '../config/db_connection.php'; // Adjust path if needed
+require '../safe/db_connection.php'; // Adjust the path if needed
 
 // Check if the form was submitted via POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
