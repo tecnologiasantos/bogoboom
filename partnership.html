@@ -1,276 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Partner With Us - Bogoboom</title>
-    <meta name="description" content="Join Bogoboom's mission to create amazing relocation experiences. Partner with us as a Real Estate Partner, Hiring Company Partner, or Associate Brand." />
-    <link rel="canonical" href="https://www.bogoboom.com/partnership.html" />
-    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-    
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
-            color: #333;
-        }
-        .container {
-            max-width: 700px;
-            margin: 30px auto;
-            background: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        h1, h2 {
-            color: #2c3e50;
-            text-align: center;
-            margin-bottom: 15px;
-        }
-        h1 {
-            font-size: 2.5em;
-        }
-        h2 {
-            font-size: 1.8em;
-        }
-        p {
-            margin-bottom: 15px;
-            text-align: center;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
-        .form-group input[type="text"],
-        .form-group input[type="email"],
-        .form-group input[type="tel"],
-        .form-group select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-        button {
-            display: block;
-            width: 100%;
-            padding: 15px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 18px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            font-size: 0.9em;
-            color: #777;
-        }
-    </style>
-    
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Partner With Us - Bogoboom</title>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding: 20px;
+    }
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1, h2, p {
+      text-align: center;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+    }
+    input, select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    button {
+      width: 100%;
+      padding: 15px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      font-size: 18px;
+      border-radius: 5px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 0.9em;
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Partner With Us</h1>
-        <p>Join our mission and let's create something amazing together.</p>
-        
-        <h2>Bogoboom partnership Form</h2>
+  <div class="container">
+    <h1>Partner With Us</h1>
+    <h2>Bogoboom Partnership Form</h2>
+    <form action="/backend/forms/partner_inquiry.php" method="POST" autocomplete="on">
+      <div style="display: none;">
+        <label for="website">Leave this field empty:</label>
+        <input type="text" name="website" id="website" tabindex="-1" autocomplete="off" />
+      </div>
+      <div class="form-group">
+        <label for="fullName">Full Name:</label>
+        <input type="text" id="fullName" name="fullName" required />
+      </div>
+      <div class="form-group">
+        <label for="emailAddress">Email Address:</label>
+        <input type="email" id="emailAddress" name="emailAddress" required />
+      </div>
+      <div class="form-group">
+        <label for="phoneNumber">Phone Number:</label>
+        <input type="tel" id="phoneNumber" name="phoneNumber" />
+      </div>
+      <div class="form-group">
+        <label for="country">Country:</label>
+        <select id="country" name="country" required>
+          <option value="">Loading countries...</option>
+        </select>
+      </div>
+      <div class="form-group" id="stateOrDepartmentGroup" style="display: none;">
+        <label for="stateOrDepartment" id="stateOrDepartmentLabel">State/Department:</label>
+        <select id="stateOrDepartment" name="stateOrDepartment"></select>
+      </div>
+      <div class="form-group">
+        <label for="city">City:</label>
+        <select id="city" name="city" required>
+          <option value="">Select a state/department first</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="collaborationType">How would you like to collaborate?</label>
+        <select id="collaborationType" name="collaborationType" required>
+          <option value="">Select an option</option>
+          <option value="Real Estate Partner">Real Estate Partner</option>
+          <option value="Hiring Company Partner">Hiring Company Partner</option>
+          <option value="Associate Brand">Associate Brand</option>
+        </select>
+      </div>
+      <button type="submit">Submit Inquiry</button>
+    </form>
+  </div>
 
-        <form action="/backend/forms/partner_inquiry.php" method="POST" autocomplete="on">
-            <div style="display: none;">
-                <label for="website">Leave this field empty:</label>
-                <input type="text" name="website" id="website" tabindex="-1" autocomplete="off" />
-            </div>
+  <div class="footer">
+    <p>&copy; 2025 Bogoboom. All rights reserved. | <a href="https://bogoboom.com/privacy_policy.html">Privacy Policy</a></p>
+  </div>
 
-            <div class="form-group">
-                <label for="fullName">Full Name:</label>
-                <input type="text" id="fullName" name="fullName" required autocomplete="name" autocapitalize="words" />
-            </div>
-            <div class="form-group">
-                <label for="emailAddress">Email Address:</label>
-                <input type="email" id="emailAddress" name="emailAddress" required autocomplete="email" />
-            </div>
-            <div class="form-group">
-                <label for="phoneNumber">Phone Number:</label>
-                <input type="tel" id="phoneNumber" name="phoneNumber" autocomplete="tel" />
-            </div>
-            <div class="form-group">
-                <label for="country">Country:</label>
-                <select id="country" name="country" required>
-                    <option value="">Loading countries...</option>
-                </select>
-            </div>
-            <div class="form-group" id="stateOrDepartmentGroup" style="display: none;">
-                <label for="stateOrDepartment" id="stateOrDepartmentLabel">State/Department:</label>
-                <select id="stateOrDepartment" name="stateOrDepartment">
-                    <option value="">Select a country first</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="city">City:</label>
-                <select id="city" name="city" required>
-                    <option value="">Select a state/department first</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="collaborationType">How would you like to collaborate?</label>
-                <select id="collaborationType" name="collaborationType" required>
-                    <option value="">Select an option</option>
-                    <option value="Real Estate Partner">Real Estate Partner</option>
-                    <option value="Hiring Company Partner">Hiring Company Partner</option>
-                    <option value="Associate Brand">Associate Brand</option>
-                </select>
-            </div>
-            <button type="submit">Submit Inquiry</button>
-        </form>
-    </div>
-
-    <div class="footer">
-        <p>&copy; 2025 Bogoboom. All rights reserved. | <a href="https://bogoboom.com/privacy_policy.html">Privacy Policy</a></p>
-    </div>
-
-    <script>
-        $(document).ready(function () {
-            // Function to load countries
-            function loadCountries() {
-                $.get("https://countriesnow.space/api/v0.1/countries/positions", function (data) {
-                    if (data && data.data) {
-                        let countryOptions = data.data.map(c =>
-                            `<option value="${c.name}" data-iso2="${c.iso2}">${c.name}</option>`
-                        );
-                        $("#country").html('<option value="">Select a country</option>' + countryOptions.join(""));
-                    } else {
-                        $("#country").html('<option value="">Error loading countries</option>');
-                    }
-                }).fail(function() {
-                    $("#country").html('<option value="">Failed to load countries</option>');
-                });
-            }
-
-            // Load countries on page load
-            loadCountries();
-
-            // Handle country change
-            $("#country").change(function () {
-                let selectedCountry = $(this).val();
-                let selectedCountryIso2 = $(this).find(':selected').data('iso2');
-                
-                // Reset and hide state/department and city fields
-                $("#stateOrDepartment").html('<option value="">Select a country first</option>').attr('required', false);
-                $("#stateOrDepartmentGroup").hide();
-                $("#city").html('<option value="">Select a state/department first</option>').attr('required', false);
-
-                if (selectedCountry) {
-                    // Update label for State/Department based on country (e.g., Colombia uses Department)
-                    if (selectedCountry === "Colombia") {
-                        $("#stateOrDepartmentLabel").text("Department:");
-                    } else {
-                        $("#stateOrDepartmentLabel").text("State:");
-                    }
-
-                    // Fetch states/departments for the selected country
-                    $.ajax({
-                        type: "POST",
-                        url: "https://countriesnow.space/api/v0.1/countries/states",
-                        contentType: "application/json",
-                        data: JSON.stringify({ iso2: selectedCountryIso2 }),
-                        success: function (response) {
-                            if (response && response.data && response.data.states && response.data.states.length > 0) {
-                                let stateOptions = response.data.states.map(s =>
-                                    `<option value="${s.name}">${s.name}</option>`
-                                );
-                                $("#stateOrDepartment").html('<option value="">Select a ' + (selectedCountry === "Colombia" ? 'department' : 'state') + '</option>' + stateOptions.join("")).attr('required', true);
-                                $("#stateOrDepartmentGroup").show(); // Show state/department field
-                            } else {
-                                // No states/departments, proceed directly to cities if available
-                                $("#stateOrDepartment").html('<option value="">No states/departments found</option>');
-                                fetchCitiesForCountry(selectedCountry);
-                            }
-                        },
-                        error: function() {
-                            $("#stateOrDepartment").html('<option value="">Failed to load states/departments</option>');
-                            // Also try to load cities directly if state/department fetch fails
-                            fetchCitiesForCountry(selectedCountry);
-                        }
-                    });
-                }
-            });
-
-            // Handle state/department change
-            $("#stateOrDepartment").change(function () {
-                let selectedCountry = $("#country").val();
-                let selectedState = $(this).val();
-
-                $("#city").html('<option value="">Loading cities...</option>').attr('required', false);
-
-                if (selectedCountry && selectedState) {
-                    fetchCitiesForState(selectedCountry, selectedState);
-                } else if (selectedCountry && !selectedState) {
-                    // If no state selected (or no states available for country), load all cities for the country
-                    fetchCitiesForCountry(selectedCountry);
-                }
-            });
-
-            // Function to fetch cities based on country and state
-            function fetchCitiesForState(country, state) {
-                $.ajax({
-                    type: "POST",
-                    url: "https://countriesnow.space/api/v0.1/countries/state/cities",
-                    contentType: "application/json",
-                    data: JSON.stringify({ country: country, state: state }),
-                    success: function (response) {
-                        if (response && response.data && response.data.length > 0) {
-                            let cityOptions = response.data.map(c =>
-                                `<option value="${c}">${c}</option>`
-                            );
-                            $("#city").html('<option value="">Select a city</option>' + cityOptions.join("")).attr('required', true);
-                        } else {
-                            $("#city").html('<option value="">No cities found for this state/department</option>');
-                        }
-                    },
-                    error: function() {
-                        $("#city").html('<option value="">Failed to load cities</option>');
-                    }
-                });
-            }
-
-            // Function to fetch all cities for a country (if no states/departments are applicable or selected)
-            function fetchCitiesForCountry(country) {
-                $.ajax({
-                    type: "POST",
-                    url: "https://countriesnow.space/api/v0.1/countries/cities",
-                    contentType: "application/json",
-                    data: JSON.stringify({ country: country }),
-                    success: function (response) {
-                        if (response && response.data && response.data.length > 0) {
-                            let cityOptions = response.data.map(c =>
-                                `<option value="${c}">${c}</option>`
-                            );
-                            $("#city").html('<option value="">Select a city</option>' + cityOptions.join("")).attr('required', true);
-                        } else {
-                            $("#city").html('<option value="">No cities found for this country</option>');
-                        }
-                    },
-                    error: function() {
-                        $("#city").html('<option value="">Failed to load cities</option>');
-                    }
-                });
-            }
+  <script>
+    $(document).ready(function () {
+      function loadCountries() {
+        $.get("https://countriesnow.space/api/v0.1/countries/iso", function (data) {
+          if (data && data.data) {
+            const options = data.data.map(c =>
+              `<option value="${c.name}" data-iso2="${c.Iso2}">${c.name}</option>`
+            );
+            $("#country").html('<option value="">Select a country</option>' + options.join(''));
+          } else {
+            $("#country").html('<option value="">Failed to load countries</option>');
+          }
+        }).fail(function () {
+          $("#country").html('<option value="">Error fetching countries</option>');
         });
-    </script>
+      }
+
+      loadCountries();
+
+      $("#country").on("change", function () {
+        const country = $(this).val();
+        const iso2 = $(this).find("option:selected").data("iso2");
+
+        $("#stateOrDepartment").empty();
+        $("#city").empty().append('<option value="">Select a state first</option>');
+        $("#stateOrDepartmentGroup").hide();
+
+        if (!country || !iso2) return;
+
+        const label = (country === "Colombia") ? "Department" : "State";
+        $("#stateOrDepartmentLabel").text(label + ":");
+
+        $.ajax({
+          type: "POST",
+          url: "https://countriesnow.space/api/v0.1/countries/states",
+          contentType: "application/json",
+          data: JSON.stringify({ iso2 }),
+          success: function (res) {
+            if (res.data && res.data.states.length > 0) {
+              const options = res.data.states.map(s => `<option value="${s.name}">${s.name}</option>`);
+              $("#stateOrDepartment").html('<option value="">Select a ' + label.toLowerCase() + '</option>' + options.join(''));
+              $("#stateOrDepartmentGroup").show();
+            } else {
+              fetchCitiesByCountry(country);
+            }
+          },
+          error: function () {
+            fetchCitiesByCountry(country);
+          }
+        });
+      });
+
+      $("#stateOrDepartment").on("change", function () {
+        const state = $(this).val();
+        const country = $("#country").val();
+        if (state) {
+          fetchCitiesByState(country, state);
+        }
+      });
+
+      function fetchCitiesByState(country, state) {
+        $.ajax({
+          type: "POST",
+          url: "https://countriesnow.space/api/v0.1/countries/state/cities",
+          contentType: "application/json",
+          data: JSON.stringify({ country, state }),
+          success: function (res) {
+            if (res.data && res.data.length > 0) {
+              const cities = res.data.map(c => `<option value="${c}">${c}</option>`);
+              $("#city").html('<option value="">Select a city</option>' + cities.join(''));
+            } else {
+              $("#city").html('<option value="">No cities found</option>');
+            }
+          },
+          error: function () {
+            $("#city").html('<option value="">Failed to load cities</option>');
+          }
+        });
+      }
+
+      function fetchCitiesByCountry(country) {
+        $.ajax({
+          type: "POST",
+          url: "https://countriesnow.space/api/v0.1/countries/cities",
+          contentType: "application/json",
+          data: JSON.stringify({ country }),
+          success: function (res) {
+            if (res.data && res.data.length > 0) {
+              const cities = res.data.map(c => `<option value="${c}">${c}</option>`);
+              $("#city").html('<option value="">Select a city</option>' + cities.join(''));
+            } else {
+              $("#city").html('<option value="">No cities found</option>');
+            }
+          },
+          error: function () {
+            $("#city").html('<option value="">Error loading cities</option>');
+          }
+        });
+      }
+    });
+  </script>
 </body>
 </html>
