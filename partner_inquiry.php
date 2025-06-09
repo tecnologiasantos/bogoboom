@@ -4,7 +4,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 // Include your DB config file
-require '../safe/db_connection.php'; // Adjust the path if needed
+require '/var/www/html/bogoboom_project/safe/db_connection.php';
 
 // Check if the form was submitted via POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
