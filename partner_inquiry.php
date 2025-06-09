@@ -6,6 +6,12 @@ error_reporting(E_ALL);
 // Include your DB config file
 require '/var/www/html/bogoboom_project/safe/db_connection.php';
 
+// Load PHPMailer classes (make sure you installed PHPMailer via Composer)
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require '/var/www/html/bogoboom_project/vendor/autoload.php'; // Adjust path if needed
+
 // Check if the form was submitted via POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
@@ -59,8 +65,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     );
 
     if ($stmt->execute()) {
+        // Send notification email via PHPMailer
+        $mail = new PHPMailer(true);
+        try {
+            // SMTP settings for Gmail with app password
+            $mail->isSMTP();
+            $mail->Host = 'smtp.gmail.com';
+            $mail->SMTPAuth = true;
+            $mail->Username = 'support@tecnologiasantos.com';
+            $mail->Password = 'ylpu wsii mjhm vdlp'; // Your app password
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port = 587;
+
+            $mail->setFrom('support@tecnologiasantos.com', 'Bogoboom Support');
+            $mail->addAddress('support@tecnologiasantos.com', 'Bogoboom Team');
+
+            $mail->isHTML(true);
+            $mail->Subject = 'New Partner Inquiry from ' . htmlspecialchars($fullName);
+            $mail->Body = "
+                <h2>New Partner Inquiry Details</h2>
+                <p><strong>Full Name:</strong> " . htmlspecialchars($fullName) . "</p>
+                <p><strong>Email:</strong> " . htmlspecialchars($email) . "</p>
+                <p><strong>Phone:</strong> " . htmlspecialchars($phone) . "</p>
+                <p><strong>Country:</strong> " . htmlspecialchars($country) . "</p>
+                <p><strong>State/Department:</strong> " . htmlspecialchars($state) . "</p>
+                <p><strong>City:</strong> " . htmlspecialchars($city) . "</p>
+                <p><strong>Collaboration Type:</strong> " . htmlspecialchars($collabType) . "</p>
+            ";
+
+            $mail->send();
+        } catch (Exception $e) {
+            // You can log this error or handle it silently
+            error_log("Mail error: " . $mail->ErrorInfo);
+        }
+
         echo "✅ Your inquiry was successfully registered. Have in mind that our stuff will reach out to you in some days.";
-    echo '<meta http-equiv="refresh" content="10;url=https://bogoboom.com">';
+        echo '<meta http-equiv="refresh" content="10;url=https://bogoboom.com">';
     } else {
         http_response_code(500);
         echo "Error saving your information. Please try again later.";
