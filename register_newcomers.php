@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bogoboom | Newcomer Registration</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+    }
+    .image-container,
+    .image-container-right {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+    }
+    .image-container {
+      left: 10px;
+    }
+    .image-container-right {
+      right: 10px;
+    }
+    .image-container img,
+    .image-container-right img {
+      width: 360px;
+      height: auto;
+    }
+
+    @media (max-width: 1024px) {
+      .image-container,
+      .image-container-right {
+        display: none;
+      }
+    }
+
+    header {
+      background-color: #004a8f;
+      color: white;
+      padding: 1rem 2rem;
+      text-align: center;
+    }
+    main {
+      padding: 2rem;
+      text-align: center;
+    }
+    .intro {
+      max-width: 600px;
+      margin: 0 auto 2rem;
+      font-size: 1.2rem;
+    }
+    section {
+      max-width: 700px;
+      margin: 2rem auto;
+      text-align: left;
+      background: #fff;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    section h3 {
+      color: #004a8f;
+      margin-bottom: 1rem;
+    }
+    section form {
+      display: grid;
+      gap: 1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    section form div {
+      margin-bottom: 1.5rem;
+    }
+    label {
+      font-weight: bold;
+      color: #004a8f;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 0.8rem;
+      border-radius: 6px;
+      font-size: 1rem;
+      border: 1px solid #ddd;
+      box-sizing: border-box;
+    }
+    input[type="text"], input[type="email"], input[type="date"], input[type="number"], input[type="password"] {
+      background-color: #f9f9f9;
+    }
+    button {
+      background-color: #004a8f;
+      color: white;
+      font-size: 1.1rem;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #003c6e;
+    }
+    footer {
+      margin-top: 2rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+
+  
+  <header>
+    <h1>Welcome to Bogoboom</h1>
+    <p>Connecting newcomers with jobs and homes</p>
+  </header>
+
+  <main>
+    <div class="intro">
+      <p>Bogoboom is your bridge to a smooth landing in your new city. Whether you're a newcomer, an HR department, or a real estate agency, our platform helps you connect and thrive.</p>
+    </div>
+
+    <section>
+      <h3>Newcomer Registration Form</h3>
+      <form action="/backend/profiles/submit_newcomers.php" method="POST" enctype="multipart/form-data">
+        <div>
+          <label for="fullname">👤 Full Name:</label>
+          <input type="text" id="fullname" name="fullname" required>
+        </div>
+        <div>
+          <label for="email">📧 Email:</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+        <div>
+          <label for="phone">📱 Phone Number:</label>
+          <input type="text" id="phone" name="phone" required>
+        </div>
+        <div>
+          <label for="country">🌍 Country of Origin:</label>
+          <select id="country" name="country" required>
+            <option value="">Select Country</option>
+          </select>
+        </div>
+        <div>
+          <label for="languages">🗣️ Spoken Languages:</label>
+          <input type="text" id="languages" name="languages">
+        </div>
+        <div>
+          <label for="password">🔒 Password:</label>
+          <input type="password" id="password" name="password" required>
+        </div>
+        <div>
+          <label for="confirm_password">🔒 Confirm Password:</label>
+          <input type="password" id="confirm_password" name="confirm_password" required>
+        </div>
+        <div>
+          <label for="document">📄 Upload Document (optional):</label>
+          <input type="file" id="document" name="document" accept=".pdf,.doc,.docx">
+        </div>
+        <div>
+          <input type="checkbox" id="dataConsent" name="dataConsent" required>
+          <label for="dataConsent">
+            I acknowledge and consent to the treatment and usage of my personal data in accordance with the site's <a href="/privacy_policy.html" target="_blank">privacy policy</a>.
+          </label>
+        </div>
+        <div style="text-align: center;">
+          <button type="submit">🚀 Register Now</button>
+        </div>
+      </form>
+    </section>
+
+  </main>
+
+  <footer>
+    &copy; 2025 Bogoboom. All rights reserved.
+  </footer>
+
+  <script>
+    fetch('https://restcountries.com/v3.1/all')
+      .then(response => response.json())
+      .then(data => {
+        const countrySelect = document.getElementById('country');
+        data.sort((a, b) => {
+          const nameA = a.name.common.toUpperCase();
+          const nameB = b.name.common.toUpperCase();
+          return nameA.localeCompare(nameB);
+        });
+        data.forEach(country => {
+          const option = document.createElement('option');
+          option.value = country.name.common;
+          option.textContent = country.name.common;
+          countrySelect.appendChild(option);
+        });
+      })
+      .catch(error => console.error('Error fetching country data:', error));
+  </script>
+
+</body>
+</html>
+
