@@ -1,8 +1,13 @@
 <?php
-require 'var/www/html/bogoboom_project/backend/profiles/config.php';
+
+
+
+// Load config
+require 'config.php';
 
 header('Content-Type: application/json');
 
+// Get the user's message
 $data = json_decode(file_get_contents('php://input'), true);
 $userMessage = $data['message'] ?? '';
 
@@ -11,31 +16,47 @@ if (!$userMessage) {
     exit;
 }
 
-// Make API request to OpenAI
-$ch = curl_init('https://api.openai.com/v1/chat/completions');
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    'Content-Type: application/json',
-    'Authorization: Bearer ' . OPENAI_API_KEY
-]);
-curl_setopt($ch, CURLOPT_POST, 1);
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
-    "model" => "gpt-3.5-turbo",
-    "messages" => [
-        ["role" => "system", "content" => "You are the Bogoboom assistant. Help newcomers, HR, and agencies with their questions about relocating to Bogotá."],
-        ["role" => "user", "content" => $userMessage]
+// Prepare Gemini API request
+$apiKey = GEMINI_API_KEY;
+$endpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={$apiKey}";
+
+$payload = json_encode([
+    'contents' => [
+        ['parts' => [['text' => $userMessage]]]
     ]
-]));
+]);
+
+// Send the request to Gemini
+$ch = curl_init($endpoint);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
 
 $response = curl_exec($ch);
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
 if (curl_errno($ch)) {
-    echo json_encode(['reply' => 'Error talking to AI.']);
+    echo json_encode(['reply' => 'Error talking to Gemini API.']);
     exit;
 }
 curl_close($ch);
 
+// Decode response
 $result = json_decode($response, true);
-$reply = $result['choices'][0]['message']['content'] ?? 'Sorry, I could not generate a reply.';
 
+// Handle errors
+if ($httpCode !== 200 || !isset($result['candidates'][0]['content']['parts'][0]['text'])) {
+    echo json_encode([
+        'reply' => 'Gemini API error.',
+        'http_code' => $httpCode,
+        'raw_response' => $response
+    ]);
+    exit;
+}
+
+// Extract reply
+$reply = $result['candidates'][0]['content']['parts'][0]['text'];
 echo json_encode(['reply' => $reply]);
 ?>
+
