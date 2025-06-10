@@ -11,7 +11,6 @@ session_start();
 require '/var/www/html/bogoboom_project/safe/db_connection.php';
 
 // Initialize variables safely
-$user_id = $_SESSION['user_id'] ?? null; // Assuming user_id stored in session after login
 $company_name = $_POST['company_name'] ?? '';
 $company_email = $_POST['company_email'] ?? '';
 $company_phone = $_POST['company_phone'] ?? '';
@@ -56,7 +55,7 @@ if (isset($_FILES['company_document']) && $_FILES['company_document']['error'] =
     $allowedExtensions = ['pdf', 'doc', 'docx'];
     if (in_array($fileExtension, $allowedExtensions)) {
         $newFileName = uniqid('doc_', true) . '.' . $fileExtension;
-        $uploadFileDir = '/var/www/html/bogoboom_project/uploads/agency_docs/'; // Ensure this dir exists and is writable
+        $uploadFileDir = '/var/www/html/bogoboom_project/uploads/agency_docs/';
         $dest_path = $uploadFileDir . $newFileName;
 
         if (move_uploaded_file($fileTmpPath, $dest_path)) {
@@ -69,10 +68,34 @@ if (isset($_FILES['company_document']) && $_FILES['company_document']['error'] =
     }
 }
 
-// Generate UUID for the agency
+// Generate UUID for the user (users table)
+$user_id = bin2hex(random_bytes(16));
+
+// Insert into 'users' table
+$stmtUser = $conn->prepare("INSERT INTO users (id, email, full_name, phone, password_hash, role) VALUES (?, ?, ?, ?, ?, 'agencies')");
+if (!$stmtUser) {
+    die('Prepare failed for users table: ' . $conn->error);
+}
+
+$stmtUser->bind_param(
+    "sssss",
+    $user_id,
+    $company_email,
+    $company_name,
+    $company_phone,
+    $company_password_hash
+);
+
+if (!$stmtUser->execute()) {
+    die('Error inserting into users table: ' . $stmtUser->error);
+}
+
+$stmtUser->close();
+
+// Generate UUID for the agency (agencies table)
 $agency_id = bin2hex(random_bytes(16));
 
-// Prepare SQL Insert
+// Prepare SQL Insert for 'agencies' table
 $sql = "INSERT INTO agencies (
             id, user_id, company_name, company_email, company_phone,
             responsible_name, company_address, country, state_or_department,
@@ -85,7 +108,7 @@ if (!$stmt) {
     die('Prepare failed: ' . $conn->error);
 }
 
-// Bind parameters
+// Bind parameters for 'agencies' table
 $stmt->bind_param(
     "sssssssssssssi",
     $agency_id,
@@ -104,10 +127,9 @@ $stmt->bind_param(
     $data_consent
 );
 
-// Execute
+// Execute insert for 'agencies' table
 if ($stmt->execute()) {
     echo "✅ Agency registered successfully.";
-    // Redirect after 5 seconds
     echo '<meta http-equiv="refresh" content="5;url=https://bogoboom.com">';
 } else {
     echo "Error: " . $stmt->error;
