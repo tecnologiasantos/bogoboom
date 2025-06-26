@@ -195,128 +195,143 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             }
         }
     </style>
-
-
 </head>
 <body>
 
-	<!-- Google Tag Manager (noscript) -->
+<!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KB35HQ9P"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
-    <header>
-        <h1>Welcome to Bogoboom</h1>
-        <p>Connecting newcomers in Bogotá with jobs and homes</p>
-        <div class="login-button">
-            <a href="https://bogoboom.com/backend/profiles/login.php">Login here</a>
+<header>
+    <h1>Welcome to Bogoboom</h1>
+    <p>Connecting newcomers in Bogotá with jobs and homes</p>
+    <div class="login-button">
+        <a href="https://bogoboom.com/backend/profiles/login.php">Login here</a>
+    </div>
+</header>
+
+<main>
+
+    <!-- Inclusive Audio Description -->
+    <section style="background-color: #e6f2ff; border: 2px solid #004a8f; border-radius: 8px; padding: 1rem; margin-bottom: 2rem;">
+        <h2 style="color: #004a8f;">🎧 Inclusive Audio Description Available</h2>
+        <p>
+            For users who prefer or require audio guidance, click the button below to listen to a narrated description of our platform.
+        </p>
+        <button onclick="document.getElementById('audioDescription').play()" style="padding: 0.6rem 1.2rem; background-color: #004a8f; color: white; border: none; border-radius: 4px; font-size: 1rem;">
+            🔊 Play Audio Description
+        </button>
+        <audio id="audioDescription" style="display: block; margin-top: 1rem;" aria-label="Bogoboom Audio Description" title="Bogoboom Audio Description" controls>
+            <source src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/bogoboom/audio+description/bogoboom.com.wav" type="audio/wav">
+            Your browser does not support the audio element.
+        </audio>
+    </section>
+
+    <div class="intro">
+        <p>Bogoboom is your bridge to a smooth landing in any place in the world. Whether you're a newcomer, an HR department, or a real estate agency, our platform helps you connect and thrive.</p>
+    </div>
+
+    <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/bogoboom/websiteimages/bogoboom-front.png" alt="Bogoboom Front" class="main-image">
+
+    <div class="innovation-images-vertical">
+        <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/bogoboom/inovation/inovation1.png" alt="Innovation 1">
+        <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/bogoboom/inovation/inovation2.png" alt="Innovation 2">
+        <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/bogoboom/inovation/inovation3.png" alt="Innovation 3">
+        <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/bogoboom/inovation/inovation4.png" alt="Innovation 4">
+        <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/bogoboom/inovation/inovation5.png" alt="Innovation 5">
+        <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/bogoboom/inovation/inovation6.png" alt="Innovation 6">
+        <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/bogoboom/inovation/inovation7.png" alt="Innovation 7">
+    </div>
+
+    <section>
+        <h3>With Bogoboom, you can be our most important partner:</h3>
+        <ul>
+            <li>✅ List real estate properties as an official partner</li>
+            <li>✅ Promote jobs and receive housing support for relocated hires</li>
+            <li>✅ Use Bogoboom's partner badge/logo on your website and media</li>
+            <li>✅ Participate in Bogoboom’s franchising and expansion programs</li>
+            <li>✅ Be listed as a featured partner on the Bogoboom portal</li>
+            <li>✅ Earn rewards by referring businesses or newcomers</li>
+        </ul>
+    </section>
+
+    <section>
+        <h3 id="vacancies">With Bogoboom, your company´s HR team can:</h3>
+        <ul id="vacanciesList">
+            <li>✅ Save money on temporary hotel stays and last-minute relocation support</li>
+            <li>✅ Delegate accommodation logistics to a dedicated, efficient platform</li>
+            <li>✅ Offer a better employee experience from day one</li>
+            <li>✅ Strengthen your company’s reputation as relocation-friendly</li>
+            <li>✅ Access a pre-screened list of real estate agencies offering fair, quality housing</li>
+            <li>✅ Focus more on hiring and retention—and less on real estate headaches</li>
+        </ul>
+    </section>
+
+    <section>
+        <h3>Newcomers, discover how Bogoboom makes your journey easier:</h3>
+        <ul>
+            <li>✅ Register for free and get matched with HR teams and local agencies</li>
+            <li>✅ Explore housing options before you even land in Bogotá</li>
+            <li>✅ Enjoy a smooth relocation with trusted partners</li>
+            <li>✅ Have your housing preferences shared directly with real estate agents</li>
+            <li>✅ Start your life in Bogotá with less stress and more support</li>
+        </ul>
+    </section>
+
+    <section>
+        <h3>Real Estate Agencies, partner with Bogoboom to grow your business:</h3>
+        <ul>
+            <li>✅ Access a growing network of international professionals relocating to Bogotá</li>
+            <li>✅ Get visibility among HR departments of top employers</li>
+            <li>✅ List properties that match newcomers' expectations and budgets</li>
+            <li>✅ Use our portal to receive qualified, verified housing leads</li>
+            <li>✅ Convert registrations into real contracts—quickly and reliably</li>
+        </ul>
+    </section>
+
+    <!-- Centered Partner Card -->
+    <div style="display: flex; justify-content: center;">
+        <div class="card">
+            <h3>I want to be Bogoboom's partner</h3>
+            <p>Check out our inquiry form, submit it and get in touch with our partnership program based on your business needs.</p>
+            <a href="partnership.html">Submit this form</a>
         </div>
-    </header>
+    </div>
 
-    <main>
-        <div class="intro">
-            <p>Bogoboom is your bridge to a smooth landing in any place in the world. Whether you're a newcomer, an HR department, or a real estate agency, our platform helps you connect and thrive.</p>
+    <!-- Role Cards -->
+    <div class="card-container">
+        <div class="card">
+            <h3>I'm a Newcomer</h3>
+            <p>Register yourself totally free to find location´s opportunities and housing options in this city.</p>
+            <a href="newcomers_options.html">Get Started</a>
         </div>
 
-        <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/bogoboom/websiteimages/bogoboom-front.png" alt="Bogoboom Front" class="main-image">
-
-        <div class="innovation-images-vertical">
-            <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/bogoboom/inovation/inovation1.png" alt="Innovation 1">
-            <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/bogoboom/inovation/inovation2.png" alt="Innovation 2">
-            <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/bogoboom/inovation/inovation3.png" alt="Innovation 3">
-            <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/bogoboom/inovation/inovation4.png" alt="Innovation 4">
-            <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/bogoboom/inovation/inovation5.png" alt="Innovation 5">
-            <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/bogoboom/inovation/inovation6.png" alt="Innovation 6">
-            <img src="https://tecnologiasantos-mira.s3.sa-east-1.amazonaws.com/bogoboom/inovation/inovation7.png" alt="Innovation 7">
+        <div class="card">
+            <h3>I'm from HR</h3>
+            <p>Create an account to register newcomers you hire and support them in relocation.</p>
+            <a href="companies_options.html">Register HR</a>
         </div>
 
-        <section>
-            <h3>With Bogoboom, you can be our most important partner:</h3>
-            <ul>
-                <li>✅ List real estate properties as an official partner</li>
-                <li>✅ Promote jobs and receive housing support for relocated hires</li>
-                <li>✅ Use Bogoboom's partner badge/logo on your website and media</li>
-                <li>✅ Participate in Bogoboom’s franchising and expansion programs</li>
-                <li>✅ Be listed as a featured partner on the Bogoboom portal</li>
-                <li>✅ Earn rewards by referring businesses or newcomers</li>
-            </ul>
-        </section>
-
-        <section>
-            <h3 id="vacancies">With Bogoboom, your company´s HR team can:</h3>
-            <ul id="vacanciesList">
-                <li>✅ Save money on temporary hotel stays and last-minute relocation support</li>
-                <li>✅ Delegate accommodation logistics to a dedicated, efficient platform</li>
-                <li>✅ Offer a better employee experience from day one</li>
-                <li>✅ Strengthen your company’s reputation as relocation-friendly</li>
-                <li>✅ Access a pre-screened list of real estate agencies offering fair, quality housing</li>
-                <li>✅ Focus more on hiring and retention—and less on real estate headaches</li>
-            </ul>
-        </section>
-
-        <section>
-            <h3>Newcomers, discover how Bogoboom makes your journey easier:</h3>
-            <ul>
-                <li>✅ Register for free and get matched with HR teams and local agencies</li>
-                <li>✅ Explore housing options before you even land in Bogotá</li>
-                <li>✅ Enjoy a smooth relocation with trusted partners</li>
-                <li>✅ Have your housing preferences shared directly with real estate agents</li>
-                <li>✅ Start your life in Bogotá with less stress and more support</li>
-            </ul>
-        </section>
-
-        <section>
-            <h3>Real Estate Agencies, partner with Bogoboom to grow your business:</h3>
-            <ul>
-                <li>✅ Access a growing network of international professionals relocating to Bogotá</li>
-                <li>✅ Get visibility among HR departments of top employers</li>
-                <li>✅ List properties that match newcomers' expectations and budgets</li>
-                <li>✅ Use our portal to receive qualified, verified housing leads</li>
-                <li>✅ Convert registrations into real contracts—quickly and reliably</li>
-            </ul>
-        </section>
-
-        <!-- Centered Partner Card -->
-        <div style="display: flex; justify-content: center;">
-            <div class="card">
-                <h3>I want to be Bogoboom's partner</h3>
-                <p>Check out our inquiry form, submit it and get in touch with our partnership program based on your business needs.</p>
-                <a href="partnership.html">Submit this form</a>
-            </div>
+        <div class="card">
+            <h3>I'm a Real Estate Agency</h3>
+            <p>List your properties and connect with the newcomers market. Premium plans available.</p>
+            <a href="agencies_options.html">Join Now</a>
         </div>
+    </div>
+</main>
 
-        <!-- Role Cards -->
-        <div class="card-container">
-            <div class="card">
-                <h3>I'm a Newcomer</h3>
-                <p>Register yourself totally free to find location´s opportunities and housing options in this city.</p>
-                <a href="newcomers_options.html">Get Started</a>
-            </div>
+<footer>
+    &copy; 2025 Bogoboom. All rights reserved.
+    <div class="links">
+        <a href="https://tecnologiasantos.com" target="_blank">
+            Visit MIRA IT job portal - a Tecnologia Santos IT project - support@tecnologiasantos.com
+        </a>
+        <a href="https://bogoboom.com/privacy_policy.html" target="_blank">Visit our privacy policy to learn more about data protection</a>
+        <br>
+    </div>
+</footer>
 
-            <div class="card">
-                <h3>I'm from HR</h3>
-                <p>Create an account to register newcomers you hire and support them in relocation.</p>
-                <a href="companies_options.html">Register HR</a>
-            </div>
-
-            <div class="card">
-                <h3>I'm a Real Estate Agency</h3>
-                <p>List your properties and connect with the newcomers market. Premium plans available.</p>
-                <a href="agencies_options.html">Join Now</a>
-            </div>
-        </div>
-    </main>
-
-    <footer>
-        &copy; 2025 Bogoboom. All rights reserved.
-        <div class="links">
-            <a href="https://tecnologiasantos.com" target="_blank">
-                Visit MIRA IT job portal - a Tecnologia Santos IT project - support@tecnologiasantos.com
-            </a>
-            <a href="https://bogoboom.com/privacy_policy.html" target="_blank">Visit our privacy policy to learn more about data protection</a>
-            <br>
-        </div>
-    </footer>
 </body>
 </html>
 
