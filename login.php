@@ -100,7 +100,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
   <script>
     window.onbeforeunload = function() {
-      // Trigger logoff when the user closes the page
       var form = document.createElement('form');
       form.method = 'POST';
       form.action = '';
@@ -118,54 +117,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     exit;
 }
 
-// Field labels (removed id, status, created_at)
+// Field labels
 $field_labels = [
-    "email" => "Email Address",
-    "role" => "User Role",
-    "full_name" => "Client's name",
-    "company_name" => "Company name",
-    "phone" => "Phone number",
-    "company_website" => "Web site"  
+    "company_name" => "Company Name",
+    "email" => "Email",
+    "phone" => "Phone",
+    "company_website" => "Website",
+    "country" => "Country",
+    "state_or_department" => "State/Department",
+    "city" => "City"
 ];
 
-// Define the fields based on user role
-if ($current_user_role === 'newcomers') {
-    $tables = [
-        "users" => ["company_name", "email", "phone", "company_website"]
-    ];
-    $stmt = $conn->prepare("SELECT " . implode(", ", $tables['users']) . " FROM users WHERE role = 'agencies' AND status = 'active' LIMIT 100");
-} elseif ($current_user_role === 'agencies') {
-    $tables = [
-        "users" => ["full_name", "email", "phone"]
-    ];
-
-    if (isset($_POST['generate_report']) && isset($_POST['start_date']) && isset($_POST['end_date'])) {
-        $start_date = $_POST['start_date'] . ' 00:00:00';
-        $end_date = $_POST['end_date'] . ' 23:59:59';
-
-        $stmt = $conn->prepare(
-            "SELECT " . implode(", ", $tables['users']) . "
-             FROM users
-             WHERE role = 'newcomers' AND status = 'active' AND created_at BETWEEN ? AND ?
-             LIMIT 100"
-        );
-        $stmt->bind_param("ss", $start_date, $end_date);
-    } else {
-        $stmt = $conn->prepare("SELECT " . implode(", ", $tables['users']) . " FROM users WHERE role = 'newcomers' AND status = 'active' LIMIT 100");
-    }
-} elseif ($current_user_role === 'companies') {
-    $tables = [
-        "users" => ["company_name", "email", "phone", "company_website"]
-    ];
-    $stmt = $conn->prepare("SELECT " . implode(", ", $tables['users']) . " FROM users WHERE role = 'agencies' AND status = 'active' LIMIT 100");
+if ($current_user_role === 'newcomers' || $current_user_role === 'companies') {
+    $query = "SELECT u.company_name, u.email, u.phone, u.company_website, a.country, a.state_or_department, a.city
+              FROM users u
+              JOIN agencies a ON u.id = a.user_id
+              WHERE u.role = 'agencies' AND u.status = 'active'
+              LIMIT 100";
+    $stmt = $conn->prepare($query);
 } else {
-    $tables = [
-        "users" => ["full_name", "email", "phone"]
-    ];
-    $stmt = $conn->prepare("SELECT " . implode(", ", $tables['users']) . " FROM users LIMIT 100");
+    $query = "SELECT full_name, email, phone FROM users WHERE role = 'newcomers' AND status = 'active' LIMIT 100";
+    $stmt = $conn->prepare($query);
 }
 
-// Execute the query
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -193,47 +167,21 @@ echo "<!DOCTYPE html><html lang='en'><head>
 echo "<header>
   <h1>Bogoboom Database Viewer</h1>
   <p>Check the records of our platform tables</p>
-
-<div class='header-actions' style='display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;'>
-  <div class='user-info' style='font-size: 0.9rem; font-style: italic;'>Logged in as: " . htmlspecialchars($current_user_email) . "</div>
-  <div style='display: flex; gap: 1rem;'>
-    <form method='POST' action=''>
-      <input type='hidden' name='action' value='logout'>
-      <button type='submit' style='background-color: #ff4d4d; color: white; padding: 0.5rem 1rem; border: none; border-radius: 5px; cursor: pointer;'>Log off</button>
-    </form>
-    <form method='GET' action='change_password.php'>
-      <button type='submit' style='background-color: #ffa500; color: white; padding: 0.5rem 1rem; border: none; border-radius: 5px; cursor: pointer;'>Change Password</button>
-    </form>
+  <div class='header-actions' style='display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;'>
+    <div class='user-info'>Logged in as: " . htmlspecialchars($current_user_email) . "</div>
+    <div style='display: flex; gap: 1rem;'>
+      <form method='POST' action=''>
+        <input type='hidden' name='action' value='logout'>
+        <button type='submit' style='background-color: #ff4d4d; color: white; padding: 0.5rem 1rem; border: none; border-radius: 5px; cursor: pointer;'>Log off</button>
+      </form>
+      <form method='GET' action='change_password.php'>
+        <button type='submit' style='background-color: #ffa500; color: white; padding: 0.5rem 1rem; border: none; border-radius: 5px; cursor: pointer;'>Change Password</button>
+      </form>
+    </div>
   </div>
-</div>
-
-  
 </header>";
 
-echo "<main>
-  <div class='intro'>
-    <p>Welcome to the database viewer. You can see user records below.</p>
-  </div>";
-
-if ($current_user_role === 'agencies') {
-    echo "<section>
-        <h3>Generate Report for Newcomers</h3>
-        <form method='POST' action=''>
-            <label for='start_date'>Start Date:</label>
-            <input type='date' id='start_date' name='start_date' required>
-            <label for='end_date'>End Date:</label>
-            <input type='date' id='end_date' name='end_date' required>
-            <input type='hidden' name='generate_report' value='1'>
-            <button type='submit'>📄 Generate Report</button>
-        </form>
-    </section>";
-}
-
-if (isset($_POST['generate_report'])) {
-    $startFormatted = date("d/m/Y", strtotime($_POST['start_date']));
-    $endFormatted = date("d/m/Y", strtotime($_POST['end_date']));
-    echo "<section><strong>Showing registration date from " . $startFormatted . " to " . $endFormatted . "</strong></section>";
-}
+echo "<main><div class='intro'><p>Welcome to the database viewer. You can see user records below.</p></div>";
 
 if ($result && $result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
@@ -252,9 +200,7 @@ if ($result && $result->num_rows > 0) {
     echo "<p class='no-records'>No records found.</p>";
 }
 
-echo "</main>";
-
-echo "<footer>
+echo "</main><footer>
   &copy; 2025 Bogoboom. All rights reserved.
   <div class='links'>
     <a href='https://tecnologiasantos.com'>About Us</a>
@@ -263,4 +209,3 @@ echo "<footer>
   </div>
 </footer></body></html>";
 ?>
-
