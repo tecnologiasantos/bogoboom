@@ -17,7 +17,7 @@ $company_phone = $_POST['company_phone'] ?? '';
 $responsible_name = $_POST['responsible_name'] ?? '';
 $company_address = $_POST['company_address'] ?? '';
 $country = $_POST['country'] ?? '';
-$state_or_department = $_POST['state'] ?? ''; // From the HTML form field named 'state'
+$state_or_department = $_POST['state'] ?? '';
 $city = $_POST['city'] ?? '';
 $company_website = $_POST['company_website'] ?? '';
 $company_password = $_POST['company_password'] ?? '';
@@ -51,7 +51,6 @@ if (isset($_FILES['company_document']) && $_FILES['company_document']['error'] =
     $fileNameCmps = explode(".", $fileName);
     $fileExtension = strtolower(end($fileNameCmps));
 
-    // Allowed file extensions
     $allowedExtensions = ['pdf', 'doc', 'docx'];
     if (in_array($fileExtension, $allowedExtensions)) {
         $newFileName = uniqid('doc_', true) . '.' . $fileExtension;
@@ -68,47 +67,48 @@ if (isset($_FILES['company_document']) && $_FILES['company_document']['error'] =
     }
 }
 
-// Generate UUID for the user (users table)
+// Generate UUID for the user
 $user_id = bin2hex(random_bytes(16));
 
-// Insert into 'users' table
-$stmtUser = $conn->prepare("INSERT INTO users (id, email, full_name, phone, password_hash, role) VALUES (?, ?, ?, ?, ?, 'agencies')");
+// ✅ Insert into 'users' table (fixed to include company_name, company_website, created_at)
+$stmtUser = $conn->prepare("INSERT INTO users (id, email, full_name, phone, password_hash, role, company_name, company_website, created_at)
+VALUES (?, ?, ?, ?, ?, 'agencies', ?, ?, NOW())");
 if (!$stmtUser) {
     die('Prepare failed for users table: ' . $conn->error);
 }
 
 $stmtUser->bind_param(
-    "sssss",
+    "sssssss",
     $user_id,
     $company_email,
     $company_name,
     $company_phone,
-    $company_password_hash
+    $company_password_hash,
+    $company_name,
+    $company_website
 );
 
 if (!$stmtUser->execute()) {
     die('Error inserting into users table: ' . $stmtUser->error);
 }
-
 $stmtUser->close();
 
-// Generate UUID for the agency (agencies table)
+// Generate UUID for the agency
 $agency_id = bin2hex(random_bytes(16));
 
-// Prepare SQL Insert for 'agencies' table
+// Insert into 'agencies' table
 $sql = "INSERT INTO agencies (
-            id, user_id, company_name, company_email, company_phone,
-            responsible_name, company_address, country, state_or_department,
-            city, company_website, company_document, company_password_hash,
-            data_consent
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    id, user_id, company_name, company_email, company_phone,
+    responsible_name, company_address, country, state_or_department,
+    city, company_website, company_document, company_password_hash,
+    data_consent
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 $stmt = $conn->prepare($sql);
 if (!$stmt) {
     die('Prepare failed: ' . $conn->error);
 }
 
-// Bind parameters for 'agencies' table
 $stmt->bind_param(
     "sssssssssssssi",
     $agency_id,
@@ -127,7 +127,6 @@ $stmt->bind_param(
     $data_consent
 );
 
-// Execute insert for 'agencies' table
 if ($stmt->execute()) {
     echo "✅ Agency registered successfully.";
     echo '<meta http-equiv="refresh" content="5;url=https://bogoboom.com">';
@@ -138,4 +137,3 @@ if ($stmt->execute()) {
 $stmt->close();
 $conn->close();
 ?>
-
