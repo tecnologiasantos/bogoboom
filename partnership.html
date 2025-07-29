@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-KB35HQ9P');</script>
-<!-- End Google Tag Manager -->
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-KB35HQ9P');</script>
+  <!-- End Google Tag Manager -->
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -127,10 +127,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </head>
 <body>
 
-	<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KB35HQ9P"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KB35HQ9P"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
 
   <header>
     <h1>Partner With Us</h1>
@@ -139,7 +139,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <div class="container">
     <h2>Bogoboom Partnership Form</h2>
-    <form action="/backend/profiles/partner_inquiry.php" method="POST" autocomplete="on">
+    <form id="partnershipForm" action="/backend/profiles/partner_inquiry.php" method="POST" autocomplete="on">
       <div style="display: none;">
         <label for="website">Leave this field empty:</label>
         <input type="text" name="website" id="website" tabindex="-1" autocomplete="off" />
@@ -191,6 +191,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </p>
   </div>
 
+  <!-- Dynamic Country/State/City Script -->
   <script>
     $(document).ready(function () {
       function loadCountries() {
@@ -292,6 +293,33 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }
     });
   </script>
+
+  <!-- ✅ Safe dataLayer push -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const form = document.getElementById("partnershipForm");
+      if (!form) return;
+
+      form.addEventListener("submit", function (e) {
+        if (!form.checkValidity()) return;
+
+        window.dataLayer = window.dataLayer || [];
+        dataLayer.push({
+          event: "partnershipFormSubmit",
+          fullName: document.getElementById("fullName").value,
+          email: document.getElementById("emailAddress").value,
+          phone: document.getElementById("phoneNumber").value,
+          country: document.getElementById("country").value,
+          state: document.getElementById("stateOrDepartment")?.value || null,
+          city: document.getElementById("city").value,
+          collaborationType: document.getElementById("collaborationType").value,
+          timestamp: new Date().toISOString(),
+          utmSource: new URLSearchParams(window.location.search).get("utm_source") || null,
+          utmMedium: new URLSearchParams(window.location.search).get("utm_medium") || null,
+          utmCampaign: new URLSearchParams(window.location.search).get("utm_campaign") || null
+        });
+      });
+    });
+  </script>
 </body>
 </html>
-
