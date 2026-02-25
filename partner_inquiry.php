@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
             $mail->Username = 'support@tecnologiasantos.com';
-            $mail->Password = 'plny sbar rbkn cfcj'; // Your app password
+            $mail->Password = 'jzxu cxip rwuv ichj'; // Your app password
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
 
