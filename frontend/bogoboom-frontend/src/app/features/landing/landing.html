@@ -1,0 +1,65 @@
+<div class="page center">
+  <p class="intro">
+    Bogoboom is your bridge to a smooth landing in any place in the world. Whether you're a newcomer, an HR
+    department, or a real estate agency, our platform helps you connect and thrive.
+  </p>
+
+  <img [src]="front" alt="Bogoboom connects newcomers, HR teams and real estate agencies" class="main-image" />
+
+  <div class="innovation">
+    @for (src of innovation; track src; let i = $index) {
+      <img [src]="src" [alt]="'Bogoboom innovation ' + (i + 1)" loading="lazy" />
+    }
+  </div>
+
+  <div class="card-row">
+    <div class="card">
+      <h3>I want to be Bogoboom's partner</h3>
+      <p>Check out our inquiry form, submit it and get in touch with our partnership program based on your business needs.</p>
+      <a class="btn" routerLink="/partnership">Get in touch with Bogoboom</a>
+    </div>
+
+    <div class="highlight audio-box">
+      <h3>🎧 Audio Description</h3>
+      <p>Listen how Bogoboom can leverage business and help people find a new home.</p>
+      <audio controls preload="none" aria-label="Bogoboom Audio Description" [src]="audio">
+        Your browser does not support the audio element.
+      </audio>
+    </div>
+  </div>
+
+  <section class="card left">
+    <h3>With Bogoboom, you can be our most important partner:</h3>
+    <ul class="ticks">@for (t of partner; track t) { <li>{{ t }}</li> }</ul>
+  </section>
+  <section class="card left">
+    <h3>With Bogoboom, your company's HR team can:</h3>
+    <ul class="ticks">@for (t of hr; track t) { <li>{{ t }}</li> }</ul>
+  </section>
+  <section class="card left">
+    <h3>Newcomers, discover how Bogoboom makes your journey easier:</h3>
+    <ul class="ticks">@for (t of newcomers; track t) { <li>{{ t }}</li> }</ul>
+  </section>
+  <section class="card left">
+    <h3>Real Estate Agencies, partner with Bogoboom to grow your business:</h3>
+    <ul class="ticks">@for (t of agencies; track t) { <li>{{ t }}</li> }</ul>
+  </section>
+
+  <div class="card-row">
+    <div class="card">
+      <h3>I'm a Newcomer</h3>
+      <p>Register yourself totally free to find location's opportunities and housing options in this city.</p>
+      <a class="btn" routerLink="/register/newcomer">Get Started</a>
+    </div>
+    <div class="card">
+      <h3>I'm from HR</h3>
+      <p>Create an account to register newcomers you hire and support them in relocation.</p>
+      <a class="btn" routerLink="/register/hr">Register HR</a>
+    </div>
+    <div class="card">
+      <h3>I'm a Real Estate Agency</h3>
+      <p>List your properties and connect with the newcomers market. Premium plans available.</p>
+      <a class="btn" routerLink="/register/agency">Join Now</a>
+    </div>
+  </div>
+</div>

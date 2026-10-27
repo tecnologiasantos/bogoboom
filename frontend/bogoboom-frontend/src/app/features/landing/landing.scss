@@ -1,0 +1,8 @@
+.intro { max-width: 600px; margin: 0 auto 2rem; font-size: 1.2rem; }
+.main-image { max-width: 100%; margin-top: 1rem; border-radius: var(--bb-radius); }
+.innovation { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; margin-top: 2rem; }
+.innovation img { width: 80%; max-width: 600px; border-radius: var(--bb-radius); }
+.left { text-align: left; max-width: 700px; margin-left: auto; margin-right: auto; }
+.audio-box { max-width: 280px; align-self: flex-start; }
+.audio-box h3 { font-size: 1.1rem; margin-top: 0; }
+.audio-box audio { width: 100%; margin-top: 0.8rem; }

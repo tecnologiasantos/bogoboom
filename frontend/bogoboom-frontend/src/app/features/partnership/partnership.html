@@ -1,0 +1,50 @@
+<section class="page-narrow">
+  <div class="card">
+    <h2>I want to be Bogoboom's partner</h2>
+    <p>Tell us about your business and we will get in touch with our partnership program.</p>
+
+    @if (done()) {
+      <div class="alert alert-ok" role="status">Thank you! We received your request and will contact you soon.</div>
+      <a class="btn" routerLink="/">Back to the home page</a>
+    } @else {
+      <form class="form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <div class="field">
+          <label for="fullName">Full name *</label>
+          <input id="fullName" formControlName="fullName" autocomplete="name" />
+          @if (form.controls.fullName.touched && form.controls.fullName.invalid) { <span class="error">Please enter your name.</span> }
+        </div>
+        <div class="form-2">
+          <div class="field">
+            <label for="email">E-mail *</label>
+            <input id="email" type="email" formControlName="email" autocomplete="email" />
+            @if (form.controls.email.touched && form.controls.email.invalid) { <span class="error">Please enter a valid e-mail.</span> }
+          </div>
+          <div class="field">
+            <label for="phone">Phone</label>
+            <input id="phone" type="tel" formControlName="phone" autocomplete="tel" />
+            @if (form.controls.phone.touched && form.controls.phone.invalid) { <span class="error">Use digits, spaces, + and dashes only.</span> }
+          </div>
+        </div>
+        <div class="form-2">
+          <div class="field"><label for="country">Country</label><input id="country" formControlName="country" autocomplete="country-name" /></div>
+          <div class="field"><label for="city">City</label><input id="city" formControlName="city" autocomplete="address-level2" /></div>
+        </div>
+        <div class="field">
+          <label for="collab">How would you like to collaborate? *</label>
+          <select id="collab" formControlName="collaborationType">
+            @for (t of types; track t.value) { <option [value]="t.value">{{ t.label }}</option> }
+          </select>
+        </div>
+        <div class="hp" aria-hidden="true"><label>Website <input tabindex="-1" autocomplete="off" formControlName="website" /></label></div>
+        <label class="check">
+          <input type="checkbox" formControlName="acceptPrivacy" />
+          <span>I accept the <a routerLink="/privacy" target="_blank">privacy policy</a>. *</span>
+        </label>
+        @if (form.controls.acceptPrivacy.touched && form.controls.acceptPrivacy.invalid) { <span class="field"><span class="error">You must accept the privacy policy.</span></span> }
+
+        @if (error()) { <div class="alert alert-error" role="alert">{{ error() }}</div> }
+        <button class="btn" type="submit" [disabled]="busy()">{{ busy() ? 'Sending…' : 'Send' }}</button>
+      </form>
+    }
+  </div>
+</section>

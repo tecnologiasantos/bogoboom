@@ -1,0 +1,51 @@
+<section class="page">
+  <h2>Relocation dashboard</h2>
+  <div class="card">
+    <h3>Register a new hire</h3>
+    <p class="muted">The hire stays private until they sign up with the same e-mail and choose to share their preferences with agencies.</p>
+    <form class="form" [formGroup]="form" (ngSubmit)="invite()" novalidate>
+      <div class="form-2">
+        <div class="field"><label for="n">Full name *</label><input id="n" formControlName="fullName" />
+          @if (fieldErrors()['fullName']) { <span class="error">{{ fieldErrors()['fullName'] }}</span> }</div>
+        <div class="field"><label for="e">E-mail *</label><input id="e" type="email" formControlName="email" />
+          @if (form.controls.email.touched && form.controls.email.invalid) { <span class="error">Enter a valid e-mail.</span> }
+          @if (fieldErrors()['email']) { <span class="error">{{ fieldErrors()['email'] }}</span> }</div>
+      </div>
+      <div class="form-2">
+        <div class="field"><label for="p">Phone</label><input id="p" type="tel" formControlName="phone" /></div>
+        <div class="field"><label for="c">City of contract *</label><input id="c" formControlName="cityOfContract" /></div>
+      </div>
+      <div class="form-2">
+        <div class="field"><label for="a">Arrival date</label><input id="a" type="date" formControlName="arrivalDate" /></div>
+        <div class="field"><label for="b">Housing budget (COP / month)</label><input id="b" type="number" min="0" formControlName="budgetMax" /></div>
+      </div>
+      <div class="form-2">
+        <div class="field"><label for="br">Bedrooms</label><input id="br" type="number" min="0" max="20" formControlName="bedrooms" /></div>
+        <label class="check"><input type="checkbox" formControlName="furnished" /> <span>Furnished</span></label>
+      </div>
+      @if (error()) { <div class="alert alert-error" role="alert">{{ error() }}</div> }
+      @if (message()) { <div class="alert alert-ok" role="status">{{ message() }}</div> }
+      <button class="btn" type="submit" [disabled]="busy()">Add hire</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>Your hires ({{ hires().length }})</h3>
+    @if (hires().length === 0) { <p class="muted">No hires registered yet.</p> } @else {
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Name</th><th>City</th><th>Arrival</th><th>Stage</th><th>Visible to agencies</th></tr></thead>
+          <tbody>
+            @for (h of hires(); track h.id) {
+              <tr>
+                <td>{{ h.firstName }}</td><td>{{ h.cityOfContract }}</td><td>{{ h.arrivalDate ?? '—' }}</td>
+                <td><span class="badge">{{ h.stage.replace('_', ' ') }}</span></td>
+                <td>{{ h.allowContact ? 'Yes' : 'No' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</section>

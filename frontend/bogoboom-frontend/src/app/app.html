@@ -1,0 +1,28 @@
+<header class="site-header">
+  <a routerLink="/" class="brand">
+    <h1>Welcome to Bogoboom</h1>
+    <p>Connecting newcomers from around the world with the perfect jobs and homes</p>
+  </a>
+  <nav class="top-actions" aria-label="Account">
+    @if (session.isLoggedIn()) {
+      @if (session.role(); as role) {
+        <a class="btn btn-ghost-light" [routerLink]="home[role]">My dashboard</a>
+      }
+      <button type="button" class="btn btn-dark" (click)="session.logout()">Log out</button>
+    } @else {
+      <button type="button" class="btn btn-dark" (click)="session.login()">Login here</button>
+    }
+  </nav>
+</header>
+
+<main id="main">
+  <router-outlet />
+</main>
+
+<footer class="site-footer">
+  &copy; {{ year }} Bogoboom. All rights reserved.
+  <div class="links">
+    <a href="https://tecnologiasantos.com" target="_blank" rel="noopener">Visit MIRA IT job portal - a Tecnologia Santos IT project - support&#64;tecnologiasantos.com</a>
+    <a routerLink="/privacy">Visit our privacy policy to learn more about data protection</a>
+  </div>
+</footer>

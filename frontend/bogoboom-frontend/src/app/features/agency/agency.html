@@ -1,0 +1,117 @@
+<section class="page">
+  @if (account(); as a) {
+    <div class="card account">
+      <div>
+        <h2>{{ a.name }}</h2>
+        @if (a.verified) { <span class="badge badge-ok">✔ Verified agency</span> } @else { <span class="badge">Pending verification</span> }
+        <span class="badge">{{ a.plan }} plan</span>
+      </div>
+      <div class="muted">
+        @if (hasPaidPlan) { Unlimited contacts on your plan. } @else { Free contacts left this month: <strong>{{ a.contactCredits }}</strong> }
+      </div>
+    </div>
+    @if (!a.verified) {
+      <div class="alert alert-error" role="status">Your agency is waiting for verification. You can publish listings now, but you cannot unlock newcomer contacts until the Bogoboom team verifies you.</div>
+    }
+  }
+
+  <div class="tabs" role="tablist">
+    <button type="button" role="tab" [class.active]="tab() === 'leads'" (click)="tab.set('leads')">Leads ({{ leads().length }})</button>
+    <button type="button" role="tab" [class.active]="tab() === 'listings'" (click)="tab.set('listings')">My listings ({{ listings().length }})</button>
+    <button type="button" role="tab" [class.active]="tab() === 'notifications'" (click)="tab.set('notifications')">Notifications @if (unreadCount > 0) { <span class="badge">{{ unreadCount }}</span> }</button>
+  </div>
+
+  @if (error()) { <div class="alert alert-error" role="alert">{{ error() }}</div> }
+  @if (message()) { <div class="alert alert-ok" role="status">{{ message() }}</div> }
+
+  @switch (tab()) {
+    @case ('leads') {
+      @if (leads().length === 0) { <p class="muted">No newcomers match your listings yet. Add listings in the cities you serve and matching newcomers will appear here.</p> }
+      <div class="grid-cards">
+        @for (l of leads(); track l.id) {
+          <article class="card">
+            <p class="score">{{ l.matchScore }}% match</p>
+            <h3>{{ l.firstName }} → {{ l.cityOfContract }}</h3>
+            <p class="muted">
+              Arrives {{ l.arrivalDate ?? 'soon' }} · up to {{ l.budgetMax ? (l.budgetMax | currency: l.currency : 'symbol-narrow' : '1.0-0') : 'n/a' }} ·
+              {{ l.bedrooms ?? '?' }} bed · {{ l.furnished ? 'furnished' : 'unfurnished' }}
+            </p>
+            @if (l.preferredDistricts.length) { <p class="muted">Districts: {{ l.preferredDistricts.join(', ') }}</p> }
+            @if (l.unlocked && l.contact) {
+              <div class="highlight">
+                <strong>{{ l.contact.fullName }}</strong><br />
+                <a [href]="'mailto:' + l.contact.email">{{ l.contact.email }}</a><br />
+                {{ l.contact.phone }}
+              </div>
+            } @else {
+              <p class="blur" aria-hidden="true">Maria Lopez · maria&#64;example.com · +57 300 000 0000</p>
+              <button type="button" class="btn btn-sm" [disabled]="busy() || !account()?.verified" (click)="unlock(l)">
+                🔓 Unlock contact{{ hasPaidPlan ? '' : ' (1 credit)' }}
+              </button>
+            }
+          </article>
+        }
+      </div>
+    }
+    @case ('listings') {
+      <div class="card">
+        <h3>{{ editing() ? 'Edit listing' : 'New listing' }}</h3>
+        <form class="form" [formGroup]="form" (ngSubmit)="saveListing()" novalidate>
+          <div class="field"><label for="t">Title *</label><input id="t" formControlName="title" /></div>
+          <div class="form-2">
+            <div class="field"><label for="pr">Monthly price *</label><input id="pr" type="number" min="0" formControlName="price" /></div>
+            <div class="field"><label for="cu">Currency</label><input id="cu" formControlName="currency" maxlength="3" /></div>
+          </div>
+          <div class="form-2">
+            <div class="field"><label for="ty">Type</label>
+              <select id="ty" formControlName="type">@for (t of types; track t) { <option [value]="t">{{ t }}</option> }</select></div>
+            <div class="field"><label for="bd">Bedrooms</label><input id="bd" type="number" min="0" max="20" formControlName="bedrooms" /></div>
+          </div>
+          <div class="form-2">
+            <div class="field"><label for="ci">City *</label><input id="ci" formControlName="city" /></div>
+            <div class="field"><label for="di">District</label><input id="di" formControlName="district" /></div>
+          </div>
+          <div class="form-2">
+            <div class="field"><label for="ad">Street address (private, never shown to newcomers)</label><input id="ad" formControlName="address" /></div>
+            <div class="field"><label for="av">Available from</label><input id="av" type="date" formControlName="availableFrom" /></div>
+          </div>
+          <div class="field"><label for="de">Description</label><textarea id="de" rows="3" formControlName="description"></textarea></div>
+          <label class="check"><input type="checkbox" formControlName="furnished" /> <span>Furnished</span></label>
+          <label class="check"><input type="checkbox" formControlName="isActive" /> <span>Published</span></label>
+          <div>
+            <button class="btn" type="submit" [disabled]="busy()">{{ editing() ? 'Save changes' : 'Publish listing' }}</button>
+            @if (editing()) { <button class="btn btn-ghost" type="button" (click)="cancelEdit()">Cancel</button> }
+          </div>
+        </form>
+      </div>
+      <div class="table-wrap card">
+        <table>
+          <thead><tr><th>Title</th><th>City</th><th>Price</th><th>Status</th><th></th></tr></thead>
+          <tbody>
+            @for (p of listings(); track p.id) {
+              <tr>
+                <td>{{ p.title }}</td><td>{{ p.city }}</td>
+                <td>{{ p.price | currency: p.currency : 'symbol-narrow' : '1.0-0' }}</td>
+                <td><span class="badge">{{ p.isActive ? 'published' : 'hidden' }}</span></td>
+                <td>
+                  <button type="button" class="btn btn-sm btn-ghost" (click)="edit(p)">Edit</button>
+                  <button type="button" class="btn btn-sm btn-danger" (click)="remove(p)">Delete</button>
+                </td>
+              </tr>
+            } @empty { <tr><td colspan="5" class="muted">No listings yet.</td></tr> }
+          </tbody>
+        </table>
+      </div>
+    }
+    @case ('notifications') {
+      <div class="card">
+        @for (n of notes(); track n.id) {
+          <p [style.fontWeight]="n.readAt ? 'normal' : 'bold'">
+            {{ n.message }} <span class="muted">· {{ n.createdAt.slice(0, 10) }}</span>
+            @if (!n.readAt) { <button type="button" class="btn btn-sm btn-ghost" (click)="markRead(n)">Mark as read</button> }
+          </p>
+        } @empty { <p class="muted">No notifications yet.</p> }
+      </div>
+    }
+  }
+</section>

@@ -1,0 +1,41 @@
+<section class="page">
+  <h2>Administration</h2>
+  @if (error()) { <div class="alert alert-error" role="alert">{{ error() }}</div> }
+  @if (message()) { <div class="alert alert-ok" role="status">{{ message() }}</div> }
+
+  <div class="card">
+    <h3>Agencies</h3>
+    <p class="muted">Paste the agency ID (shown in the database or the audit log). Every change is audited.</p>
+    <form class="form" [formGroup]="form">
+      <div class="field">
+        <label for="aid">Agency ID</label>
+        <input id="aid" formControlName="agencyId" placeholder="00000000-0000-0000-0000-000000000000" />
+        @if (form.controls.agencyId.touched && form.controls.agencyId.invalid) { <span class="error">Enter a valid agency ID.</span> }
+      </div>
+      <div class="form-2">
+        <div class="field"><label for="plan">Plan</label>
+          <select id="plan" formControlName="plan"><option value="free">free</option><option value="pro">pro</option><option value="enterprise">enterprise</option></select></div>
+        <div class="field"><label for="until">Active until (empty = no end)</label><input id="until" type="date" formControlName="activeUntil" /></div>
+      </div>
+      <div>
+        <button class="btn" type="button" (click)="verify(true)">Verify agency</button>
+        <button class="btn btn-ghost" type="button" (click)="verify(false)">Remove verification</button>
+        <button class="btn btn-dark" type="button" (click)="setPlan()">Set plan</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>Partnership requests ({{ inquiries().length }})</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Date</th><th>Name</th><th>E-mail</th><th>Phone</th><th>Where</th><th>Interest</th></tr></thead>
+        <tbody>
+          @for (q of inquiries(); track q.id) {
+            <tr><td>{{ q.createdAt.slice(0, 10) }}</td><td>{{ q.fullName }}</td><td>{{ q.email }}</td><td>{{ q.phone }}</td><td>{{ q.city }} {{ q.country }}</td><td>{{ q.collaborationType }}</td></tr>
+          } @empty { <tr><td colspan="6" class="muted">No requests yet.</td></tr> }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

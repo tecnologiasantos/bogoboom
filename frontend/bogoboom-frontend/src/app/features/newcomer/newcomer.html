@@ -1,0 +1,78 @@
+<section class="page">
+  <h2>Hello{{ profile() ? ', ' + profile()!.firstName : '' }} 👋</h2>
+  <div class="tabs" role="tablist">
+    <button type="button" role="tab" [class.active]="tab() === 'profile'" (click)="tab.set('profile')">My profile</button>
+    <button type="button" role="tab" [class.active]="tab() === 'search'" (click)="tab.set('search')">Find a home</button>
+    <button type="button" role="tab" [class.active]="tab() === 'favorites'" (click)="tab.set('favorites')">Saved ({{ favorites().length }})</button>
+  </div>
+
+  @if (error()) { <div class="alert alert-error" role="alert">{{ error() }}</div> }
+
+  @switch (tab()) {
+    @case ('profile') {
+      <div class="card">
+        <form class="form" [formGroup]="form" (ngSubmit)="save()">
+          <div class="form-2">
+            <div class="field"><label for="city">City you are moving to</label><input id="city" formControlName="cityOfContract" /></div>
+            <div class="field"><label for="arrival">Arrival date</label><input id="arrival" type="date" formControlName="arrivalDate" /></div>
+          </div>
+          <div class="form-2">
+            <div class="field"><label for="budget">Monthly budget (COP)</label><input id="budget" type="number" min="0" formControlName="budgetMax" /></div>
+            <div class="field"><label for="beds">Bedrooms</label><input id="beds" type="number" min="0" max="20" formControlName="bedrooms" /></div>
+          </div>
+          <div class="field"><label for="districts">Preferred districts (comma separated)</label><input id="districts" formControlName="districts" /></div>
+          <label class="check"><input type="checkbox" formControlName="furnished" /> <span>I need a furnished place</span></label>
+          <div class="field">
+            <label for="stage">Where are you in your relocation?</label>
+            <select id="stage" formControlName="stage">
+              @for (s of stages; track s.value) { <option [value]="s.value">{{ s.label }}</option> }
+            </select>
+          </div>
+          <div class="highlight">
+            <label class="check">
+              <input type="checkbox" formControlName="allowContact" />
+              <span><strong>Let verified real estate agencies find me.</strong> They see my first name, city, budget and preferences. They get my phone and e-mail only after unlocking my contact. You can switch this off any time.</span>
+            </label>
+          </div>
+          @if (message()) { <div class="alert alert-ok" role="status">{{ message() }}</div> }
+          <button class="btn" type="submit" [disabled]="busy()">Save profile</button>
+        </form>
+      </div>
+    }
+    @case ('search') {
+      <div class="card">
+        <form class="form-2" [formGroup]="searchForm" (ngSubmit)="search()">
+          <div class="field"><label for="scity">City</label><input id="scity" formControlName="city" /></div>
+          <div class="field"><label for="smax">Max price (COP)</label><input id="smax" type="number" min="0" formControlName="maxPrice" /></div>
+          <div class="field"><label>&nbsp;</label><button class="btn" type="submit" [disabled]="busy()">Search</button></div>
+        </form>
+      </div>
+      @if (searched() && results().length === 0) { <p class="muted">No listings found for this search yet.</p> }
+      <div class="grid-cards">
+        @for (p of results(); track p.id) {
+          <article class="card">
+            <h3>{{ p.title }}</h3>
+            <p><strong>{{ p.price | currency: p.currency : 'symbol-narrow' : '1.0-0' }}</strong> / month</p>
+            <p class="muted">{{ p.type }} · {{ p.bedrooms ?? '?' }} bed · {{ p.furnished ? 'furnished' : 'unfurnished' }} · {{ p.district || p.city }}</p>
+            @if (p.verified) { <span class="badge badge-ok">verified</span> }
+            <p>{{ p.description }}</p>
+            <button type="button" class="btn btn-sm" [class.btn-ghost]="isFavorite(p.id)" (click)="toggleFavorite(p)">{{ isFavorite(p.id) ? '★ Saved' : '☆ Save' }}</button>
+          </article>
+        }
+      </div>
+    }
+    @case ('favorites') {
+      @if (favorites().length === 0) { <p class="muted">You have not saved any listing yet.</p> }
+      <div class="grid-cards">
+        @for (p of favorites(); track p.id) {
+          <article class="card">
+            <h3>{{ p.title }}</h3>
+            <p><strong>{{ p.price | currency: p.currency : 'symbol-narrow' : '1.0-0' }}</strong> / month</p>
+            <p class="muted">{{ p.district || p.city }}</p>
+            <button type="button" class="btn btn-sm btn-ghost" (click)="toggleFavorite(p)">Remove</button>
+          </article>
+        }
+      </div>
+    }
+  }
+</section>

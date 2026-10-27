@@ -1,0 +1,104 @@
+<section class="page-narrow">
+  @if (kind(); as k) {
+    <div class="card">
+      <h2>{{ title() }}</h2>
+      <p class="muted">You are signed in. Complete your profile to finish creating your account.</p>
+
+      <form class="form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <div class="form-2">
+          <div class="field">
+            <label for="fullName">Full name *</label>
+            <input id="fullName" formControlName="fullName" autocomplete="name" />
+            @if (form.controls.fullName.touched && form.controls.fullName.invalid) { <span class="error">Please enter your name.</span> }
+            @if (fieldError('fullName')) { <span class="error">{{ fieldError('fullName') }}</span> }
+          </div>
+          <div class="field">
+            <label for="phone">Phone</label>
+            <input id="phone" type="tel" formControlName="phone" autocomplete="tel" />
+            @if (form.controls.phone.touched && form.controls.phone.invalid) { <span class="error">Use digits, spaces, + and dashes only.</span> }
+            @if (fieldError('phone')) { <span class="error">{{ fieldError('phone') }}</span> }
+          </div>
+        </div>
+
+        @switch (k) {
+          @case ('newcomer') {
+            <div class="form-2">
+              <div class="field">
+                <label for="city">City you are moving to *</label>
+                <input id="city" formControlName="cityOfContract" />
+                @if (fieldError('cityOfContract')) { <span class="error">{{ fieldError('cityOfContract') }}</span> }
+              </div>
+              <div class="field">
+                <label for="arrival">Arrival date</label>
+                <input id="arrival" type="date" formControlName="arrivalDate" />
+                @if (fieldError('arrivalDate')) { <span class="error">{{ fieldError('arrivalDate') }}</span> }
+              </div>
+            </div>
+            <div class="form-2">
+              <div class="field">
+                <label for="budget">Monthly budget (COP)</label>
+                <input id="budget" type="number" min="0" formControlName="budgetMax" />
+                @if (fieldError('budgetMax')) { <span class="error">{{ fieldError('budgetMax') }}</span> }
+              </div>
+              <div class="field">
+                <label for="beds">Bedrooms</label>
+                <input id="beds" type="number" min="0" max="20" formControlName="bedrooms" />
+              </div>
+            </div>
+            <div class="field">
+              <label for="districts">Preferred districts (comma separated)</label>
+              <input id="districts" formControlName="districts" placeholder="Chapinero, Usaquén" />
+            </div>
+            <label class="check"><input type="checkbox" formControlName="furnished" /> <span>I need a furnished place</span></label>
+            <label class="check">
+              <input type="checkbox" formControlName="shareWithAgencies" />
+              <span>Let verified real estate agencies see my first name, city, budget and preferences. They only get my phone and e-mail if they unlock my contact, and I can turn this off at any time.</span>
+            </label>
+          }
+          @case ('hr') {
+            <div class="field">
+              <label for="company">Company name *</label>
+              <input id="company" formControlName="companyName" autocomplete="organization" />
+              @if (fieldError('companyName')) { <span class="error">{{ fieldError('companyName') }}</span> }
+            </div>
+            <div class="form-2">
+              <div class="field"><label for="industry">Industry</label><input id="industry" formControlName="industry" /></div>
+              <div class="field"><label for="hcity">City</label><input id="hcity" formControlName="city" /></div>
+            </div>
+            <div class="field">
+              <label for="hcountry">Country (2-letter code) *</label>
+              <input id="hcountry" formControlName="country" maxlength="2" />
+              @if (fieldError('country')) { <span class="error">{{ fieldError('country') }}</span> }
+            </div>
+          }
+          @case ('agency') {
+            <div class="field">
+              <label for="agency">Agency name *</label>
+              <input id="agency" formControlName="agencyName" autocomplete="organization" />
+              @if (fieldError('agencyName')) { <span class="error">{{ fieldError('agencyName') }}</span> }
+            </div>
+            <div class="form-2">
+              <div class="field"><label for="acity">City *</label><input id="acity" formControlName="city" />
+                @if (fieldError('city')) { <span class="error">{{ fieldError('city') }}</span> }</div>
+              <div class="field"><label for="acountry">Country (2-letter code) *</label><input id="acountry" formControlName="country" maxlength="2" />
+                @if (fieldError('country')) { <span class="error">{{ fieldError('country') }}</span> }</div>
+            </div>
+            <div class="field"><label for="desc">About your agency</label><textarea id="desc" rows="3" formControlName="description"></textarea></div>
+            <p class="muted">New agencies are reviewed before they can contact newcomers. You will get 5 free contacts per month.</p>
+          }
+        }
+
+        <label class="check">
+          <input type="checkbox" formControlName="acceptTerms" />
+          <span>I accept the terms and the <a routerLink="/privacy" target="_blank">privacy policy</a>. *</span>
+        </label>
+        @if (form.controls.acceptTerms.touched && form.controls.acceptTerms.invalid) { <span class="error">You must accept to continue.</span> }
+
+        @if (error()) { <div class="alert alert-error" role="alert">{{ error() }}</div> }
+        <button class="btn" type="submit" [disabled]="busy()">{{ busy() ? 'Creating your account…' : 'Create my account' }}</button>
+      </form>
+    </div>
+  } @else {
+    <div class="card center"><h2>Unknown account type</h2><a class="btn" routerLink="/start">Choose an account type</a></div>
+  }
+</section>
