@@ -1,0 +1,12 @@
+name: Stale
+on: { schedule: [{ cron: "0 12 * * 1" }] }
+permissions: { issues: write, pull-requests: write }
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        with:
+          days-before-stale: 45
+          days-before-close: 14
+          exempt-issue-labels: "priority:P0,mvp,pinned"

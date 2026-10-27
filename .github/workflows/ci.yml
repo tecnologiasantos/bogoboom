@@ -1,0 +1,58 @@
+name: CI
+on:
+  push: { branches: [main], paths: ["v2/**", ".github/workflows/ci.yml"] }
+  pull_request: { paths: ["v2/**", ".github/workflows/ci.yml"] }
+permissions: { contents: read }
+defaults:
+  run:
+    working-directory: v2
+concurrency: { group: "ci-${{ github.ref }}", cancel-in-progress: true }
+
+jobs:
+  api:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env: { POSTGRES_PASSWORD: postgres, POSTGRES_DB: bogoboom_test }
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/bogoboom_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version-file: v2/.nvmrc, cache: npm, cache-dependency-path: v2/package-lock.json }
+      - run: npm ci
+      - run: npm run typecheck -w apps/api
+      - run: npm test -w apps/api
+      - run: npm run build -w apps/api
+
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version-file: v2/.nvmrc, cache: npm, cache-dependency-path: v2/package-lock.json }
+      - run: npm ci
+      - run: npm run build -w apps/web   # next build also type-checks
+        env: { NEXT_PUBLIC_API_URL: "http://localhost:4000" }
+
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version-file: v2/.nvmrc, cache: npm, cache-dependency-path: v2/package-lock.json }
+      - run: npm ci
+      - run: npm audit --audit-level=high --omit=dev
+        continue-on-error: true
+
+  secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: gitleaks/gitleaks-action@v2
+        env: { GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}" }
