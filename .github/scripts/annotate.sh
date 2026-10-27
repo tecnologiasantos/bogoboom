@@ -9,7 +9,7 @@ set +e
 code=${PIPESTATUS[0]}
 set -e
 if [ "$code" -ne 0 ]; then
-  tail -n 40 "$out" | while IFS= read -r line; do
+  ( grep -E "FAIL|panic|_test\.go|Error|expected|actual|want|got" "$out" | grep -v "Auth0\] Unauthorized" | head -n 40; tail -n 5 "$out" ) | while IFS= read -r line; do
     esc="${line//'%'/'%25'}"; esc="${esc//$'\r'/'%0D'}"
     echo "::error title=${title}::${esc:0:400}"
   done

@@ -43,3 +43,18 @@ jobs:
       - name: Vulnerability scan
         run: go run golang.org/x/vuln/cmd/govulncheck@latest ./...
         continue-on-error: true
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: frontend/bogoboom-frontend } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: frontend/bogoboom-frontend/package-lock.json }
+      - run: npm ci
+      - run: npm run build
+      - name: Unit tests
+        run: npm test -- --watch=false
+      - name: Dependency audit (non-blocking)
+        run: npm audit --omit=dev --audit-level=high
+        continue-on-error: true

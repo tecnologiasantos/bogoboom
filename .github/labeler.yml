@@ -1,4 +1,4 @@
-"area:frontend": ["v2/apps/web/**"]
-"area:backend": ["v2/apps/api/**", "v2/db/**"]
-"area:infra": ["v2/docker-compose.yml", "**/Dockerfile", ".github/workflows/**"]
-"type:docs": ["v2/docs/**", "v2/*.md"]
+"area:frontend": ["frontend/**"]
+"area:backend": ["backend/**"]
+"area:infra": ["devops-compose/**", "**/Dockerfile", ".github/workflows/**"]
+"type:docs": ["docs/**", "*.md", "**/AGENTS.md"]
