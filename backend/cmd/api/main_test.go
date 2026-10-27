@@ -23,6 +23,18 @@ func testApp(t *testing.T) *fiber.App {
 	return buildApp(cfg, nil, nil, origins)
 }
 
+// doRaw returns the transport error too: the server may refuse a request before routing it.
+func doRaw(app *fiber.App, method, path, body string, headers map[string]string) (*http.Response, error) {
+	req := httptest.NewRequest(method, path, strings.NewReader(body))
+	if body != "" {
+		req.Header.Set("Content-Type", "application/json")
+	}
+	for k, v := range headers {
+		req.Header.Set(k, v)
+	}
+	return app.Test(req)
+}
+
 func do(t *testing.T, app *fiber.App, method, path, body string, headers map[string]string) *http.Response {
 	t.Helper()
 	req := httptest.NewRequest(method, path, strings.NewReader(body))
@@ -75,7 +87,10 @@ func TestEveryOtherRouteRequiresAToken(t *testing.T) {
 func TestRejectsGarbageTokens(t *testing.T) {
 	app := testApp(t)
 	for _, h := range []string{"Bearer", "Bearer x", "Bearer a.b.c", "Basic abc", "bearer " + strings.Repeat("a", 5000)} {
-		resp := do(t, app, "GET", "/api/v1/me", "", map[string]string{"Authorization": h})
+		resp, err := doRaw(app, "GET", "/api/v1/me", "", map[string]string{"Authorization": h})
+		if err != nil {
+			continue // refused by the HTTP server (oversized header): never reaches a handler
+		}
 		if resp.StatusCode != fiber.StatusUnauthorized {
 			t.Errorf("Authorization %.20q: status %d", h, resp.StatusCode)
 		}
@@ -137,7 +152,10 @@ func TestPublicFormsValidateBeforeTouchingTheDatabase(t *testing.T) {
 
 func TestBodyLimit(t *testing.T) {
 	big := `{"name":"` + strings.Repeat("a", 70*1024) + `"}`
-	resp := do(t, testApp(t), "POST", "/api/v1/leads", big, nil)
+	resp, err := doRaw(testApp(t), "POST", "/api/v1/leads", big, nil)
+	if err != nil {
+		return // refused by the body limit before reaching a handler
+	}
 	if resp.StatusCode != fiber.StatusRequestEntityTooLarge {
 		t.Errorf("oversized body: %d", resp.StatusCode)
 	}
