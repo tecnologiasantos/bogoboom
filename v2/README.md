@@ -31,7 +31,7 @@ Demo logins (dev mode, no password): `hr@demo.test` (HR), `agency@demo.test` (ag
 Tests need a throw-away database (**it is wiped**): `TEST_DATABASE_URL=postgres://postgres:postgres@localhost:5432/bogoboom_test npm test`
 
 ## Layout
-`apps/api` · `apps/web` · `db/migrations` · `docs/` (api, matching, architecture, ADRs) · `.github/` (CI + seed data for issues) · `scripts/seed_github.sh`
+`apps/api` · `apps/web` · `db/migrations` · `docs/` (api, matching, architecture, ADRs) · `.github/` (CI + seed data for issues) · `scripts/seed_github.py`
 
 ## GitHub setup (once)
 1. Push to `main`. 2. Actions → **Seed labels, milestones & issues** → Run. 3. Enable branch protection, secret scanning/push protection, Dependabot alerts. See [ROADMAP.md](ROADMAP.md).
