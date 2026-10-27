@@ -52,7 +52,8 @@
 <body>
     <div class="form-container">
         <h2>Partner With Us</h2>
-        <form action="submit_lead.php" method="POST">
+        <form action="/backend/profiles/submit_lead.php" method="POST">
+            <input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
             <label for="name">Full Name</label>
             <input type="text" id="name" name="name" required>
 
@@ -90,5 +91,6 @@
     </div>
 
     <script src="geo-dropdown.js"></script>
+  <script src="/csrf.js" defer></script>
 </body>
 </html>
