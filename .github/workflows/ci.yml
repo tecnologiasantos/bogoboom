@@ -33,7 +33,9 @@ jobs:
       - name: Vet
         run: ../.github/scripts/annotate.sh "go vet" go vet ./...
       - name: Format
-        run: test -z "$(gofmt -l .)" || { gofmt -l . | sed 's/^/::error::gofmt needed: /'; exit 1; }
+        run: |
+          bad="$(gofmt -l .)"
+          if [ -n "$bad" ]; then echo "$bad" | sed 's/^/::error::gofmt needed for /'; exit 1; fi
       - name: Migrate
         run: ../.github/scripts/annotate.sh "migrate" go run ./cmd/migrate
       - name: Test (race, with PostgreSQL)

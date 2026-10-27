@@ -1,0 +1,21 @@
+# secrets and local config - never commit
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+/etc/
+
+# dependencies and builds
+node_modules/
+frontend/**/dist/
+frontend/**/.angular/
+backend/bin/
+backend/uploads/
+coverage/
+*.log
+
+# editors / OS
+.idea/
+.vscode/
+.DS_Store
