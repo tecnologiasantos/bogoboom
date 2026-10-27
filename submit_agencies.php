@@ -1,140 +1,68 @@
 <?php
-// Enable full error reporting
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+require __DIR__ . '/lib/bootstrap.php';
+require_post();
+csrf_verify();
+rate_limit_or_fail('register_agency', 10, 3600);
 
-// Start the session
-session_start();
+$name = clean($_POST['company_name'] ?? '', 160);
+$email = strtolower(clean($_POST['company_email'] ?? '', 254));
+$phone = clean($_POST['company_phone'] ?? '', 40);
+$responsible = clean($_POST['responsible_name'] ?? '', 160);
+$address = clean($_POST['company_address'] ?? '', 255);
+$country = clean($_POST['country'] ?? '', 80);
+$state = clean($_POST['state'] ?? '', 80);
+$city = clean($_POST['city'] ?? '', 80);
+$website = clean($_POST['company_website'] ?? '', 255);
+$password = (string) ($_POST['company_password'] ?? '');
+$confirm = (string) ($_POST['confirm_password'] ?? '');
 
-// Include the DB connection
-require '/var/www/html/bogoboom_project/safe/db_connection.php';
-
-// Initialize variables safely
-$company_name = $_POST['company_name'] ?? '';
-$company_email = $_POST['company_email'] ?? '';
-$company_phone = $_POST['company_phone'] ?? '';
-$responsible_name = $_POST['responsible_name'] ?? '';
-$company_address = $_POST['company_address'] ?? '';
-$country = $_POST['country'] ?? '';
-$state_or_department = $_POST['state'] ?? '';
-$city = $_POST['city'] ?? '';
-$company_website = $_POST['company_website'] ?? '';
-$company_password = $_POST['company_password'] ?? '';
-$confirm_password = $_POST['confirm_password'] ?? '';
-$data_consent = isset($_POST['dataConsent']) ? 1 : 0;
-
-// Validate required fields
-if (
-    empty($company_name) || empty($company_email) || empty($company_phone) ||
-    empty($responsible_name) || empty($company_address) || empty($country) ||
-    empty($state_or_department) || empty($city) || empty($company_password) || empty($confirm_password)
-) {
-    die('Please fill in all required fields.');
-}
-
-// Validate password match
-if ($company_password !== $confirm_password) {
-    die('Passwords do not match.');
-}
-
-// Password hashing
-$company_password_hash = password_hash($company_password, PASSWORD_DEFAULT);
-
-// Handle file upload
-$company_document = null;
-if (isset($_FILES['company_document']) && $_FILES['company_document']['error'] === UPLOAD_ERR_OK) {
-    $fileTmpPath = $_FILES['company_document']['tmp_name'];
-    $fileName = $_FILES['company_document']['name'];
-    $fileSize = $_FILES['company_document']['size'];
-    $fileType = $_FILES['company_document']['type'];
-    $fileNameCmps = explode(".", $fileName);
-    $fileExtension = strtolower(end($fileNameCmps));
-
-    $allowedExtensions = ['pdf', 'doc', 'docx'];
-    if (in_array($fileExtension, $allowedExtensions)) {
-        $newFileName = uniqid('doc_', true) . '.' . $fileExtension;
-        $uploadFileDir = '/var/www/html/bogoboom_project/uploads/agency_docs/';
-        $dest_path = $uploadFileDir . $newFileName;
-
-        if (move_uploaded_file($fileTmpPath, $dest_path)) {
-            $company_document = $newFileName;
-        } else {
-            die('Error moving the uploaded file.');
-        }
-    } else {
-        die('Invalid file type. Only PDF, DOC, DOCX allowed.');
+foreach ([$name, $phone, $responsible, $address, $country, $state, $city] as $required) {
+    if ($required === '') {
+        fail(400, 'Please fill in all required fields.');
     }
 }
-
-// Generate UUID for the user
-$user_id = bin2hex(random_bytes(16));
-
-// ✅ Insert into 'users' table (fixed to include company_name, company_website, created_at)
-$stmtUser = $conn->prepare("INSERT INTO users (id, email, full_name, phone, password_hash, role, company_name, company_website, created_at)
-VALUES (?, ?, ?, ?, ?, 'agencies', ?, ?, NOW())");
-if (!$stmtUser) {
-    die('Prepare failed for users table: ' . $conn->error);
+if (!valid_email($email)) {
+    fail(400, 'Invalid email format.');
+}
+if ($website !== '' && !preg_match('#^https?://#i', $website)) {
+    fail(400, 'Website must start with http:// or https://');   // blocks javascript: URLs later rendered as links
+}
+if (empty($_POST['dataConsent'])) {
+    fail(400, 'You must accept the privacy policy to register.');
+}
+if ($password !== $confirm) {
+    fail(400, 'Passwords do not match.');
+}
+if (($problem = password_problem($password)) !== null) {
+    fail(400, $problem);
 }
 
-$stmtUser->bind_param(
-    "sssssss",
-    $user_id,
-    $company_email,
-    $company_name,
-    $company_phone,
-    $company_password_hash,
-    $company_name,
-    $company_website
-);
+$document = save_upload($_FILES['company_document'] ?? ['error' => UPLOAD_ERR_NO_FILE], uploads_dir('agency_docs'));
 
-if (!$stmtUser->execute()) {
-    die('Error inserting into users table: ' . $stmtUser->error);
+$conn = db();
+$userId = uuid_v4();
+$agencyId = uuid_v4();
+$hash = password_hash($password, PASSWORD_DEFAULT);
+$consent = 1;
+
+$conn->begin_transaction();
+try {
+    $u = $conn->prepare("INSERT INTO users (id, email, full_name, phone, password_hash, role, company_name, company_website, created_at) VALUES (?, ?, ?, ?, ?, 'agencies', ?, ?, NOW())");
+    $u->bind_param('sssssss', $userId, $email, $name, $phone, $hash, $name, $website);
+    $u->execute();
+    $a = $conn->prepare('INSERT INTO agencies (id, user_id, company_name, company_email, company_phone, responsible_name, company_address, country, state_or_department, city, company_website, company_document, company_password_hash, data_consent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    $a->bind_param('sssssssssssssi', $agencyId, $userId, $name, $email, $phone, $responsible, $address, $country, $state, $city, $website, $document, $hash, $consent);
+    $a->execute();
+    $conn->commit();
+} catch (mysqli_sql_exception $e) {
+    $conn->rollback();
+    if ($document) {
+        @unlink(uploads_dir('agency_docs') . '/' . $document);
+    }
+    if ($e->getCode() === 1062) {
+        fail(409, 'This e-mail is already registered.');
+    }
+    throw $e;
 }
-$stmtUser->close();
-
-// Generate UUID for the agency
-$agency_id = bin2hex(random_bytes(16));
-
-// Insert into 'agencies' table
-$sql = "INSERT INTO agencies (
-    id, user_id, company_name, company_email, company_phone,
-    responsible_name, company_address, country, state_or_department,
-    city, company_website, company_document, company_password_hash,
-    data_consent
-) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-$stmt = $conn->prepare($sql);
-if (!$stmt) {
-    die('Prepare failed: ' . $conn->error);
-}
-
-$stmt->bind_param(
-    "sssssssssssssi",
-    $agency_id,
-    $user_id,
-    $company_name,
-    $company_email,
-    $company_phone,
-    $responsible_name,
-    $company_address,
-    $country,
-    $state_or_department,
-    $city,
-    $company_website,
-    $company_document,
-    $company_password_hash,
-    $data_consent
-);
-
-if ($stmt->execute()) {
-    echo "✅ Agency registered successfully.";
-    echo '<meta http-equiv="refresh" content="5;url=https://bogoboom.com">';
-} else {
-    echo "Error: " . $stmt->error;
-}
-
-$stmt->close();
-$conn->close();
-?>
-
+echo '✅ Agency registered successfully.';
+echo '<meta http-equiv="refresh" content="5;url=/">';

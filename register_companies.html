@@ -173,7 +173,7 @@
 
         <div>
           <label for="company_password">🔒 Password:</label>
-          <input type="password" id="company_password" name="company_password" required>
+          <input type="password" id="company_password" name="company_password" required minlength="10" maxlength="128">
         </div>
         <div>
           <label for="confirm_password">🔒 Confirm Password:</label>
@@ -274,6 +274,7 @@
     }
   </script>
 
+  <script src="/csrf.js" defer></script>
 </body>
 </html>
 

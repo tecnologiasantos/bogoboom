@@ -1,109 +1,56 @@
 <?php
-session_start();
-require '/var/www/html/bogoboom_project/safe/db_connection.php';
+require __DIR__ . '/lib/bootstrap.php';
+require __DIR__ . '/lib/layout.php';
 
-// Redirect if not logged in
-if (!isset($_SESSION['user_email'])) {
-    header("Location: index.html");
+if (empty($_SESSION['user_id'])) {
+    header('Location: /backend/profiles/login.php');
     exit;
 }
+$userId = $_SESSION['user_id'];
+$message = '';
 
-$email = $_SESSION['user_email'];
-$message = "";
-
-// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $current_password = $_POST['current_password'];
-    $new_password = $_POST['new_password'];
-    $confirm_password = $_POST['confirm_password'];
+    csrf_verify();
+    rate_limit_or_fail('chgpw:' . $userId, 5, 900);
+    $current = (string) ($_POST['current_password'] ?? '');
+    $new = (string) ($_POST['new_password'] ?? '');
+    $confirm = (string) ($_POST['confirm_password'] ?? '');
 
-    // Check if new passwords match
-    if ($new_password !== $confirm_password) {
-        $message = "❌ New passwords do not match.";
+    if ($new !== $confirm) {
+        $message = 'New passwords do not match.';
+    } elseif (($problem = password_problem($new)) !== null) {
+        $message = $problem;
+    } elseif (hash_equals($current, $new)) {
+        $message = 'Choose a password different from the current one.';
     } else {
-        $stmt = $conn->prepare("SELECT password_hash FROM users WHERE email = ?");
-        $stmt->bind_param("s", $email);
+        $stmt = db()->prepare('SELECT password_hash FROM users WHERE id = ? LIMIT 1');
+        $stmt->bind_param('s', $userId);
         $stmt->execute();
-        $stmt->bind_result($stored_hash);
-        $stmt->fetch();
-        $stmt->close();
-
-        // Check current password
-        if (!password_verify($current_password, $stored_hash)) {
-            $message = "❌ Current password is incorrect.";
+        $row = $stmt->get_result()->fetch_assoc();
+        if (!$row || !password_verify($current, $row['password_hash'])) {
+            $message = 'Current password is incorrect.';
         } else {
-            // Hash and update the new password
-            $new_hash = password_hash($new_password, PASSWORD_DEFAULT);
-            $update_stmt = $conn->prepare("UPDATE users SET password_hash = ? WHERE email = ?");
-            $update_stmt->bind_param("ss", $new_hash, $email);
-            $update_stmt->execute();
-            $update_stmt->close();
-
-            // Successful password change
-            echo "<!DOCTYPE html>
-            <html><head><meta charset='UTF-8'>
-            <meta http-equiv='refresh' content='5;url=https://bogoboom.com/'>
-            <title>Password Changed</title>
-            <style>
-              body { font-family: Arial; background: #f9f9f9; text-align: center; padding: 50px; }
-              .message { background: #d4edda; color: #155724; padding: 20px; border: 1px solid #c3e6cb; border-radius: 8px; display: inline-block; }
-              .home-btn { padding: 10px 20px; background-color: #004a8f; color: white; border: none; border-radius: 6px; font-size: 1rem; cursor: pointer; margin-top: 20px; }
-              .home-btn:hover { background-color: #003366; }
-              .container { display: flex; justify-content: center; align-items: center; }
-              .home-btn-container { margin-left: 20px; }
-            </style>
-            </head><body>
-            <div class='message'>
-              ✅ Password changed successfully. You will be redirected in 5 seconds...
-            </div>
-            <div class='container'>
-              <a href='https://bogoboom.com/'><button class='home-btn'>Back to Home Now</button></a>
-            </div>
-            </body></html>";
-
-            // Log out user after redirection
-            session_destroy();
+            $hash = password_hash($new, PASSWORD_DEFAULT);
+            $upd = db()->prepare('UPDATE users SET password_hash = ? WHERE id = ?');
+            $upd->bind_param('ss', $hash, $userId);
+            $upd->execute();
+            logout_user();
+            page_start('Password changed');
+            echo '<section><p class="ok">✅ Password changed successfully. Please log in again.</p><p><a href="/login.html">Go to login</a></p></section>';
+            page_end();
             exit;
         }
     }
 }
-?>
 
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Change Password</title>
-    <style>
-        body { font-family: Arial, sans-serif; background: #f2f2f2; padding: 2rem; }
-        .container { max-width: 400px; margin: auto; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #004a8f; }
-        label { font-weight: bold; display: block; margin-top: 1rem; }
-        input { width: 100%; padding: 0.8rem; margin-top: 0.5rem; border-radius: 6px; border: 1px solid #ccc; }
-        button { margin-top: 1.5rem; background: #004a8f; color: white; padding: 0.8rem; border: none; border-radius: 6px; width: 100%; cursor: pointer; }
-        button:hover { background: #003366; }
-        .error { color: red; margin-top: 1rem; text-align: center; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h2>Change Password</h2>
-        <form method="POST">
-            <label for="current_password">Current Password</label>
-            <input type="password" id="current_password" name="current_password" required>
-
-            <label for="new_password">New Password</label>
-            <input type="password" id="new_password" name="new_password" required>
-
-            <label for="confirm_password">Confirm New Password</label>
-            <input type="password" id="confirm_password" name="confirm_password" required>
-
-            <button type="submit">🔒 Update Password</button>
-        </form>
-        <?php if ($message): ?>
-            <div class="error"><?= htmlspecialchars($message) ?></div>
-        <?php endif; ?>
-    </div>
-</body>
-</html>
-
+page_start('Change Password', 'Change Password');
+echo '<section><form class="grid" method="POST" action="">' . csrf_field()
+    . '<div><label for="cp">Current Password</label><input type="password" id="cp" name="current_password" required autocomplete="current-password" maxlength="128"></div>'
+    . '<div><label for="np">New Password (min. 10 characters)</label><input type="password" id="np" name="new_password" required minlength="10" maxlength="128" autocomplete="new-password"></div>'
+    . '<div><label for="cf">Confirm New Password</label><input type="password" id="cf" name="confirm_password" required minlength="10" maxlength="128" autocomplete="new-password"></div>'
+    . '<button type="submit">🔒 Update Password</button></form>';
+if ($message !== '') {
+    echo '<p class="err" role="alert">' . h($message) . '</p>';
+}
+echo '</section>';
+page_end();

@@ -123,7 +123,7 @@
       }
     }
   </style>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -306,9 +306,6 @@
         window.dataLayer = window.dataLayer || [];
         dataLayer.push({
           event: "partnershipFormSubmit",
-          fullName: document.getElementById("fullName").value,
-          email: document.getElementById("emailAddress").value,
-          phone: document.getElementById("phoneNumber").value,
           country: document.getElementById("country").value,
           state: document.getElementById("stateOrDepartment")?.value || null,
           city: document.getElementById("city").value,
@@ -321,5 +318,6 @@
       });
     });
   </script>
+  <script src="/csrf.js" defer></script>
 </body>
 </html>

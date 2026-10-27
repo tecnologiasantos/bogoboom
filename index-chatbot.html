@@ -268,7 +268,7 @@ src="https://www.facebook.com/tr?id=699826945906215&ev=PageView&noscript=1"
       .then(res => res.json())
       .then(data => {
         const botMsg = document.createElement("div");
-        botMsg.textContent = "Bot: " + data.response;
+        botMsg.textContent = "Bot: " + (data.reply || data.response);
         messages.appendChild(botMsg);
         messages.scrollTop = messages.scrollHeight;
       })
