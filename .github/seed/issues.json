@@ -428,14 +428,14 @@
   "body": "The doc suggests manual matchmaking first (Airbnb-style). Define pilot script, success metrics (time-to-housing, hotel nights saved), feedback loop.\n\n**Acceptance criteria**\n- [ ] Interview notes in `docs/research/`\n- [ ] Pilot KPIs dashboard"
  },
  {
-  "title": "Existing repo: audit and retire the legacy PHP site/server",
+  "title": "URGENT: rotate DB credentials committed in legacy PHP + harden the old site",
   "milestone": "M0 · Foundation",
   "labels": [
    "type:security",
    "area:backend",
    "priority:P0"
   ],
-  "body": "`tecnologiasantos/bogoboom` already contains a PHP site/server (config.php, config_login.php, db_connection.php, chatbot.php, change_password.php, partner_inquiry.php …). Audit it before migrating: committed credentials/secrets in code **and git history**, SQL injection, CSRF, password hashing, input validation. Rotate anything exposed.\n\n**Acceptance criteria**\n- [ ] Findings report in docs/\n- [ ] All exposed secrets rotated\n- [ ] Plan to migrate users/data to the new schema"
+  "body": "Static audit of the PHP code at the repo root (details in `v2/docs/legacy-audit.md`; secret values deliberately not quoted).\n\n**Critical:** a database password is hard-coded in `testconnection.php` and `db_connection.php`, and the same value protects `list_database.php` (DB viewer). It is in git history — **rotate it now**.\n\n**High:** diagnostic endpoints (`list_database.php`, `testconnection.php`) in the web root; `display_errors=1` in login/register/partner_inquiry/default_profile.\n**Medium:** no CSRF tokens; only 11/33 PHP files use prepared statements.\n\n**Acceptance criteria**\n- [ ] DB user password and viewer password rotated (and the old ones revoked)\n- [ ] Secrets moved out of source (env / Secrets Manager)\n- [ ] `list_database.php` and `testconnection.php` removed from the server and blocked in nginx\n- [ ] `display_errors` off in production\n- [ ] CSRF protection on all form handlers\n- [ ] Every query reviewed for SQL injection\n- [ ] Decide whether to purge git history (filter-repo/BFG)"
  },
  {
   "title": "Data migration from legacy PHP database to schema v1",
