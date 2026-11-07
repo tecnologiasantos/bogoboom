@@ -10,6 +10,12 @@ Site: https://bogoboom.tecnologiasantos.com
 |---|---|
 | `v3/` | Landing page estática (EN/ES/PT). Abra `v3/index.html` ou rode `python3 -m http.server` dentro da pasta |
 
+## Documentação
+
+- [Visão do produto](docs/PRODUCT.md)
+- [Modelo de dados](docs/DATA-MODEL.md)
+- [Como contribuir](CONTRIBUTING.md)
+
 ## Regras do repositório
 
 - Nenhuma credencial no código. Segredos ficam em variáveis de ambiente ou no gerenciador de segredos do provedor, e `.env` está no `.gitignore`.
