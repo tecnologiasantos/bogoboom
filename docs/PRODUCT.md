@@ -46,7 +46,7 @@ Imobiliárias (selo de parceiro, eventos e webinars, expansão), empresas e RH (
 | Marco | Objetivo |
 |---|---|
 | V3 · Landing e crescimento | Site no ar, lista de espera, SEO, parceiros e piloto |
-| V3 · Fundação | Decisões de stack e hospedagem, fluxos dos três públicos, segurança e modelo de dados |
+| V3 · Fundação | Hospedagem, fluxos dos três públicos, segurança e modelo de dados |
 | V3 · MVP Bogotá | Valor central para os três papéis, com contato protegido e combinação por regras |
 | V3 · Monetização e confiança | Assinaturas, verificação, avaliações, mensagens e conformidade (Lei 1581 e LGPD) |
 | V3 · Escala | Assistente MIRA, integração com a vaga MIRA/MRE-AI, várias cidades, API e dados de mercado |
@@ -55,4 +55,4 @@ Estimativa original do documento do Drive para o MVP: 8 a 12 semanas com 1 a 3 p
 
 ## Ainda em aberto
 
-Stack e hospedagem (issue de decisão), preços por mercado, entidade legal para a América Latina, processo operacional de verificação de imobiliárias e incentivo de entrada para as primeiras agências.
+Hospedagem da plataforma (a stack já está decidida: ver `docs/adr/0001-stack-e-fluxo-de-trabalho.md`), preços por mercado, entidade legal para a América Latina, processo operacional de verificação de imobiliárias e incentivo de entrada para as primeiras agências.
