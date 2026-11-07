@@ -55,4 +55,4 @@ Estimativa original do documento do Drive para o MVP: 8 a 12 semanas com 1 a 3 p
 
 ## Ainda em aberto
 
-Hospedagem da plataforma (a stack já está decidida: ver `docs/adr/0001-stack-e-fluxo-de-trabalho.md`), preços por mercado, entidade legal para a América Latina, processo operacional de verificação de imobiliárias e incentivo de entrada para as primeiras agências.
+Servidor e domínio da plataforma (stack e modelo de deployment já decididos: ver `docs/adr/0001-stack-e-fluxo-de-trabalho.md`), preços por mercado, entidade legal para a América Latina, processo operacional de verificação de imobiliárias e incentivo de entrada para as primeiras agências.
