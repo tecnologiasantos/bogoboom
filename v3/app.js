@@ -144,7 +144,7 @@
     var f = e.target;
     var role = f.role.options[f.role.selectedIndex].textContent;
     var body = "Name: " + f.name.value + "\nEmail: " + f.email.value + "\nRole: " + role + "\nLanguage: " + lang;
-    window.location.href = "mailto:ronaldo@tecnologiasantos.com.br?subject=" +
+    window.location.href = "mailto:support@tecnologiasantos.com?subject=" +
       encodeURIComponent(T[lang].mail_subject) + "&body=" + encodeURIComponent(body);
   });
 
