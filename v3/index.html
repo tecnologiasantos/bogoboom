@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bogoboom – Your smart start, anywhere</title>
+  <meta name="description" content="Bogoboom connects real estate agencies, HR departments and newcomers, starting in Bogotá, Colombia.">
+  <link rel="icon" href="assets/logo-mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="flag-band" aria-hidden="true"><i></i><i></i><i></i></div>
+
+  <header class="top">
+    <a class="brand" href="#top" aria-label="Bogoboom">
+      <img src="assets/logo-mark.svg" alt="" width="34" height="34">
+      <span>Bogoboom</span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="#how" data-i18n="nav_how">How it works</a>
+      <a href="#why" data-i18n="nav_why">Why not hotels</a>
+      <a href="#launch" data-i18n="nav_launch">Bogotá first</a>
+      <a class="nav-cta" href="#join" data-i18n="nav_join">Join the waitlist</a>
+    </nav>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang="es" aria-pressed="false">ES</button>
+      <button type="button" data-lang="pt" aria-pressed="false">PT</button>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-copy">
+        <h1 data-i18n="hero_title">Your smart start, anywhere.</h1>
+        <p class="lede" data-i18n="hero_sub">A worldwide company that connects real estate agencies, HR departments and newcomers.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#join" data-i18n="cta_join">Join the waitlist</a>
+          <a class="btn btn-ghost" href="#how" data-i18n="cta_how">See how it works</a>
+        </div>
+      </div>
+
+      <div class="street">
+        <svg class="skyline" viewBox="0 0 1200 440" role="group" aria-label="Illustrated street with three houses" preserveAspectRatio="xMidYMax meet">
+          <!-- backdrop -->
+          <g class="backdrop" aria-hidden="true">
+            <circle cx="470" cy="128" r="46" fill="#FCD116"/>
+            <path d="M392 150c0-22 22-36 44-30 10-18 46-18 56 2 22-4 40 10 40 28z" fill="#fff" stroke="#14213D" stroke-width="2.5" stroke-linejoin="round"/>
+            <path class="mount" d="M600 400C650 270 760 190 880 196c110 6 190 110 260 204z" fill="#1F9D55"/>
+            <path d="M700 330c60-50 150-70 210-40" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".7"/>
+            <path d="M650 170q18-22 36 0t36 0" fill="none" stroke="#14213D" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M770 120q12-14 24 0t24 0" fill="none" stroke="#14213D" stroke-width="2.5" stroke-linecap="round"/>
+          </g>
+
+          <!-- NEWCOMERS: yellow house -->
+          <g class="bld b1" data-aud="newcomers" tabindex="0" role="button" aria-pressed="true" aria-label="Newcomers">
+            <rect x="60" y="150" width="230" height="250" fill="#FCD116" stroke="#14213D" stroke-width="2.5"/>
+            <rect x="290" y="222" width="120" height="178" fill="#F7C417" stroke="#14213D" stroke-width="2.5"/>
+            <path d="M52 150h246" stroke="#14213D" stroke-width="4" stroke-linecap="round"/>
+            <path d="M60 262h230" stroke="#14213D" stroke-width="2.5"/>
+            <!-- upper window -->
+            <path d="M104 262v-46a42 42 0 0 1 84 0v46z" fill="#1B8E9A" stroke="#14213D" stroke-width="2.5"/>
+            <path d="M146 174v88M104 226h84" stroke="#14213D" stroke-width="2.5"/>
+            <!-- balcony plants -->
+            <path d="M70 262c0-30 18-50 40-52-6 22-18 40-40 52zM250 262c-10-24-32-38-58-38 8 22 28 38 58 38z" fill="#1F9D55" stroke="#14213D" stroke-width="2"/>
+            <!-- lower windows + door -->
+            <rect x="84" y="298" width="60" height="68" fill="#1B8E9A" stroke="#14213D" stroke-width="2.5"/>
+            <path d="M114 298v68M84 332h60" stroke="#14213D" stroke-width="2"/>
+            <path d="M172 400v-76a30 30 0 0 1 60 0v76z" fill="#1B8E9A" stroke="#14213D" stroke-width="2.5"/>
+            <path d="M202 294v106" stroke="#14213D" stroke-width="2.5"/>
+            <circle cx="162" cy="344" r="5" fill="#14213D"/><circle cx="242" cy="344" r="5" fill="#14213D"/>
+            <!-- side annex -->
+            <rect x="316" y="262" width="22" height="46" rx="3" fill="#1B8E9A" stroke="#14213D" stroke-width="2"/>
+            <rect x="354" y="262" width="22" height="46" rx="3" fill="#1B8E9A" stroke="#14213D" stroke-width="2"/>
+            <path d="M330 400v-52a22 22 0 0 1 44 0v52z" fill="#CE1126" stroke="#14213D" stroke-width="2.5"/>
+            <path d="M345 360v40M359 360v40" stroke="#14213D" stroke-width="2"/>
+          </g>
+
+          <!-- HR: red house with terrace -->
+          <g class="bld b2" data-aud="hr" tabindex="0" role="button" aria-pressed="false" aria-label="HR teams">
+            <rect x="420" y="268" width="290" height="132" fill="#CE1126" stroke="#14213D" stroke-width="2.5"/>
+            <rect x="420" y="232" width="290" height="36" fill="#F7C417" stroke="#14213D" stroke-width="2.5"/>
+            <!-- pergola -->
+            <path d="M432 232v-44M698 232v-44M432 188h266" stroke="#14213D" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M466 188v14M500 188v14M534 188v14M568 188v14M602 188v14M636 188v14M670 188v14" stroke="#14213D" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M470 232c0-16 10-26 22-26-2 12-10 22-22 26zM640 232c-2-14-12-24-26-24 2 14 12 24 26 24z" fill="#1F9D55" stroke="#14213D" stroke-width="2"/>
+            <!-- people on terrace -->
+            <circle cx="548" cy="206" r="7" fill="#14213D"/><rect x="541" y="214" width="14" height="18" rx="5" fill="#003893"/>
+            <circle cx="586" cy="208" r="7" fill="#14213D"/><rect x="579" y="216" width="14" height="16" rx="5" fill="#FCD116" stroke="#14213D" stroke-width="1.5"/>
+            <!-- arched windows -->
+            <path d="M448 360v-46a26 26 0 0 1 52 0v46z" fill="#fff" stroke="#14213D" stroke-width="2.5"/>
+            <path d="M458 360v-44M474 360v-48M490 360v-44" stroke="#1B8E9A" stroke-width="3"/>
+            <path d="M630 360v-46a26 26 0 0 1 52 0v46z" fill="#fff" stroke="#14213D" stroke-width="2.5"/>
+            <path d="M640 360v-44M656 360v-48M672 360v-44" stroke="#1B8E9A" stroke-width="3"/>
+            <!-- door -->
+            <path d="M524 400v-86a32 32 0 0 1 64 0v86z" fill="#FCD116" stroke="#14213D" stroke-width="2.5"/>
+            <path d="M534 400v-78a22 22 0 0 1 44 0v78z" fill="#1B8E9A" stroke="#14213D" stroke-width="2"/>
+            <path d="M556 300v100" stroke="#14213D" stroke-width="2"/>
+          </g>
+
+          <!-- AGENCIES: blue shopfront -->
+          <g class="bld b3" data-aud="agencies" tabindex="0" role="button" aria-pressed="false" aria-label="Real estate agencies">
+            <rect x="730" y="190" width="300" height="210" fill="#003893" stroke="#14213D" stroke-width="2.5"/>
+            <rect x="730" y="176" width="300" height="14" fill="#14213D"/>
+            <rect x="760" y="226" width="130" height="66" fill="#1B8E9A" stroke="#fff" stroke-width="3"/>
+            <path d="M825 226v66M760 259h130" stroke="#fff" stroke-width="2"/>
+            <rect x="916" y="226" width="86" height="40" rx="6" fill="#FCD116" stroke="#14213D" stroke-width="2.5"/>
+            <!-- key sign -->
+            <circle cx="942" cy="246" r="8" fill="none" stroke="#14213D" stroke-width="3"/>
+            <path d="M950 246h36M974 246v10M984 246v8" stroke="#14213D" stroke-width="3" stroke-linecap="round"/>
+            <!-- shop front -->
+            <rect x="730" y="300" width="190" height="100" fill="#fff" stroke="#14213D" stroke-width="2.5"/>
+            <path d="M750 300h150l-12-30H762z" fill="#CE1126" stroke="#14213D" stroke-width="2.5" stroke-linejoin="round"/>
+            <path d="M782 270l-6 30M806 270l-2 30M830 270v30M854 270l2 30M878 270l6 30" stroke="#FCD116" stroke-width="5"/>
+            <rect x="760" y="326" width="56" height="74" fill="#FCD116" stroke="#14213D" stroke-width="2.5"/>
+            <path d="M788 326v74M760 363h56" stroke="#14213D" stroke-width="2"/>
+            <rect x="838" y="326" width="54" height="40" fill="#1B8E9A" opacity=".35"/>
+            <!-- garage -->
+            <rect x="940" y="316" width="90" height="84" fill="#14213D"/>
+            <rect x="932" y="308" width="106" height="12" fill="#FCD116" stroke="#14213D" stroke-width="2.5"/>
+            <path d="M948 340h74M948 360h74M948 380h74" stroke="#003893" stroke-width="2.5"/>
+          </g>
+
+          <!-- plants + ground -->
+          <g aria-hidden="true">
+            <g class="leafy">
+              <path d="M26 400c-24-34-18-84 28-110 16 46 6 90-28 110z" fill="#1B8E9A" stroke="#14213D" stroke-width="2.5" stroke-linejoin="round"/>
+              <path d="M52 400c-8-52 32-96 84-88-10 54-40 86-84 88z" fill="#1F9D55" stroke="#14213D" stroke-width="2.5" stroke-linejoin="round"/>
+              <rect x="40" y="378" width="34" height="22" rx="3" fill="#CE1126" stroke="#14213D" stroke-width="2.5"/>
+            </g>
+            <g class="leafy">
+              <path d="M1176 400c24-34 18-84-28-110-16 46-6 90 28 110z" fill="#1B8E9A" stroke="#14213D" stroke-width="2.5" stroke-linejoin="round"/>
+              <path d="M1150 400c8-52-32-96-84-88 10 54 40 86 84 88z" fill="#1F9D55" stroke="#14213D" stroke-width="2.5" stroke-linejoin="round"/>
+              <rect x="1128" y="378" width="34" height="22" rx="3" fill="#FCD116" stroke="#14213D" stroke-width="2.5"/>
+            </g>
+            <path d="M0 400h1200" stroke="#14213D" stroke-width="3"/>
+          </g>
+        </svg>
+      </div>
+
+      <!-- audience panel, driven by the buildings -->
+      <div class="panel" id="panel" aria-live="polite">
+        <p class="panel-hint" data-i18n="panel_hint">Tap a house to see who Bogoboom is for.</p>
+        <div class="panel-body" data-aud-panel="newcomers">
+          <h2 data-i18n="aud_new_title">Newcomers</h2>
+          <p class="panel-lead" data-i18n="aud_new_lead">Find a verified long-term home before you land. It's free.</p>
+          <ul>
+            <li data-i18n="aud_new_1">Browse listings from vetted agencies</li>
+            <li data-i18n="aud_new_2">Filter by budget, neighborhood and lifestyle</li>
+            <li data-i18n="aud_new_3">Avoid scams and settle in faster</li>
+          </ul>
+          <a class="btn btn-primary" href="#join" data-role="newcomer" data-i18n="aud_new_cta">Find a home</a>
+        </div>
+        <div class="panel-body" data-aud-panel="hr" hidden>
+          <h2 data-i18n="aud_hr_title">HR teams</h2>
+          <p class="panel-lead" data-i18n="aud_hr_lead">Relocate talent into real homes, not hotel rooms.</p>
+          <ul>
+            <li data-i18n="aud_hr_1">Cut hotel and short-term housing costs</li>
+            <li data-i18n="aud_hr_2">Give new hires a smoother first month</li>
+            <li data-i18n="aud_hr_3">Follow every relocation in one place</li>
+          </ul>
+          <a class="btn btn-primary" href="#join" data-role="hr" data-i18n="aud_hr_cta">Plan a relocation</a>
+        </div>
+        <div class="panel-body" data-aud-panel="agencies" hidden>
+          <h2 data-i18n="aud_ag_title">Real estate agencies</h2>
+          <p class="panel-lead" data-i18n="aud_ag_lead">Meet renters who are looking for a long-term home.</p>
+          <ul>
+            <li data-i18n="aud_ag_1">Get matched with professionals, students and expats</li>
+            <li data-i18n="aud_ag_2">Fill vacancies with verified leads</li>
+            <li data-i18n="aud_ag_3">Sign up free, subscribe when you're ready to scale</li>
+          </ul>
+          <a class="btn btn-primary" href="#join" data-role="agency" data-i18n="aud_ag_cta">List your properties</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHY NOT HOTELS -->
+    <section class="why" id="why">
+      <div class="wrap">
+        <h2 data-i18n="why_title">Hotels are the expensive way to start.</h2>
+        <p class="section-lede" data-i18n="why_body">Companies that hire from other cities often put new hires in hotels. It inflates relocation budgets, delays integration and stresses people who are still learning a new city.</p>
+        <div class="compare">
+          <div class="compare-col before">
+            <h3 data-i18n="why_before">With a hotel stay</h3>
+            <ul>
+              <li data-i18n="why_b1">You pay per night while the housing search drags on</li>
+              <li data-i18n="why_b2">New hires feel like visitors, not residents</li>
+              <li data-i18n="why_b3">HR coordinates by email and spreadsheet</li>
+            </ul>
+          </div>
+          <div class="compare-col after">
+            <h3 data-i18n="why_after">With Bogoboom</h3>
+            <ul>
+              <li data-i18n="why_a1">A real home is lined up before arrival</li>
+              <li data-i18n="why_a2">New hires start their job already settled</li>
+              <li data-i18n="why_a3">HR follows progress in one place</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="how" id="how">
+      <div class="wrap">
+        <h2 data-i18n="how_title">From offer letter to front door.</h2>
+        <ol class="steps">
+          <li><h3 data-i18n="how_1_t">Say who is moving</h3><p data-i18n="how_1_p">Tell us the city, the dates and the budget. Newcomers, HR teams and agencies each start from their own door.</p></li>
+          <li><h3 data-i18n="how_2_t">Verified agencies respond</h3><p data-i18n="how_2_p">Only vetted real estate agencies show homes, so the options are real.</p></li>
+          <li><h3 data-i18n="how_3_t">Compare matching homes</h3><p data-i18n="how_3_p">Sort by budget, neighborhood and move-in date, then shortlist your favorites.</p></li>
+          <li><h3 data-i18n="how_4_t">Sign before you land</h3><p data-i18n="how_4_p">Secure long-term housing ahead of arrival and skip the hotel nights.</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- LAUNCH -->
+    <section class="launch" id="launch">
+      <div class="wrap launch-grid">
+        <div>
+          <h2 data-i18n="launch_title">Launching in Bogotá. Built for anywhere.</h2>
+          <p class="section-lede" data-i18n="launch_body">We start in Colombia's capital, where BPO, tech and education teams hire people from across the country and the world. The model is designed to repeat in every growing city.</p>
+        </div>
+        <div class="launch-flag" aria-hidden="true"><i></i><i></i><i></i></div>
+      </div>
+    </section>
+
+    <!-- JOIN -->
+    <section class="join" id="join">
+      <div class="wrap join-grid">
+        <div>
+          <h2 data-i18n="join_title">Be first in line.</h2>
+          <p class="section-lede" data-i18n="join_body">Tell us which side you're on and we'll write when Bogotá opens.</p>
+          <p class="direct">
+            <a href="mailto:support@tecnologiasantos.com">support@tecnologiasantos.com</a><br>
+            <a href="https://wa.me/5511954561103" rel="noopener">WhatsApp +55 11 95456-1103</a>
+          </p>
+        </div>
+        <form class="form" id="waitlist">
+          <label><span data-i18n="f_name">Your name</span><input name="name" type="text" autocomplete="name" required></label>
+          <label><span data-i18n="f_email">Email</span><input name="email" type="email" autocomplete="email" required></label>
+          <label><span data-i18n="f_role">I am a</span>
+            <select name="role" id="role">
+              <option value="newcomer" data-i18n="f_r_new">Newcomer</option>
+              <option value="hr" data-i18n="f_r_hr">HR team</option>
+              <option value="agency" data-i18n="f_r_ag">Real estate agency</option>
+            </select>
+          </label>
+          <button class="btn btn-primary" type="submit" data-i18n="cta_join">Join the waitlist</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot-in">
+      <a class="brand" href="#top"><img src="assets/logo-mark.svg" alt="" width="28" height="28"><span>Bogoboom</span></a>
+      <p data-i18n="foot">Bogoboom and the MIRA job portal are technical properties of Tecnologia Santos.</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

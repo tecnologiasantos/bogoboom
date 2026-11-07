@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-label="Bogoboom">
+  <g transform="rotate(45 24 24)">
+    <rect x="3" y="3" width="19" height="19" rx="6" fill="#FCD116"/>
+    <rect x="26" y="3" width="19" height="19" rx="6" fill="#003893"/>
+    <rect x="3" y="26" width="19" height="19" rx="6" fill="#CE1126"/>
+    <rect x="26" y="26" width="19" height="19" rx="6" fill="#1B8E9A"/>
+  </g>
+</svg>
