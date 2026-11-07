@@ -1,8 +1,0 @@
-{
-    "require": {
-        "php": ">=8.1",
-        "hybridauth/hybridauth": "^3.12",
-        "phpmailer/phpmailer": "^6.9"
-    },
-    "config": { "sort-packages": true, "platform-check": true }
-}
