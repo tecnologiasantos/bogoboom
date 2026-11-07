@@ -4,6 +4,8 @@ Conecta imobiliárias, equipes de RH e recém-chegados. Lançamento em Bogotá, 
 
 Este repositório foi recomeçado do zero em novembro de 2026.
 
+Site: https://bogoboom.tecnologiasantos.com
+
 | Pasta | O que é |
 |---|---|
 | `v3/` | Landing page estática (EN/ES/PT). Abra `v3/index.html` ou rode `python3 -m http.server` dentro da pasta |
