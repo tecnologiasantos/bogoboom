@@ -6,6 +6,10 @@
 4. **Abra o pull request** e peça revisão. A `main` não recebe commit direto.
 5. **Nunca coloque segredo no código:** senhas, chaves, tokens e `.env` ficam fora do git. O repositório bloqueia commits com segredos (secret scanning e push protection). Se um segredo vazar, avise na hora e revogue; apagar o commit não basta.
 
+## Spec e plan por issue
+
+Antes de codar, escreva um spec e um plan para a issue (modelo em `docs/adr/0001-stack-e-fluxo-de-trabalho.md`), faça deles o primeiro commit da branch e linke os dois na issue. A stack (Go, Fiber, PostgreSQL, Angular) e o fluxo seguem o MIRA.
+
 ## Idiomas
 
 - Issues, documentação e textos para a equipe: português.

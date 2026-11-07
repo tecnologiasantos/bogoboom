@@ -14,6 +14,7 @@ Site: https://bogoboom.tecnologiasantos.com
 
 - [Visão do produto](docs/PRODUCT.md)
 - [Modelo de dados](docs/DATA-MODEL.md)
+- [Decisões (ADR)](docs/adr/0001-stack-e-fluxo-de-trabalho.md)
 - [Como contribuir](CONTRIBUTING.md)
 
 ## Regras do repositório
