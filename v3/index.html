@@ -79,7 +79,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <p data-i18n="intro">Bogoboom is your bridge to a smooth landing in any place in the world. Whether you're a newcomer, an HR department or a real estate agency, the platform will help you connect and thrive.</p>
     </div>
 
-    <img src="assets/front.jpeg" alt="Bogoboom: a worldwide company that connects real estate agencies, HR departments and newcomers" data-i18n-alt="alt" class="main-image">
+    <img src="assets/front-en.jpeg" data-hero alt="Bogoboom: a worldwide company that connects real estate agencies, HR departments and newcomers" data-i18n-alt="alt" class="main-image">
 
     <section>
         <h3 data-i18n="why_h">Hotels are the expensive way to start</h3>
@@ -311,6 +311,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     document.title = t.title;
     document.querySelectorAll("[data-i18n]").forEach(function (el) { el.textContent = t[el.getAttribute("data-i18n")]; });
     document.querySelectorAll("[data-i18n-alt]").forEach(function (el) { el.alt = t[el.getAttribute("data-i18n-alt")]; });
+    document.querySelectorAll("[data-hero]").forEach(function (el) { el.src = "assets/front-" + l + ".jpeg"; });
     document.querySelectorAll("[data-i18n-list]").forEach(function (ul) {
       ul.innerHTML = "";
       t[ul.getAttribute("data-i18n-list")].forEach(function (x) {
