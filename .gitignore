@@ -1,0 +1,8 @@
+vendor/
+.env
+*.env
+*.log
+uploads/
+/var/
+*.sql.gz
+.DS_Store
