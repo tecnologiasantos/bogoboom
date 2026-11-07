@@ -7,7 +7,6 @@ Este repositório foi recomeçado do zero em novembro de 2026.
 | Pasta | O que é |
 |---|---|
 | `v3/` | Landing page estática (EN/ES/PT). Abra `v3/index.html` ou rode `python3 -m http.server` dentro da pasta |
-| `v2/` | Tentativa anterior, mantida só até a triagem da issue #72 |
 
 ## Regras do repositório
 
